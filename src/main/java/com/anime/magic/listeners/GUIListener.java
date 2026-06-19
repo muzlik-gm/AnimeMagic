@@ -82,18 +82,17 @@ public final class GUIListener implements Listener {
             if (e.getClickedInventory() == null || !e.getClickedInventory().equals(gui.getInventory())) return;
 
             int slot = e.getRawSlot();
+            // Close button
+            if (gui.isCloseButton(slot)) {
+                p.closeInventory();
+                return;
+            }
             Spell.SchoolId school = gui.schoolAt(slot);
             if (school != null) {
-                // Apply the school's default loadout
                 plugin.getDefaultBindings().applyLoadout(p, school);
                 String nameKey = "school." + school.configKey() + ".name";
                 plugin.getMessages().send(p, "school.switched",
                         "%school%", plugin.getMessages().raw(nameKey));
-                p.closeInventory();
-                return;
-            }
-            // Close button (slot 22)
-            if (slot == 22) {
                 p.closeInventory();
                 return;
             }

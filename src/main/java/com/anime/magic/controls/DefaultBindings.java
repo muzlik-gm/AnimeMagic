@@ -98,14 +98,17 @@ public final class DefaultBindings {
         if (loadout == null) return;
         // Clear existing bindings first
         plugin.getControlManager().clearBindings(player.getUniqueId());
-        // Bind normal slots (stored under "hotbar:<slot>" state)
-        Map<String, String> slotMap = new HashMap<>();
+        // Clear hotbar items
+        for (int i = 0; i < 9; i++) {
+            player.getInventory().setItem(i, null);
+        }
+        // Bind normal slots
         for (int i = 0; i < 9; i++) {
             if (loadout.slotNormal[i] != null) {
                 plugin.getControlManager().bindHotbar(player.getUniqueId(), i, loadout.slotNormal[i]);
             }
         }
-        // Store sneak-variant map in control state for HotbarControl to read
+        // Store sneak-variant map
         Map<String, String> sneakMap = new HashMap<>();
         for (int i = 0; i < 9; i++) {
             if (loadout.slotSneak[i] != null) {
@@ -114,6 +117,13 @@ public final class DefaultBindings {
         }
         plugin.getControlManager().state(player.getUniqueId(), "hotbar_sneak", sneakMap);
         activeSchool.put(player.getUniqueId(), school);
+
+        // Give actual hotbar items with textures
+        var hotbar = plugin.getControlManager().get("hotbar");
+        if (hotbar instanceof HotbarControl hc) {
+            hc.giveHotbarItems(player);
+        }
+
         plugin.getControlManager().save();
     }
 
