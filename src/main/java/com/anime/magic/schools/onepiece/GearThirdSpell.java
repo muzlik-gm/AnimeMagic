@@ -76,7 +76,7 @@ public final class GearThirdSpell implements Spell {
         Location at = target.getEyeLocation();
         if (at.getWorld() == null) return;
         at.getWorld().spawnParticle(Particle.CLOUD, at, 30, 0.8, 0.8, 0.8, 0.1);
-        at.getWorld().spawnParticle(Particle.DUST, at, 25, 0.5, 0.5, 0.5, 0.2);
+        at.getWorld().spawnParticle(Particle.DUST, at, 25, 0.5, 0.5, 0.5, 0.2, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(225, 65, 65), 1.5f));
         at.getWorld().spawnParticle(Particle.SWEEP_ATTACK, at, 3, 0.5, 0.5, 0.5, 0);
         LocationUtil.sound(at, Sound.ENTITY_PLAYER_ATTACK_STRONG, 2.0f, 0.5f);
         LocationUtil.sound(at, Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 0.8f);

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * Saint-class Fire — Explosive Fireball (Mushoku style). Three-line incantation,
+ * Saint-class Fire Explosive Fireball (Mushoku style). Three-line incantation,
  * then a single fireball flies from the caster's outstretched hand toward the target,
  * exploding for AoE fire damage.
  */
@@ -43,7 +43,7 @@ public final class SaintFireSpell implements Spell {
         return List.of(
                 "Flame, gather in my hand",
                 "Burn my enemy to ash",
-                "Saint-class — Fireball!"
+                "Saint-class Fireball."
         );
     }
 

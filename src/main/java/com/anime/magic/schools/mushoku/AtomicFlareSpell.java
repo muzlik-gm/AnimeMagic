@@ -16,9 +16,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * <b>King-class Fire — Atomic Flare</b>
+ * <b>King-class Fire Atomic Flare</b>
  *
- * <p>The strongest fire spell — a miniature sun that detonates with nuclear force.</p>
+ * <p>The strongest fire spell a miniature sun that detonates with nuclear force.</p>
  *
  * <ol>
  *   <li><b>Incantation (4 lines):</b> Player must type the chant.</li>
@@ -49,14 +49,14 @@ public final class AtomicFlareSpell implements Spell {
                 "Sun, source of all heat",
                 "Lend me thy burning wrath",
                 "Consume my foes in fire",
-                "King-class — Atomic Flare!"
+                "King-class Atomic Flare."
         );
     }
 
     @Override
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
-        // Skip incantation for now if system not loaded — just fire
+        // Skip incantation for now if system not loaded just fire
         // (Real incantation handled by MushokuSchool when it detects this spell)
         chargeAndDetonate(p);
         return true;

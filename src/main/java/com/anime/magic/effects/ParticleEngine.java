@@ -82,8 +82,19 @@ public final class ParticleEngine {
             if (p.getLocation().distanceSquared(args.location) <= renderDistanceSq) { anyNear = true; break; }
         }
         if (!anyNear) return;
+
+        // Auto-provide required data for particles that need it (prevents NPE on 1.21+)
+        Object data = args.data;
+        if (data == null) {
+            if (args.particle == Particle.DUST) {
+                data = new org.bukkit.Particle.DustOptions(org.bukkit.Color.RED, 1.0f);
+            } else if (args.particle == Particle.DUST_COLOR_TRANSITION) {
+                data = new org.bukkit.Particle.DustTransition(org.bukkit.Color.RED, org.bukkit.Color.ORANGE, 1.0f);
+            }
+        }
+
         args.world.spawnParticle(args.particle, args.location, args.count,
-                args.offsetX, args.offsetY, args.offsetZ, args.speed, args.data);
+                args.offsetX, args.offsetY, args.offsetZ, args.speed, data);
     }
 
     private void tickAll() {

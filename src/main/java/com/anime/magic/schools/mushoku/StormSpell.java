@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * <b>Saint-class Wind — Storm</b>
+ * <b>Saint-class Wind Storm</b>
  *
  * <p>Summons a swirling storm around the caster for 8 seconds that damages and
  * slows all nearby enemies. Wind particles spiral outward continuously.</p>
@@ -42,7 +42,7 @@ public final class StormSpell implements Spell {
         return List.of(
                 "Winds, heed my call",
                 "Swirl and consume my foes",
-                "Saint-class — Storm!"
+                "Saint-class Storm."
         );
     }
 

@@ -63,7 +63,7 @@ public final class GearSecondSpell implements Spell {
                 if (ticks % 3 == 0 && p.getWorld() != null) {
                     Location feet = p.getLocation();
                     p.getWorld().spawnParticle(Particle.CLOUD, feet, 1, 0.3, 0.1, 0.3, 0.1);
-                    p.getWorld().spawnParticle(Particle.DUST, feet, 1, 0.3, 0.8, 0.3, 0);
+                    p.getWorld().spawnParticle(Particle.DUST, feet, 1, 0.3, 0.8, 0.3, 0, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(255, 110, 110), 1.0f));
                 }
                 ticks++;
             }

@@ -53,6 +53,11 @@ public final class AnimeMagicPlugin extends JavaPlugin {
     private DefaultBindings defaultBindings;
     private BukkitTask controlTickerTask;
     private DoubleJumpCastControl doubleJumpControl;
+    // v5 cinematic systems
+    private com.anime.magic.cinematic.DestructionSystem destructionSystem;
+    private com.anime.magic.cinematic.ScreenShakeSystem screenShakeSystem;
+    private com.anime.magic.cinematic.ImpactFrameSystem impactFrameSystem;
+    private com.anime.magic.cinematic.CinematicEffects cinematicEffects;
 
     @Override
     public void onEnable() {
@@ -97,6 +102,12 @@ public final class AnimeMagicPlugin extends JavaPlugin {
         this.defaultBindings = new DefaultBindings(this);
         registerControls();
         this.controlTickerTask = Bukkit.getScheduler().runTaskTimer(this, () -> controlManager.tickAll(), 1L, 1L);
+
+        // v5 cinematic systems
+        this.destructionSystem = new com.anime.magic.cinematic.DestructionSystem(this);
+        this.screenShakeSystem = new com.anime.magic.cinematic.ScreenShakeSystem(this);
+        this.impactFrameSystem = new com.anime.magic.cinematic.ImpactFrameSystem(this);
+        this.cinematicEffects = new com.anime.magic.cinematic.CinematicEffects(this);
 
         Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
         Bukkit.getPluginManager().registerEvents(new CombatListener(this), this);
@@ -216,4 +227,8 @@ public final class AnimeMagicPlugin extends JavaPlugin {
     public AnimationRegistry getAnimationRegistry() { return animationRegistry; }
     public ControlManager getControlManager() { return controlManager; }
     public DefaultBindings getDefaultBindings() { return defaultBindings; }
+    public com.anime.magic.cinematic.DestructionSystem getDestructionSystem() { return destructionSystem; }
+    public com.anime.magic.cinematic.ScreenShakeSystem getScreenShakeSystem() { return screenShakeSystem; }
+    public com.anime.magic.cinematic.ImpactFrameSystem getImpactFrameSystem() { return impactFrameSystem; }
+    public com.anime.magic.cinematic.CinematicEffects getCinematicEffects() { return cinematicEffects; }
 }

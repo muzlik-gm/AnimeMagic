@@ -21,30 +21,28 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * <b>Rasengan v2 — Production Overhaul</b>
+ * <b>Rasengan v5 — CINEMATIC EDITION</b>
  *
- * <p>A multi-phase anime-accurate Rasengan:</p>
+ * <p>Full anime-grade choreography with all cinematic systems:</p>
  *
  * <ol>
- *   <li><b>Phase 1 — Formation (20 ticks / 1s):</b> A 3D {@code rasengan_sphere} model
- *       spawns in the player's hand playing the {@code orb_spin} animation. The sphere
- *       grows from 0.3 to full size with a smooth ease-out curve. Spiraling particles
- *       converge from around the player toward the orb.</li>
+ *   <li><b>Formation (20 ticks):</b> Energy charge — particles spiral inward
+ *       toward the player's hand. 3D rasengan_sphere model spawns and grows.
+ *       Escalating sound. Screen begins to subtly shake.</li>
  *
- *   <li><b>Phase 2 — Charge (20 ticks / 1s):</b> The orb pulses brighter, the player
- *       gains Speed II and Jump Boost II. A second spiral of crit particles orbits the
- *       orb. Sound: escalating ender dragon growls.</li>
+ *   <li><b>Charge (20 ticks):</b> Orb pulses brighter. Player gains Speed II +
+ *       Jump Boost II. Converging particles increase in density. Sound peaks.</li>
  *
- *   <li><b>Phase 3 — Thrust (10 ticks / 0.5s):</b> The player lunges forward 3 blocks
- *       (teleport with velocity set). The orb scales up briefly to 1.5x then snaps back
- *       as the strike lands.</li>
+ *   <li><b>Thrust (10 ticks):</b> Player lunges forward 3 blocks (velocity dash).
+ *       Orb scales up to 1.5x then snaps back. Motion blur particles trail the dash.</li>
  *
- *   <li><b>Phase 4 — Detonation:</b> On hit, the orb explodes. Three expanding spheres
- *       (END_ROD, CLOUD, SPOKE) ripple out from impact. Knockback of 2.0 launches all
- *       nearby entities. Sound: explosion + thunder.</li>
+ *   <li><b>Impact:</b> Impact frame triggers — target freezes (Slowness 255 for 5 ticks),
+ *       FLASH particle burst, layered impact sounds, screen shake for all nearby players.
+ *       3-layer expanding sphere (END_ROD + CLOUD + SPORE_BLOSSOM_AIR). Knockback 2.0
+ *       launches all nearby entities. <b>Crater forms at impact point (DestructionSystem).</b></li>
+ *
+ *   <li><b>Aftermath:</b> Lingering dust cloud for 20 ticks. Embers float up.</li>
  * </ol>
- *
- * <p>If no target is within 4 blocks after Phase 3, the sphere dissipates harmlessly.</p>
  */
 public final class RasenganSpell implements Spell {
     private final AnimeMagicPlugin plugin;
@@ -58,8 +56,7 @@ public final class RasenganSpell implements Spell {
     @Override public long cooldownMs() { return 8000; }
     @Override public int requiredLevel() { return 10; }
     @Override public @NotNull String description() {
-        return "Form a sphere of pure chakra in your palm, lunge forward, and detonate on impact with massive knockback. "
-                + "4-phase cast: Formation -> Charge -> Thrust -> Detonation.";
+        return "Form a sphere of pure chakra, lunge forward, and detonate on impact. Crater + screen shake + impact frame.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("SNOWBALL", 3003, "§aRasengan");
@@ -68,60 +65,29 @@ public final class RasenganSpell implements Spell {
     @Override
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
-        // Phase 1: Formation — spawn orb model with spin animation
+        var effects = plugin.getCinematicEffects();
+
+        // Phase 1: Formation — energy charge converging on hand
+        Location handLoc = p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.0));
+        effects.energyCharge(handLoc, 20, Particle.END_ROD, null);
+
+        // Spawn 3D orb model with spin animation
         ModelDisplay orb = SpellEffects.spawnInHand(plugin, p, "rasengan_sphere", "orb_spin", 100);
         if (orb != null) {
-            // Start small, grow over 20 ticks
             for (int t = 0; t <= 20; t++) {
                 final int tick = t;
                 new BukkitRunnable() {
                     @Override public void run() {
                         if (orb.isDead()) return;
-                        float s = 0.3f + 0.5f * (tick / 20f); // 0.3 -> 0.8
+                        float s = 0.3f + 0.5f * (tick / 20f);
                         orb.setTransform(0, -0.4f, 0.8f, 0, tick * 18f, 0, s, s, s);
                     }
                 }.runTaskLater(plugin, t);
             }
         }
 
-        // Phase 1 + 2: Particle spiral converging on orb
-        new BukkitRunnable() {
-            int ticks = 0;
-            @Override public void run() {
-                if (ticks >= 40) { cancel(); return; } // formation + charge phases
-                Location hand = p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.0));
-                if (hand.getWorld() == null) return;
-
-                // Converging particles (only during phase 1)
-                if (ticks < 20) {
-                    for (int i = 0; i < 6; i++) {
-                        double angle = (ticks * 0.3) + (i * Math.PI / 3);
-                        double r = 2.0 - (ticks / 20.0) * 1.8; // 2.0 -> 0.2
-                        double x = Math.cos(angle) * r;
-                        double z = Math.sin(angle) * r;
-                        Location from = hand.clone().add(x, 0, z);
-                        hand.getWorld().spawnParticle(Particle.END_ROD, from, 0,
-                                -x * 0.1, -0.05, -z * 0.1, 0.05);
-                    }
-                }
-                // Phase 2: Orbital crit particles
-                if (ticks >= 20) {
-                    double angle = ticks * 0.5;
-                    double r = 0.8;
-                    Location orb1 = hand.clone().add(Math.cos(angle) * r, 0.2, Math.sin(angle) * r);
-                    Location orb2 = hand.clone().add(Math.cos(angle + Math.PI) * r, -0.2, Math.sin(angle + Math.PI) * r);
-                    hand.getWorld().spawnParticle(Particle.CRIT, orb1, 1, 0, 0, 0, 0);
-                    hand.getWorld().spawnParticle(Particle.CRIT, orb2, 1, 0, 0, 0, 0);
-                }
-                // Sound escalating
-                if (ticks % 8 == 0) {
-                    LocationUtil.sound(hand, Sound.ENTITY_ENDERMAN_AMBIENT, 0.4f + ticks * 0.02f, 1.0f + ticks * 0.02f);
-                }
-                ticks++;
-            }
-        }.runTaskTimer(plugin, 0L, 1L);
-
-        // Phase 2 buffs
+        // Phase 2: Charge — escalating converging particles + buffs
+        effects.buildUp(handLoc, 20, Particle.CRIT, Sound.ENTITY_ENDERMAN_AMBIENT);
         new BukkitRunnable() {
             @Override public void run() {
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 25, 1));
@@ -129,11 +95,10 @@ public final class RasenganSpell implements Spell {
             }
         }.runTaskLater(plugin, 20L);
 
-        // Phase 3: Thrust — lunge forward after 40 ticks
+        // Phase 3: Thrust — lunge forward at 40 ticks
         new BukkitRunnable() {
             @Override public void run() {
                 if (orb != null && !orb.isDead()) {
-                    // Brief scale-up then snap-back
                     orb.setTransform(0, -0.4f, 0.8f, 0, 0, 0, 1.5f, 1.5f, 1.5f);
                     new BukkitRunnable() {
                         @Override public void run() {
@@ -141,43 +106,57 @@ public final class RasenganSpell implements Spell {
                         }
                     }.runTaskLater(plugin, 4L);
                 }
-                // Lunge forward 3 blocks
                 Vector dash = p.getLocation().getDirection().setY(0).normalize().multiply(3.0).setY(0.2);
                 p.setVelocity(dash);
+                // Motion blur trail
+                Location trailStart = p.getEyeLocation();
+                Location trailEnd = trailStart.clone().add(dash);
+                effects.directedStream(Particle.END_ROD, trailStart, trailEnd, 8, 3, null);
                 LocationUtil.sound(p.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.0f, 1.5f);
             }
         }.runTaskLater(plugin, 40L);
 
-        // Phase 4: Detonation check at 50 ticks
+        // Phase 4 + 5: Impact + aftermath at 50 ticks
         new BukkitRunnable() {
             @Override public void run() {
                 Location hand = p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.0));
                 if (orb != null) orb.remove();
                 List<LivingEntity> near = LocationUtil.nearbyLiving(hand, 4.0, p.getUniqueId());
                 if (near.isEmpty()) {
-                    // Dissipate harmlessly
+                    // Dissipate
                     if (hand.getWorld() != null) {
                         hand.getWorld().spawnParticle(Particle.CLOUD, hand, 20, 0.5, 0.5, 0.5, 0.05);
                     }
                     LocationUtil.sound(hand, Sound.ENTITY_ENDERMAN_TELEPORT, 0.5f, 0.7f);
                     return;
                 }
-                // Detonate!
+                LivingEntity primary = near.get(0);
+
+                // Impact frame — freeze + flash + shake
+                plugin.getImpactFrameSystem().trigger(hand, primary, 1.5);
+
+                // 3-layer explosion
                 plugin.getParticleEngine().play(
                         new SphereAnimation(plugin, p, hand, Particle.END_ROD, 8, 0.5, 5.0, 80));
                 plugin.getParticleEngine().play(
                         new SphereAnimation(plugin, p, hand, Particle.CLOUD, 8, 0.3, 3.5, 40));
                 plugin.getParticleEngine().play(
                         new SphereAnimation(plugin, p, hand, Particle.SPORE_BLOSSOM_AIR, 6, 0.2, 2.5, 30));
-                LocationUtil.sound(hand, Sound.ENTITY_GENERIC_EXPLODE, 1.6f, 0.8f);
-                LocationUtil.sound(hand, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.0f, 1.5f);
 
+                // Damage + knockback
                 double dmg = 16.0 * plugin.getConfig().getDouble("schools.naruto.damage-multiplier", 1.0);
                 for (LivingEntity e : LocationUtil.nearbyLiving(hand, 5.0, p.getUniqueId())) {
                     e.damage(dmg, p);
                     LocationUtil.knockback(e, hand, 2.0);
-                    e.setVelocity(e.getVelocity().setY(0.8)); // pop up
+                    e.setVelocity(e.getVelocity().setY(0.8));
                 }
+
+                // Destruction — crater at impact point
+                plugin.getDestructionSystem().formCrater(hand, 2.5);
+
+                // Aftermath — lingering dust + embers
+                effects.aftermath(hand, 30, "dust");
+                effects.aftermath(hand, 20, "embers");
             }
         }.runTaskLater(plugin, 50L);
 

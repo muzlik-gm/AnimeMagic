@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * <b>God-class — Time Warp</b>
+ * <b>God-class Time Warp</b>
  *
  * <p>Bends time around the target. The caster moves at normal speed while the target
  * is slowed to a crawl. After 4 seconds, the target takes 30 "accumulated" damage
@@ -45,7 +45,7 @@ public final class TimeWarpSpell implements Spell {
                 "Time, the river that flows",
                 "Halt your course for me",
                 "Bind my foe in stillness",
-                "God-class — Time Warp!"
+                "God-class Time Warp."
         );
     }
 

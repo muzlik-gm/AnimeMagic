@@ -17,19 +17,24 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * <b>Kirin — Lightning Style: Kirin</b>
+ * <b>Kirin v5 — CINEMATIC EDITION</b>
  *
- * <p>Sasuke's ultimate — calls down a literal lightning strike from the sky on the target.
- * One-shot, devastating, 50-block radius warning visual.</p>
+ * <p>The most destructive spell — calls down a literal lightning strike from
+ * the sky. Full cinematic treatment:</p>
  *
  * <ol>
- *   <li><b>Storm Build (40 ticks / 2s):</b> Player raises hand. ELECTRIC_SPARK
- *       particles spiral upward into the sky. Sound: thunder rumble escalating.</li>
- *   <li><b>Strike (instant at 40 ticks):</b> A 3D kirin_bolt model descends from 10 blocks
- *       above the target's head, playing kirin.descend. On landing, a massive shockwave
- *       ring expands 15 blocks.</li>
- *   <li><b>Impact:</b> Target takes 50 lightning damage. All entities within 8 blocks
- *       take 25 damage + Slowness V (paralysis) + set on fire. Crater formed at strike point.</li>
+ *   <li><b>Storm Build (40 ticks / 2s):</b> Player raises hand. Electric sparks
+ *       spiral upward into the sky. Target location crackles with lightning.
+ *       Escalating thunder rumbles. Subtle screen shake on the caster.</li>
+ *   <li><b>Descent (10 ticks / 0.5s):</b> 3D kirin_bolt model descends from 10
+ *       blocks above the target, playing the descend animation. The sky darkens
+ *       (brief Darkness effect on nearby players).</li>
+ *   <li><b>Impact:</b> Massive impact frame — FLASH + screen shake (intensity 3.0)
+ *       for all players within 30 blocks. Ground shockwave ring expands 15 blocks.
+ *       Crater forms (radius 4). All entities within 8 blocks take 25-50 damage.
+ *       Scorch marks left behind.</li>
+ *   <li><b>Aftermath:</b> Smoke cloud + embers for 3 seconds. Residual lightning
+ *       crackles for 2 seconds.</li>
  * </ol>
  */
 public final class KirinSpell implements Spell {
@@ -44,8 +49,7 @@ public final class KirinSpell implements Spell {
     @Override public long cooldownMs() { return 45000; }
     @Override public int requiredLevel() { return 50; }
     @Override public @NotNull String description() {
-        return "Call down a literal lightning strike on your target. 50 damage to primary target, "
-                + "25 to all within 8 blocks. Leaves a crater.";
+        return "Call down a literal lightning strike. Massive crater + violent screen shake + scorch marks. 50 dmg primary, 25 AoE.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("PRISMARINE_SHARD", 7009, "§bKirin");
@@ -57,34 +61,22 @@ public final class KirinSpell implements Spell {
         LivingEntity target = caster.targetEntity(50);
         if (target == null) return false;
         Location strike = target.getLocation();
+        var effects = plugin.getCinematicEffects();
 
-        // Phase 1: Storm build — particles spiral upward
-        new BukkitRunnable() {
-            int t = 0;
-            @Override public void run() {
-                if (t >= 40) { cancel(); return; }
-                Location above = p.getLocation().add(0, 2, 0);
-                if (above.getWorld() == null) return;
-                for (int i = 0; i < 6; i++) {
-                    double angle = (t * 0.4) + (i * Math.PI / 3);
-                    double r = 1.5;
-                    double y = t * 0.4;
-                    Location from = p.getLocation().add(Math.cos(angle) * r, y, Math.sin(angle) * r);
-                    above.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, from, 1, 0.1, 0.1, 0.1, 0.1);
-                }
-                // Crackling at target
-                target.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, target.getEyeLocation(), 2, 1, 2, 1, 0.2);
-                if (t % 5 == 0) LocationUtil.sound(p.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 0.3f + t * 0.02f, 0.4f + t * 0.02f);
-                t++;
-            }
-        }.runTaskTimer(plugin, 0L, 1L);
+        // Phase 1: Storm Build — escalating energy at target
+        effects.buildUp(strike.clone().add(0, 5, 0), 40, Particle.ELECTRIC_SPARK, Sound.ENTITY_LIGHTNING_BOLT_THUNDER);
+        // Caster-side charge
+        effects.energyCharge(p.getEyeLocation(), 40, Particle.ELECTRIC_SPARK, null);
+        // Subtle shake on caster during build
+        if (plugin.getScreenShakeSystem() != null) {
+            plugin.getScreenShakeSystem().shake(p, 0.3);
+        }
 
-        // Phase 2: Strike at 40 ticks — descending kirin bolt
+        // Phase 2: Descent at 40 ticks — kirin bolt model descends
         new BukkitRunnable() {
             @Override public void run() {
                 Location spawnAt = strike.clone().add(0, 10, 0);
-                ModelDisplay bolt = SpellEffects.spawnAnimated(plugin, p, "kirin_bolt",
-                        "animation.kirin.descend", spawnAt, 20, null);
+                SpellEffects.spawnAnimated(plugin, p, "kirin_bolt", "animation.kirin.descend", spawnAt, 20, null);
                 LocationUtil.sound(strike, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 3.0f, 0.3f);
                 LocationUtil.sound(strike, Sound.ENTITY_ENDER_DRAGON_GROWL, 2.0f, 0.5f);
             }
@@ -94,13 +86,20 @@ public final class KirinSpell implements Spell {
         new BukkitRunnable() {
             @Override public void run() {
                 if (strike.getWorld() == null) return;
-                // Massive ring + sphere
-                plugin.getParticleEngine().play(new RingBurst(plugin, p, strike, Particle.ELECTRIC_SPARK, 30, 15.0, 96));
+
+                // Impact frame — violent (intensity 3.0)
+                plugin.getImpactFrameSystem().trigger(strike, target, 3.0);
+
+                // Massive shockwave ring (ground-traveling)
+                effects.shockwaveRing(strike, 15.0, 30, Particle.ELECTRIC_SPARK);
+
+                // Layered particle spheres
                 plugin.getParticleEngine().play(new SphereAnimation(plugin, p, strike, Particle.ELECTRIC_SPARK, 20, 1.0, 8.0, 100));
                 plugin.getParticleEngine().play(new SphereAnimation(plugin, p, strike, Particle.CRIT, 15, 0.5, 5.0, 60));
                 plugin.getParticleEngine().play(new SphereAnimation(plugin, p, strike, Particle.FLASH, 5, 0.2, 3.0, 20));
-                LocationUtil.sound(strike, Sound.ENTITY_GENERIC_EXPLODE, 3.0f, 0.4f);
+                plugin.getParticleEngine().play(new RingBurst(plugin, p, strike, Particle.ELECTRIC_SPARK, 30, 15.0, 96));
 
+                // Damage
                 double dmgPrimary = 50.0 * plugin.getConfig().getDouble("schools.naruto.damage-multiplier", 1.0);
                 double dmgAoE = 25.0 * plugin.getConfig().getDouble("schools.naruto.damage-multiplier", 1.0);
                 if (!target.isDead()) {
@@ -113,10 +112,23 @@ public final class KirinSpell implements Spell {
                     if (e.getUniqueId().equals(target.getUniqueId())) continue;
                     e.damage(dmgAoE, p);
                     e.setFireTicks(60);
-                    e.addPotionEffect(new org.bukkit.potion.PotionEffect(
-                            org.bukkit.potion.PotionEffectType.SLOWNESS, 60, 4));
-                    LocationUtil.knockback(e, strike, 1.5);
+                    LocationUtil.knockback(e, strike, 2.0);
                 }
+
+                // Destruction — massive crater + scorch marks
+                plugin.getDestructionSystem().formCrater(strike, 4.0);
+                plugin.getDestructionSystem().scorchMark(strike, 5.0);
+
+                // Aftermath — smoke + residual lightning
+                effects.aftermath(strike, 60, "smoke");
+                new BukkitRunnable() {
+                    int ticks = 0;
+                    @Override public void run() {
+                        if (ticks >= 40 || strike.getWorld() == null) { cancel(); return; }
+                        strike.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, strike, 3, 3, 3, 3, 0.1);
+                        ticks++;
+                    }
+                }.runTaskTimer(plugin, 5L, 2L);
             }
         }.runTaskLater(plugin, 60L);
 

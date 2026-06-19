@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * Saint-class Water — Cleansing Water Burst. After the incantation, summons a sphere
+ * Saint-class Water Cleansing Water Burst. After the incantation, summons a sphere
  * of water around the caster that extinguishes fire, removes negative effects, and
  * damages nearby hostiles.
  */
@@ -43,7 +43,7 @@ public final class SaintWaterSpell implements Spell {
         return List.of(
                 "O water, heed my call",
                 "Wash away the unclean",
-                "Saint-class — Water Burst!"
+                "Saint-class Water Burst."
         );
     }
 
@@ -64,9 +64,11 @@ public final class SaintWaterSpell implements Spell {
 
         p.setFireTicks(0);
         for (PotionEffect eff : p.getActivePotionEffects()) {
-            String name = eff.getType().getName();
-            if (name.startsWith("POISON") || name.startsWith("WITHER")
-                    || name.startsWith("WEAKNESS") || name.startsWith("SLOW")) {
+            PotionEffectType type = eff.getType();
+            if (type == PotionEffectType.POISON || type == PotionEffectType.WITHER
+                    || type == PotionEffectType.WEAKNESS || type == PotionEffectType.SLOWNESS
+                    || type == PotionEffectType.NAUSEA || type == PotionEffectType.BLINDNESS
+                    || type == PotionEffectType.DARKNESS) {
                 p.removePotionEffect(eff.getType());
             }
         }

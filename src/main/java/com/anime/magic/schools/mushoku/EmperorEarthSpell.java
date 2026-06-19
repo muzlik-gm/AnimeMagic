@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * Emperor-class Earth — Earthquake Surge. Five-line incantation (longer = stronger).
+ * Emperor-class Earth Earthquake Surge. Five-line incantation (longer = stronger).
  * Causes a ring of cracked blocks to expand outward, launches falling-block debris
  * into the air, and damages all entities in a 10-block radius. Affected entities are
  * launched upward.
@@ -50,7 +50,7 @@ public final class EmperorEarthSpell implements Spell {
                 "Tremble at my command",
                 "Shatter the ground beneath",
                 "Rise, stones of the deep",
-                "Emperor-class — Earthquake Surge!"
+                "Emperor-class Earthquake Surge."
         );
     }
 
@@ -108,7 +108,7 @@ public final class EmperorEarthSpell implements Spell {
                     Location at = center.clone().add(Math.cos(angle) * r, -0.5, Math.sin(angle) * r);
                     Block b = at.getBlock();
                     if (b.getType().isSolid()) {
-                        center.getWorld().spawnParticle(Particle.DUST, at, 4, 0.3, 0.3, 0.3, 0.0);
+                        center.getWorld().spawnParticle(Particle.DUST, at, 4, 0.3, 0.3, 0.3, 0.0, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(130, 100, 70), 1.0f));
                     }
                 }
                 r++;

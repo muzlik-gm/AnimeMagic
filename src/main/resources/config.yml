@@ -30,7 +30,7 @@ schools:
     cooldown-multiplier: 1.0
   mushoku:
     enabled: true
-    require-chant: true
+    require-chant: false
     damage-multiplier: 1.0
     cooldown-multiplier: 1.0
   onepiece:
@@ -104,4 +104,47 @@ controls:
     interrupt-on-damage: true
     interrupt-on-sneak: true
 
-config-version: 2
+# ---------------------------------------------------------------------
+#  Cinematic Effects (v5 — impact frames, screen shake, destruction)
+# ---------------------------------------------------------------------
+cinematic:
+  # Screen shake — rapidly offsets the player's view by tiny amounts for a
+  # few ticks on big impacts. Simulates camera shake. Can cause motion
+  # sickness for some players — disable if complaints.
+  screen-shake:
+    enabled: true
+    # Maximum offset in blocks (0.05 = very subtle, 0.2 = violent)
+    max-offset: 0.12
+    # Duration in ticks (10 = 0.5 seconds)
+    duration-ticks: 10
+  # Impact frame — freezes the target + flashes + plays impact sound at the
+  # moment of contact. Makes hits feel weighty.
+  impact-frame:
+    enabled: true
+    # Duration of target freeze in ticks (5 = 0.25s)
+    freeze-ticks: 5
+  # Destruction — spells break blocks, form craters, leave scorch marks.
+  # WARNING: This modifies terrain. Respect WorldGuard regions automatically.
+  # Set max-blocks-per-spell to limit griefing potential.
+  destruction:
+    enabled: true
+    # Max blocks a single spell can break
+    max-blocks-per-spell: 30
+    # Blocks that spells can NEVER break (even if destruction is enabled)
+    unbreakable-blocks:
+      - BEDROCK
+      - BARRIER
+      - SPAWNER
+      - CHEST
+      - ENDER_CHEST
+      - SHULKER_BOX
+      - COMMAND_BLOCK
+      - STRUCTURE_BLOCK
+      - NETHERITE_BLOCK
+      - OBSIDIAN
+    # Form craters on big impacts (replaces ground blocks with air + debris)
+    craters: true
+    # Leave scorch marks (fire + blackened blocks) after fire spells
+    scorch-marks: true
+
+config-version: 3

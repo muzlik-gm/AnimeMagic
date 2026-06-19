@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * <b>Emperor-class Earth — Quake</b>
+ * <b>Emperor-class Earth Quake</b>
  *
  * <p>Slams both hands into the ground, causing a massive earthquake that damages and
  * launches all entities within 20 blocks. The ground cracks in expanding rings.</p>
@@ -42,7 +42,7 @@ public final class QuakeSpell implements Spell {
                 "Earth, tremble at my command",
                 "Rise up and shatter the ground",
                 "Cast my enemies to the sky",
-                "Emperor-class — Quake!"
+                "Emperor-class Quake."
         );
     }
 

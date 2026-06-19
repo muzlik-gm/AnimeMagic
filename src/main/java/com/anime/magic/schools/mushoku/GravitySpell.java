@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * <b>King-class — Gravity</b>
+ * <b>King-class Gravity</b>
  *
  * <p>Creates a gravitational singularity at the target location that pulls all nearby
  * entities inward, then explodes them outward. 4-second duration.</p>
@@ -43,7 +43,7 @@ public final class GravitySpell implements Spell {
         return List.of(
                 "Force that binds all things",
                 "Pull my enemies to the abyss",
-                "King-class — Gravity!"
+                "King-class Gravity."
         );
     }
 
