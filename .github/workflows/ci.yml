@@ -63,10 +63,8 @@ jobs:
           cat resource_pack/pack.mcmeta
 
   # ─── Publish "latest" release on every push to main ──────────────────────
-  # This job uploads the JAR + resource pack DIRECTLY to a GitHub Release.
-  # GitHub Releases serve files in their original format — NO ZIP wrapping.
-  # Users should download from the Releases page, NOT the Actions artifacts tab
-  # (Actions artifacts are always wrapped in an extra ZIP by GitHub).
+  # Uploads JAR + resource pack DIRECTLY to a GitHub Release (raw files).
+  # Download from the Releases page, NOT the Actions artifacts tab.
   publish-latest:
     name: Publish Latest Release
     needs: [build-test, resource-pack]
@@ -75,6 +73,9 @@ jobs:
     permissions:
       contents: write
     steps:
+      # MUST checkout the repo — gh CLI requires a git context
+      - uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v4
         with:
           name: AnimeMagic-jar
@@ -101,34 +102,24 @@ jobs:
       - name: Create new "latest" release
         run: |
           gh release create latest \
-            --title "AnimeMagic — Latest Build" \
+            --title "AnimeMagic v1.0.0-alpha — Latest Build" \
             --notes "Automated build from commit ${{ github.sha }}
 
           ## Downloads
 
-          - **AnimeMagic-*.jar** — The plugin JAR. Drop into your server's \`plugins/\` folder.
-          - **AnimeMagicResourcePack.zip** — Custom textures + 3D models. Host on a static URL and set \`gui.resource-pack-url\` in config.
+          - **AnimeMagic-*.jar** — The plugin JAR. Drop into your server's plugins folder.
+          - **AnimeMagicResourcePack.zip** — Custom textures + 3D models. Host on a static URL and set gui.resource-pack-url in config.
 
           ## How to install
 
-          1. Download the JAR and resource pack from THIS page (not the Actions tab — those are wrapped in extra ZIPs)
-          2. Drop the JAR into \`plugins/\`
+          1. Download the JAR and resource pack from THIS page (not the Actions tab)
+          2. Drop the JAR into plugins/
           3. Upload the resource pack ZIP to any static file host
-          4. Set \`gui.resource-pack-url\` in \`config.yml\`
+          4. Set gui.resource-pack-url in config.yml
           5. Restart server" \
             --target main \
             --prerelease \
             release-files/AnimeMagic-*.jar \
             release-files/AnimeMagicResourcePack.zip
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Verify release files
-        run: |
-          echo "=== Release assets ==="
-          gh release view latest --json assets --jq '.assets[].name'
-          echo ""
-          echo "=== Direct download URLs ==="
-          gh release view latest --json assets --jq '.assets[] | "https://github.com/${{ github.repository }}/releases/download/latest/" + .name'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

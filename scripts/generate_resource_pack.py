@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AnimeMagic Resource Pack Generator v4 — Cinematic Edition
+AnimeMagic Resource Pack Generator v1.0.0-alpha — Cinematic Edition
 =========================================================
 
 MAJOR UPGRADES over v3:
@@ -2733,7 +2733,7 @@ def make_3d_flame_model(texture_path):
 # === Main ===================================================================
 
 def main():
-    print("AnimeMagic Resource Pack Generator v4 — Cinematic Edition")
+    print("AnimeMagic Resource Pack Generator v1.0.0-alpha — Cinematic Edition")
     print("=" * 60)
     BUILD_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -2820,11 +2820,11 @@ def main():
         "pack": {
             "pack_format": 66,
             "supported_formats": {"min_inclusive": 18, "max_inclusive": 99},
-            "description": "§dAnimeMagic §7v4 §8— §fCinematic 32x32 pixel art + multi-cube 3D models"
+            "description": "§dAnimeMagic §7v1.0.0-alpha §8— §fCinematic 32x32 pixel art + multi-cube 3D models"
         }
     }
     (PACK_ROOT / "pack.mcmeta").write_text(json.dumps(pack_mcmeta, indent=2))
-    print(f"\n[3/4] Wrote pack.mcmeta (pack_format 66, supported_formats 18-99 = MC 1.20.2 through 1.21.8+)")
+    print(f"\n[3/4] Wrote pack.mcmeta (pack_format 66, supported_formats 18-99 (MC 1.20.2 through 1.21.8+) = MC 1.20.2 through 1.21.8+)")
 
     # 4) Zip it
     print(f"\n[4/4] Packaging into {PACK_PATH.name}...")
