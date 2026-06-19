@@ -21,18 +21,9 @@ public final class PlayerListener implements Listener {
         plugin.getManaManager().load(p.getUniqueId());
         int bonus = plugin.getManaManager().permissionBonus(p.getUniqueId());
         plugin.getManaManager().setMaxBonus(p.getUniqueId(), bonus);
-        // Apply default hotbar loadout + give items on first join
+        // Apply default loadout on first join (binds abilities to slot NUMBERS, no items)
         if (plugin.getDefaultBindings() != null) {
             plugin.getDefaultBindings().applyDefaultOnFirstJoin(p);
-            // Also give hotbar items to existing players who already have a loadout
-            var school = plugin.getDefaultBindings().activeSchool(p.getUniqueId());
-            if (school != null) {
-                // Player already has a school — give them their hotbar items
-                var hotbar = plugin.getControlManager() != null ? plugin.getControlManager().get("hotbar") : null;
-                if (hotbar instanceof com.anime.magic.controls.HotbarControl hc) {
-                    hc.giveHotbarItems(p);
-                }
-            }
         }
     }
 

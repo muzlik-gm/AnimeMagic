@@ -3,17 +3,22 @@ package com.anime.magic.controls;
 import com.anime.magic.AnimeMagicPlugin;
 import com.anime.magic.api.CastingService;
 import com.anime.magic.api.Spell;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Hotbar Control v4 — LEFT CLICK ONLY by default. Works in air and on blocks.
- * Gives players actual hotbar items with CustomModelData textures.
+ * Hotbar Control v6 — NO INVENTORY ITEMS.
+ *
+ * Abilities are bound to hotbar SLOT NUMBERS (0-8), not to items.
+ * The player's hotbar stays as their normal inventory — we don't touch it.
+ *
+ * - Left-click casts the ability bound to the current slot number
+ * - Switching slots shows the ability name in the action bar
+ * - Sneak+click casts the variant ability
+ * - No items are given, modified, or prevented from moving
  */
 public final class HotbarControl implements ControlScheme {
     private final AnimeMagicPlugin plugin;
@@ -23,21 +28,20 @@ public final class HotbarControl implements ControlScheme {
     @Override public @NotNull String id() { return "hotbar"; }
     @Override public @NotNull String displayName() { return "Hotbar Binding"; }
     @Override public @NotNull String description() {
-        return "Left-click to cast. Sneak+left-click for variant. Works in air and on blocks.";
+        return "Left-click casts ability bound to current slot. No inventory items.";
     }
 
     @Override
     public void onInteract(@NotNull Player player, @NotNull PlayerInteractEvent e) {
         Action action = e.getAction();
-        // LEFT CLICK only (both air and block). Also accept right-click as backup.
+        if (action == Action.PHYSICAL) return;
         if (action != Action.LEFT_CLICK_AIR && action != Action.LEFT_CLICK_BLOCK
-            && action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) {
-            return;
-        }
+            && action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return;
 
         int slot = player.getInventory().getHeldItemSlot();
         boolean sneaking = player.isSneaking();
 
+        // Check sneak variant first
         String spellId = null;
         if (sneaking && plugin.getDefaultBindings() != null) {
             spellId = plugin.getDefaultBindings().sneakSpellFor(player.getUniqueId(), slot);
@@ -50,7 +54,8 @@ public final class HotbarControl implements ControlScheme {
         Spell spell = plugin.getSpellRegistry().get(spellId);
         if (spell == null) return;
 
-        e.setCancelled(true);
+        // Do NOT cancel the event — let vanilla item interactions happen too
+        // (player can still mine blocks with their pickaxe while having abilities bound)
 
         CastingService cs = new CastingService(plugin);
         CastingService.Result result = cs.cast(player, spell);
@@ -59,48 +64,25 @@ public final class HotbarControl implements ControlScheme {
         }
     }
 
-    public void giveHotbarItems(Player player) {
-        if (plugin.getDefaultBindings() == null) return;
-        var activeSchool = plugin.getDefaultBindings().activeSchool(player.getUniqueId());
-        if (activeSchool == null) return;
+    @Override
+    public void onSlotChange(@NotNull Player player, @NotNull PlayerItemHeldEvent e) {
+        int newSlot = e.getNewSlot();
+        String spellId = plugin.getControlManager().boundSpell(player.getUniqueId(), newSlot);
+        if (spellId == null) return;
+        Spell spell = plugin.getSpellRegistry().get(spellId);
+        if (spell == null) return;
 
-        var loadout = plugin.getDefaultBindings().loadoutFor(activeSchool);
-        if (loadout == null) return;
+        // Show ability name + mana cost in action bar
+        String sneakId = plugin.getDefaultBindings() != null
+                ? plugin.getDefaultBindings().sneakSpellFor(player.getUniqueId(), newSlot) : null;
+        Spell sneak = sneakId != null ? plugin.getSpellRegistry().get(sneakId) : null;
 
-        for (int i = 0; i < 9; i++) {
-            String spellId = loadout.slotNormal()[i];
-            if (spellId == null) continue;
-
-            Spell spell = plugin.getSpellRegistry().get(spellId);
-            if (spell == null) continue;
-
-            ItemStack item = createSpellItem(spell, i);
-            player.getInventory().setItem(i, item);
+        StringBuilder msg = new StringBuilder();
+        msg.append("\u00a76Slot ").append(newSlot + 1).append(": \u00a7e").append(spell.displayName());
+        msg.append(" \u00a77(").append(spell.manaCost()).append(" mana)");
+        if (sneak != null) {
+            msg.append(" \u00a7d+ [Sneak] ").append(sneak.displayName());
         }
-    }
-
-    private ItemStack createSpellItem(Spell spell, int slot) {
-        Material mat;
-        try { mat = Material.valueOf(spell.icon().material); }
-        catch (IllegalArgumentException e) { mat = Material.PAPER; }
-
-        ItemStack item = new ItemStack(mat);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(spell.displayName());
-            if (spell.icon().customModelData != 0) {
-                meta.setCustomModelData(spell.icon().customModelData);
-            }
-            java.util.List<String> lore = new java.util.ArrayList<>();
-            lore.add("§7" + spell.school().name());
-            lore.add("§bMana: §e" + spell.manaCost());
-            lore.add("§bCD: §e" + (spell.cooldownMs() / 1000) + "s");
-            lore.add("");
-            lore.add("§aLeft-Click to cast");
-            lore.add("§dSneak+Click for variant");
-            meta.setLore(lore);
-            item.setItemMeta(meta);
-        }
-        return item;
+        player.sendActionBar(msg.toString());
     }
 }

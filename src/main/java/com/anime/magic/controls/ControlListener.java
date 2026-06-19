@@ -13,9 +13,8 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 /**
- * Routes raw Bukkit input events to the ControlManager for fan-out to all registered
- * ControlSchemes. Priority HIGH so spell-bound right-clicks can be cancelled before
- * vanilla item-use logic fires.
+ * Routes input events to ControlManager. No item-prevention logic — abilities
+ * are bound to slot NUMBERS, not items, so the player's inventory is untouched.
  */
 public final class ControlListener implements Listener {
     private final AnimeMagicPlugin plugin;
@@ -49,6 +48,7 @@ public final class ControlListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent e) {
         if (!(e.getWhoClicked() instanceof Player p)) return;
+        // Only handle SpellWheelGUI clicks — don't touch player inventory at all
         if (!(e.getInventory().getHolder() instanceof SpellWheelGUI gui)) return;
         e.setCancelled(true);
         if (e.getClickedInventory() == null || !e.getClickedInventory().equals(gui.getInventory())) return;

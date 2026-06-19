@@ -71,10 +71,6 @@ public final class DefaultBindings {
         Loadout loadout = loadouts.get(school);
         if (loadout == null) return;
         plugin.getControlManager().clearBindings(player.getUniqueId());
-        // Clear hotbar items
-        for (int i = 0; i < 9; i++) {
-            player.getInventory().setItem(i, null);
-        }
         // Bind normal slots
         for (int i = 0; i < 9; i++) {
             if (loadout.slotNormal[i] != null) {
@@ -90,12 +86,6 @@ public final class DefaultBindings {
         }
         plugin.getControlManager().state(player.getUniqueId(), "hotbar_sneak", sneakMap);
         activeSchool.put(player.getUniqueId(), school);
-        // Give actual hotbar items with textures
-        var hotbar = plugin.getControlManager().get("hotbar");
-        if (hotbar instanceof HotbarControl hc) {
-            hc.giveHotbarItems(player);
-        }
-        plugin.getControlManager().save();
     }
 
     public @org.jetbrains.annotations.Nullable Spell.SchoolId activeSchool(@NotNull UUID playerId) {
