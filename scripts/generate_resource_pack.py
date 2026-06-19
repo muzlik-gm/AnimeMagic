@@ -2818,13 +2818,13 @@ def main():
     # 3) pack.mcmeta
     pack_mcmeta = {
         "pack": {
-            "pack_format": 34,
-            "supported_formats": {"min_inclusive": 22, "max_inclusive": 99},
+            "pack_format": 66,
+            "supported_formats": {"min_inclusive": 18, "max_inclusive": 99},
             "description": "§dAnimeMagic §7v4 §8— §fCinematic 32x32 pixel art + multi-cube 3D models"
         }
     }
     (PACK_ROOT / "pack.mcmeta").write_text(json.dumps(pack_mcmeta, indent=2))
-    print(f"\n[3/4] Wrote pack.mcmeta (pack_format 34, supported_formats 22-99 = MC 1.20.2 through 1.21.8+)")
+    print(f"\n[3/4] Wrote pack.mcmeta (pack_format 66, supported_formats 18-99 = MC 1.20.2 through 1.21.8+)")
 
     # 4) Zip it
     print(f"\n[4/4] Packaging into {PACK_PATH.name}...")

@@ -1,152 +1,134 @@
 name: CI
 
-# Trigger on every push to any branch, and on every PR targeting main
 on:
   push:
-    branches: ['**']
+    branches: [main]
     tags: ['v*']
   pull_request:
     branches: [main]
-  workflow_dispatch:    # Manual trigger from the Actions tab
+  workflow_dispatch:
 
-# Cancel in-progress runs on the same branch when a new commit is pushed
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # ─── Job 1: Build + Test on Java 21 ──────────────────────────────────────
+  # ─── Build + Test ────────────────────────────────────────────────────────
   build-test:
     name: Build & Test
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v4
-
-      - name: ☕ Set up JDK 21
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-
-      - name: 🔨 Compile + Test + Package
-        run: mvn -B -ntp clean verify
-
-      - name: 📊 Upload test results
+      - run: mvn -B -ntp clean verify
+      - uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: |
-            target/surefire-reports/*.xml
-            target/site/jacoco/**/*
+          path: target/surefire-reports/*.xml
           if-no-files-found: ignore
           retention-days: 14
-
-      - name: 📦 Upload built JAR
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: AnimeMagic-jar
           path: target/AnimeMagic-*.jar
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 7
 
-  # ─── Job 2: Resource pack regeneration check ────────────────────────────
+  # ─── Resource Pack ───────────────────────────────────────────────────────
   resource-pack:
-    name: Resource Pack Build
+    name: Resource Pack
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v4
-
-      - name: 🐍 Set up Python 3.11
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: 🎨 Install Pillow
-        run: pip install --no-cache-dir Pillow
-
-      - name: 🖼️ Generate resource pack
-        run: python3 scripts/generate_resource_pack.py
-
-      - name: 📦 Upload resource pack
-        uses: actions/upload-artifact@v4
+      - run: pip install --no-cache-dir Pillow
+      - run: python3 scripts/generate_resource_pack.py
+      - uses: actions/upload-artifact@v4
         with:
           name: AnimeMagicResourcePack
           path: resource_pack/build/AnimeMagicResourcePack.zip
           if-no-files-found: error
-          retention-days: 30
-
-      - name: 🔍 Verify pack contents
-        run: |
-          echo "=== Resource pack contents ==="
+          retention-days: 7
+      - run: |
+          echo "=== Pack contents ==="
           unzip -l resource_pack/build/AnimeMagicResourcePack.zip | tail -5
-          echo "=== File count by type ==="
-          unzip -l resource_pack/build/AnimeMagicResourcePack.zip | grep -c "\.png$"
-          echo "PNG textures above"
+          echo "=== pack.mcmeta ==="
+          cat resource_pack/pack.mcmeta
 
-  # ─── Job 3: Code quality — fail on Java warnings ────────────────────────
-  lint:
-    name: Lint & Code Quality
+  # ─── Publish "latest" release on every push to main ──────────────────────
+  # This job uploads the JAR + resource pack DIRECTLY to a GitHub Release.
+  # GitHub Releases serve files in their original format — NO ZIP wrapping.
+  # Users should download from the Releases page, NOT the Actions artifacts tab
+  # (Actions artifacts are always wrapped in an extra ZIP by GitHub).
+  publish-latest:
+    name: Publish Latest Release
+    needs: [build-test, resource-pack]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v4
-
-      - name: ☕ Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-          cache: 'maven'
-
-      - name: 🔍 Check for compiler warnings
-        run: mvn -B -ntp compile -X -Dmaven.compiler.showWarnings=true -Dmaven.compiler.failOnWarning=false 2>&1 | tee compile.log
-        continue-on-error: true
-
-      - name: 📏 Count source lines
-        run: |
-          echo "=== Source code stats ==="
-          find src/main/java -name "*.java" | wc -l | xargs echo "Java source files:"
-          find src/main/java -name "*.java" -exec cat {} + | wc -l | xargs echo "Total lines of Java:"
-          find src/test/java -name "*.java" | wc -l | xargs echo "Test files:"
-          echo ""
-          echo "=== Per-package breakdown ==="
-          for d in src/main/java/com/anime/magic/*/; do
-            name=$(basename "$d")
-            count=$(find "$d" -name "*.java" | wc -l)
-            printf "  %-15s %d files\n" "$name" "$count"
-          done
-
-  # ─── Job 4: Verify the JAR has all expected classes ─────────────────────
-  verify-jar:
-    name: Verify JAR Contents
-    needs: build-test
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Download JAR artifact
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: AnimeMagic-jar
-          path: artifact
+          path: release-files
+      - uses: actions/download-artifact@v4
+        with:
+          name: AnimeMagicResourcePack
+          path: release-files
 
-      - name: 🔍 Inspect JAR
+      - name: Verify file types
         run: |
-          cd artifact
-          JAR=$(ls AnimeMagic-*.jar | head -1)
-          echo "=== JAR file: $JAR ==="
-          ls -la "$JAR"
+          cd release-files
+          echo "=== Files to publish ==="
+          ls -la
+          file AnimeMagic-*.jar
+          file AnimeMagicResourcePack.zip
+
+      - name: Delete old "latest" release if exists
+        run: |
+          gh release delete latest --yes --cleanup-tag 2>/dev/null || echo "No previous latest release to delete"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create new "latest" release
+        run: |
+          gh release create latest \
+            --title "AnimeMagic — Latest Build" \
+            --notes "Automated build from commit ${{ github.sha }}
+
+          ## Downloads
+
+          - **AnimeMagic-*.jar** — The plugin JAR. Drop into your server's \`plugins/\` folder.
+          - **AnimeMagicResourcePack.zip** — Custom textures + 3D models. Host on a static URL and set \`gui.resource-pack-url\` in config.
+
+          ## How to install
+
+          1. Download the JAR and resource pack from THIS page (not the Actions tab — those are wrapped in extra ZIPs)
+          2. Drop the JAR into \`plugins/\`
+          3. Upload the resource pack ZIP to any static file host
+          4. Set \`gui.resource-pack-url\` in \`config.yml\`
+          5. Restart server" \
+            --target main \
+            --prerelease \
+            release-files/AnimeMagic-*.jar \
+            release-files/AnimeMagicResourcePack.zip
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify release files
+        run: |
+          echo "=== Release assets ==="
+          gh release view latest --json assets --jq '.assets[].name'
           echo ""
-          echo "=== Class file count ==="
-          unzip -l "$JAR" | grep -c "\.class$"
-          echo ""
-          echo "=== Top-level packages ==="
-          unzip -l "$JAR" | grep "\.class$" | awk '{print $4}' | sed 's|/[^/]*$||' | sort -u | head -20
-          echo ""
-          echo "=== Resource files (yml/json) ==="
-          unzip -l "$JAR" | grep -E "\.(yml|json)$" | wc -l
-          echo ""
-          echo "=== Shaded dependencies ==="
-          unzip -l "$JAR" | grep -E "(bstats|json)" | head -5
+          echo "=== Direct download URLs ==="
+          gh release view latest --json assets --jq '.assets[] | "https://github.com/${{ github.repository }}/releases/download/latest/" + .name'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
