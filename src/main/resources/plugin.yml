@@ -1,0 +1,107 @@
+name: AnimeMagic
+version: '${project.version}'
+main: com.anime.magic.AnimeMagicPlugin
+api-version: '1.17'
+author: AnimeMagic Team
+description: Anime-inspired magic plugin with Naruto, Tensura, Mushoku Tensei, One Piece schools, 3D models, animations, custom GUIs, and magical duel minigame.
+folia-supported: false
+
+softdepend:
+  - PlaceholderAPI
+  - Vault
+  - WorldGuard
+
+commands:
+  magic:
+    description: Master AnimeMagic command (admin + info)
+    usage: /magic <help|reload|info|give|version>
+    aliases: [animemagic, am]
+    permission: animemagic.command.magic
+  spell:
+    description: Cast or learn a spell by id
+    usage: /spell <cast|learn|forget|list|info> [spell_id] [target]
+    aliases: [sp, jutsu]
+    permission: animemagic.command.spell
+  mana:
+    description: Show or modify a player's mana
+    usage: /mana <show|set|add|remove> [player] [amount]
+    permission: animemagic.command.mana
+  arena:
+    description: Manage the magical duel minigame arena
+    usage: /arena <create|delete|join|leave|start|stop|list|info> [name]
+    aliases: [duel]
+    permission: animemagic.command.arena
+  spellbook:
+    description: Open the custom magical spellbook GUI
+    usage: /spellbook
+    aliases: [grimoire, book]
+    permission: animemagic.command.spellbook
+  bind:
+    description: Bind spells to control schemes (hotbar/sneak/combo)
+    usage: /bind <hotbar|sneak|combo|list|help> [args]
+    permission: animemagic.command.bind
+
+permissions:
+  animemagic.*:
+    description: Grants all AnimeMagic permissions
+    children:
+      animemagic.command.*: true
+      animemagic.spell.*: true
+      animemagic.arena.*: true
+      animemagic.admin: true
+    default: op
+  animemagic.admin:
+    description: Administrative access (reload, give spells, bypass cooldowns/mana)
+    default: op
+  animemagic.command.*:
+    description: Access to all commands
+    children:
+      animemagic.command.magic: true
+      animemagic.command.spell: true
+      animemagic.command.mana: true
+      animemagic.command.arena: true
+      animemagic.command.spellbook: true
+      animemagic.command.bind: true
+    default: op
+  animemagic.command.magic:
+    description: Allows /magic
+    default: true
+  animemagic.command.spell:
+    description: Allows /spell
+    default: true
+  animemagic.command.spellbook:
+    description: Allows /spellbook
+    default: true
+  animemagic.command.bind:
+    description: Allows /bind (control scheme bindings)
+    default: true
+  animemagic.command.mana:
+    description: Allows /mana show on self
+    default: true
+  animemagic.command.arena:
+    description: Allows /arena join/leave
+    default: true
+  animemagic.command.arena.admin:
+    description: Allows /arena create/delete/start/stop
+    default: op
+  animemagic.spell.*:
+    description: Cast any spell from any school
+    default: op
+  animemagic.spell.naruto:
+    description: Cast Naruto-school spells
+    default: true
+  animemagic.spell.tensura:
+    description: Cast Tensura-school spells
+    default: true
+  animemagic.spell.mushoku:
+    description: Cast Mushoku Tensei-school spells
+    default: true
+  animemagic.spell.onepiece:
+    description: Cast One Piece-school spells
+    default: true
+  animemagic.arena.join:
+    description: Join an arena queue
+    default: true
+  animemagic.arena.manage:
+    description: Create/delete/start/stop arenas
+    default: op

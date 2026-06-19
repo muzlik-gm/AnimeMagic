@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/nether_star"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 2001
+      },
+      "model": "anime_magic:item/nether_star_2001"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2002
+      },
+      "model": "anime_magic:item/nether_star_2002"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2003
+      },
+      "model": "anime_magic:item/nether_star_2003"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2004
+      },
+      "model": "anime_magic:item/nether_star_2004"
+    }
+  ]
+}

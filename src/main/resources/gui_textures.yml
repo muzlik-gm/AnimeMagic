@@ -1,0 +1,68 @@
+textures:
+  filter-all:
+    material: PAPER
+    model: 1001
+    display: "&fAll Schools"
+  filter-naruto:
+    material: PAPER
+    model: 1002
+    display: "&6Naruto"
+  filter-tensura:
+    material: PAPER
+    model: 1003
+    display: "&5Tensura"
+  filter-mushoku:
+    material: PAPER
+    model: 1004
+    display: "&3Mushoku Tensei"
+  filter-onepiece:
+    material: PAPER
+    model: 1005
+    display: "&bOne Piece"
+  next-page:
+    material: ARROW
+    model: 1010
+    display: "&aNext"
+  prev-page:
+    material: ARROW
+    model: 1011
+    display: "&aPrev"
+  close:
+    material: BARRIER
+    model: 1012
+    display: "&cClose"
+  icon-naruto:
+    material: NETHER_STAR
+    model: 2001
+    display: "&6Naruto School"
+  icon-tensura:
+    material: NETHER_STAR
+    model: 2002
+    display: "&5Tensura School"
+  icon-mushoku:
+    material: NETHER_STAR
+    model: 2003
+    display: "&3Mushoku Tensei School"
+  icon-onepiece:
+    material: NETHER_STAR
+    model: 2004
+    display: "&bOne Piece School"
+  border-corner:
+    material: PURPLE_STAINED_GLASS_PANE
+    model: 0
+    display: " "
+  border-edge:
+    material: MAGENTA_STAINED_GLASS_PANE
+    model: 0
+    display: " "
+
+layout:
+  rows: 6
+  filter-slots: [0, 1, 2, 3, 4]
+  nav-next: 53
+  nav-prev: 45
+  nav-close: 49
+  border-slots: [6, 7, 8, 15, 16, 17, 24, 26, 33, 35, 42, 43, 44, 46, 47, 48, 50, 51, 52]
+  spell-slots-start: 19
+  spell-slots-end: 44
+  spell-slots-skip: [24, 26, 33, 35]

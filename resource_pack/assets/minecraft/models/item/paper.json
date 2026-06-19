@@ -1,0 +1,62 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/paper"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1001
+      },
+      "model": "anime_magic:item/paper_1001"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1002
+      },
+      "model": "anime_magic:item/paper_1002"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1003
+      },
+      "model": "anime_magic:item/paper_1003"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1004
+      },
+      "model": "anime_magic:item/paper_1004"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1005
+      },
+      "model": "anime_magic:item/paper_1005"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1010
+      },
+      "model": "anime_magic:item/paper_1010"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1011
+      },
+      "model": "anime_magic:item/paper_1011"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1012
+      },
+      "model": "anime_magic:item/paper_1012"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7001
+      },
+      "model": "anime_magic:item/paper_7001"
+    }
+  ]
+}

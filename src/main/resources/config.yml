@@ -1,0 +1,107 @@
+# AnimeMagic global configuration
+
+general:
+  language: en
+  debug: false
+  disabled-worlds:
+    - "spawn"
+  global-cast-cooldown-ms: 250
+
+mana:
+  enabled: true
+  base-max: 100
+  regen-per-second: 2.0
+  permission-bonus:
+    "animemagic.mana.250": 150
+    "animemagic.mana.500": 400
+    "animemagic.mana.1000": 900
+  show-bossbar: true
+  bossbar-color: PURPLE
+  bossbar-style: SEGMENTED_20
+
+schools:
+  naruto:
+    enabled: true
+    damage-multiplier: 1.0
+    cooldown-multiplier: 1.0
+  tensura:
+    enabled: true
+    damage-multiplier: 1.0
+    cooldown-multiplier: 1.0
+  mushoku:
+    enabled: true
+    require-chant: true
+    damage-multiplier: 1.0
+    cooldown-multiplier: 1.0
+  onepiece:
+    enabled: true
+    damage-multiplier: 1.0
+    cooldown-multiplier: 1.0
+
+effects:
+  max-per-player: 8
+  particle-budget-per-tick: 4000
+  render-distance: 64
+  tick-interval: 1
+  default-density: 32
+
+gui:
+  resource-pack-url: ""
+  resource-pack-hash: ""
+  force-resource-pack: false
+  spellbook-rows: 6
+  show-lore: true
+
+arena:
+  min-players: 2
+  max-players: 8
+  match-duration-seconds: 300
+  sudden-death-seconds: 60
+  reward-command: "eco give %player% 100"
+  teleport-back: true
+
+metrics:
+  enabled: true
+  plugin-id: 0
+
+storage:
+  type: yaml
+  sqlite:
+    file: "animemagic.db"
+  mysql:
+    host: localhost
+    port: 3306
+    database: animemagic
+    username: root
+    password: ""
+  auto-save-seconds: 300
+
+models:
+  enabled: true
+  max-per-player: 16
+  default-lifetime-ticks: 200
+  interpolation-duration: 2
+
+animations:
+  enabled: true
+  tick-interval: 1
+
+controls:
+  hotbar:
+    enabled: true
+    show-equipped-message: true
+  wheel:
+    enabled: true
+    auto-close-ticks: 100
+  sneak:
+    enabled: true
+    target-range: 25.0
+  combo:
+    enabled: true
+    window-ms: 1500
+    max-length: 8
+  castbar:
+    interrupt-on-damage: true
+    interrupt-on-sneak: true
+
+config-version: 2

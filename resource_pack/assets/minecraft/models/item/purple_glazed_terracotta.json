@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/purple_glazed_terracotta"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 6001
+      },
+      "model": "anime_magic:item/purple_glazed_terracotta_6001"
+    }
+  ]
+}

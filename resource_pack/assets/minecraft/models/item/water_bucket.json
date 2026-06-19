@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/water_bucket"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5001
+      },
+      "model": "anime_magic:item/water_bucket_5001"
+    }
+  ]
+}

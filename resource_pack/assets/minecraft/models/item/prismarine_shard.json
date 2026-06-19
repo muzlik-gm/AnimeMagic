@@ -1,0 +1,20 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/prismarine_shard"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3002
+      },
+      "model": "anime_magic:item/prismarine_shard_3002"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7002
+      },
+      "model": "anime_magic:item/prismarine_shard_7002"
+    }
+  ]
+}
