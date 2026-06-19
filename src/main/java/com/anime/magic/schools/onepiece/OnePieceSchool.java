@@ -21,5 +21,11 @@ public final class OnePieceSchool implements SpellSchool {
         registry.register(new ConquerorsHaki(plugin));
         registry.register(new ArmamentHaki(plugin));
         registry.register(new GomuGomuSkill(plugin));
+        // v2 Ultimates
+        registry.register(new ObservationHakiSpell(plugin));
+        registry.register(new GearSecondSpell(plugin));
+        registry.register(new GearThirdSpell(plugin));
+        registry.register(new GearFourthSpell(plugin));
+        registry.register(new VoiceOfAllThingsSpell(plugin));
     }
 }

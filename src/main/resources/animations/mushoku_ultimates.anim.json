@@ -1,0 +1,44 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.atomic flare": {
+      "loop": false,
+      "length": 2.0,
+      "bones": {
+        "root": {
+          "scale": {
+            "0.0": [0.05, 0.05, 0.05],
+            "0.5": { "vector": [0.8, 0.8, 0.8], "easing": "easeInExpo" },
+            "1.0": { "vector": [1.5, 1.5, 1.5], "easing": "easeOutCubic" },
+            "1.5": { "vector": [0.3, 0.3, 0.3], "easing": "easeInExpo" },
+            "2.0": [0.0, 0.0, 0.0]
+          },
+          "rotation": { "0.0": [0, 0, 0], "2.0": [0, 1440, 0] }
+        }
+      }
+    },
+    "animation.quake.erupt": {
+      "loop": false,
+      "length": 1.5,
+      "bones": {
+        "root": {
+          "scale": {
+            "0.0": [0.1, 0.1, 0.1],
+            "1.0": { "vector": [3.0, 3.0, 3.0], "easing": "easeOutExpo" },
+            "1.5": [0.0, 0.0, 0.0]
+          }
+        }
+      }
+    },
+    "animation.storm.swirl": {
+      "loop": true,
+      "length": 2.0,
+      "bones": {
+        "root": {
+          "rotation": { "0.0": [0, 0, 0], "1.0": [0, 180, 0], "2.0": [0, 360, 0] },
+          "scale": { "0.0": [1.0, 1.0, 1.0], "1.0": [1.2, 1.5, 1.2], "2.0": [1.0, 1.0, 1.0] }
+        }
+      }
+    }
+  }
+}

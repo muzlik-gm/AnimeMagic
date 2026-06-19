@@ -30,5 +30,11 @@ public final class MushokuSchool implements SpellSchool {
         registry.register(new SaintWaterSpell(plugin, incantation));
         registry.register(new SaintFireSpell(plugin, incantation));
         registry.register(new EmperorEarthSpell(plugin, incantation));
+        // v2 Ultimates
+        registry.register(new StormSpell(plugin));
+        registry.register(new AtomicFlareSpell(plugin));
+        registry.register(new GravitySpell(plugin));
+        registry.register(new QuakeSpell(plugin));
+        registry.register(new TimeWarpSpell(plugin));
     }
 }

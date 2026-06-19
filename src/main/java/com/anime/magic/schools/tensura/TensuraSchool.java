@@ -21,5 +21,11 @@ public final class TensuraSchool implements SpellSchool {
         registry.register(new MagiculeBlade(plugin));
         registry.register(new GluttonySkill(plugin));
         registry.register(new RazorEdgeSkill(plugin));
+        // v2 Ultimates
+        registry.register(new DisintegrationSpell(plugin));
+        registry.register(new BeelzebuthSpell(plugin));
+        registry.register(new MegiddoSpell(plugin));
+        registry.register(new RaphaelSpell(plugin));
+        registry.register(new TrueDragonSpell(plugin));
     }
 }

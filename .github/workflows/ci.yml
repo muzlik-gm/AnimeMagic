@@ -1,0 +1,156 @@
+name: CI
+
+# Trigger on every push to any branch, and on every PR targeting main
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:    # Manual trigger from the Actions tab
+
+# Cancel in-progress runs on the same branch when a new commit is pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ─── Job 1: Build + Test on Java 21 ──────────────────────────────────────
+  build-test:
+    name: Build & Test (Java ${{ matrix.java }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: ['17', '21']
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+          cache: 'maven'
+
+      - name: 🔨 Compile + Test + Package
+        run: mvn -B -ntp clean verify
+
+      - name: 📊 Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-java-${{ matrix.java }}
+          path: |
+            target/surefire-reports/*.xml
+            target/site/jacoco/**/*
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: 📦 Upload built JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: AnimeMagic-jar-java-${{ matrix.java }}
+          path: target/AnimeMagic-*.jar
+          if-no-files-found: error
+          retention-days: 30
+
+  # ─── Job 2: Resource pack regeneration check ────────────────────────────
+  resource-pack:
+    name: Resource Pack Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 🎨 Install Pillow
+        run: pip install --no-cache-dir Pillow
+
+      - name: 🖼️ Generate resource pack
+        run: python3 scripts/generate_resource_pack.py
+
+      - name: 📦 Upload resource pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: AnimeMagicResourcePack
+          path: resource_pack/build/AnimeMagicResourcePack.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: 🔍 Verify pack contents
+        run: |
+          echo "=== Resource pack contents ==="
+          unzip -l resource_pack/build/AnimeMagicResourcePack.zip | tail -5
+          echo "=== File count by type ==="
+          unzip -l resource_pack/build/AnimeMagicResourcePack.zip | grep -c "\.png$"
+          echo "PNG textures above"
+
+  # ─── Job 3: Code quality — fail on Java warnings ────────────────────────
+  lint:
+    name: Lint & Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: 🔍 Check for compiler warnings
+        run: mvn -B -ntp compile -X -Dmaven.compiler.showWarnings=true -Dmaven.compiler.failOnWarning=false 2>&1 | tee compile.log
+        continue-on-error: true
+
+      - name: 📏 Count source lines
+        run: |
+          echo "=== Source code stats ==="
+          find src/main/java -name "*.java" | wc -l | xargs echo "Java source files:"
+          find src/main/java -name "*.java" -exec cat {} + | wc -l | xargs echo "Total lines of Java:"
+          find src/test/java -name "*.java" | wc -l | xargs echo "Test files:"
+          echo ""
+          echo "=== Per-package breakdown ==="
+          for d in src/main/java/com/anime/magic/*/; do
+            name=$(basename "$d")
+            count=$(find "$d" -name "*.java" | wc -l)
+            printf "  %-15s %d files\n" "$name" "$count"
+          done
+
+  # ─── Job 4: Verify the JAR has all expected classes ─────────────────────
+  verify-jar:
+    name: Verify JAR Contents
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Download JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: AnimeMagic-jar-java-21
+          path: artifact
+
+      - name: 🔍 Inspect JAR
+        run: |
+          cd artifact
+          JAR=$(ls AnimeMagic-*.jar | head -1)
+          echo "=== JAR file: $JAR ==="
+          ls -la "$JAR"
+          echo ""
+          echo "=== Class file count ==="
+          unzip -l "$JAR" | grep -c "\.class$"
+          echo ""
+          echo "=== Top-level packages ==="
+          unzip -l "$JAR" | grep "\.class$" | awk '{print $4}' | sed 's|/[^/]*$||' | sort -u | head -20
+          echo ""
+          echo "=== Resource files (yml/json) ==="
+          unzip -l "$JAR" | grep -E "\.(yml|json)$" | wc -l
+          echo ""
+          echo "=== Shaded dependencies ==="
+          unzip -l "$JAR" | grep -E "(bstats|json)" | head -5

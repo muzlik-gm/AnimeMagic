@@ -9,12 +9,17 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Naruto school — Chakra nature transformations and signature jutsu.
  *
- * <p>Spells:</p>
+ * <p>Spells (9 total):</p>
  * <ul>
- *   <li>{@link FireballJutsu} — Fire Style: Fireball Jutsu (with 3D orb model + charge animation)</li>
- *   <li>{@link ChidoriSpell} — Lightning Style: Chidori (with 3D blade model + slash animation)</li>
- *   <li>{@link RasenganSpell} — Spiraling sphere melee (with 3D orb model + spin animation)</li>
- *   <li>{@link ShadowCloneJutsu} — Summons temporary combat clones</li>
+ *   <li>{@link FireballJutsu} — Katon: Gōkakyū no Jutsu</li>
+ *   <li>{@link ChidoriSpell} — Raiton: Chidori</li>
+ *   <li>{@link RasenganSpell} — Spiraling Sphere</li>
+ *   <li>{@link ShadowCloneJutsu} — Kage Bunshin no Jutsu</li>
+ *   <li>{@link PhoenixFlowerSpell} — Katon: Hōsenka no Jutsu (barrage)</li>
+ *   <li>{@link RasenshurikenSpell} — Fūton: Rasenshuriken (throwable)</li>
+ *   <li>{@link KirinSpell} — Raiton: Kirin (lightning strike)</li>
+ *   <li>{@link SageModeSpell} — Sennin Mōdo (transformation)</li>
+ *   <li>{@link SixPathsSpell} — Rikudō Sennin Mōdo (ultimate transformation)</li>
  * </ul>
  */
 public final class NarutoSchool implements SpellSchool {
@@ -35,5 +40,11 @@ public final class NarutoSchool implements SpellSchool {
         registry.register(new ChidoriSpell(plugin));
         registry.register(new RasenganSpell(plugin));
         registry.register(new ShadowCloneJutsu(plugin));
+        // v2 Ultimates
+        registry.register(new PhoenixFlowerSpell(plugin));
+        registry.register(new RasenshurikenSpell(plugin));
+        registry.register(new KirinSpell(plugin));
+        registry.register(new SageModeSpell(plugin));
+        registry.register(new SixPathsSpell(plugin));
     }
 }
