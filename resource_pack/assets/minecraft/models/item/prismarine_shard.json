@@ -15,6 +15,18 @@
         "custom_model_data": 7002
       },
       "model": "anime_magic:item/prismarine_shard_7002"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7007
+      },
+      "model": "anime_magic:item/prismarine_shard_7007"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7009
+      },
+      "model": "anime_magic:item/prismarine_shard_7009"
     }
   ]
 }

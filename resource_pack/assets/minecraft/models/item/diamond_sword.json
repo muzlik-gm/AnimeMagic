@@ -9,6 +9,12 @@
         "custom_model_data": 4001
       },
       "model": "anime_magic:item/diamond_sword_4001"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7006
+      },
+      "model": "anime_magic:item/diamond_sword_7006"
     }
   ]
 }

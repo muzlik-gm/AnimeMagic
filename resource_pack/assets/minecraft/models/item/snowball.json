@@ -15,6 +15,12 @@
         "custom_model_data": 7003
       },
       "model": "anime_magic:item/snowball_7003"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7008
+      },
+      "model": "anime_magic:item/snowball_7008"
     }
   ]
 }

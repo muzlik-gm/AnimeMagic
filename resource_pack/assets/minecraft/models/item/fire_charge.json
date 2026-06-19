@@ -9,6 +9,18 @@
         "custom_model_data": 3001
       },
       "model": "anime_magic:item/fire_charge_3001"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7004
+      },
+      "model": "anime_magic:item/fire_charge_7004"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7011
+      },
+      "model": "anime_magic:item/fire_charge_7011"
     }
   ]
 }

@@ -9,6 +9,12 @@
         "custom_model_data": 6001
       },
       "model": "anime_magic:item/purple_glazed_terracotta_6001"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7005
+      },
+      "model": "anime_magic:item/purple_glazed_terracotta_7005"
     }
   ]
 }
