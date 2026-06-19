@@ -2762,7 +2762,7 @@ def main():
     print(f"\n[2/4] Generating item model JSONs for {len(OVERRIDES)} vanilla items...")
     for vanilla_item, overrides in OVERRIDES.items():
         override_list = []
-        for cmd, _ in overrides:
+        for cmd, texture_path in overrides:
             custom_model_name = f"{vanilla_item}_{cmd}"
             custom_model_path = f"anime_magic:item/{custom_model_name}"
 
@@ -2793,7 +2793,7 @@ def main():
                 # Flat item model — just references the texture
                 model_json = {
                     "parent": "minecraft:item/generated",
-                    "textures": {"layer0": f"anime_magic:item/{custom_model_name}"}
+                    "textures": {"layer0": texture_path}
                 }
 
             (models_dir / f"{custom_model_name}.json").write_text(
@@ -2818,8 +2818,11 @@ def main():
     # 3) pack.mcmeta
     pack_mcmeta = {
         "pack": {
-            "pack_format": 57,
-            "description": "§dAnimeMagic §7v1.0.0-alpha §8— §fCinematic 32x32 pixel art + multi-cube 3D models"
+            "pack_format": 84,
+            "supported_formats": [15, 100],
+            "min_format": 15,
+            "max_format": 100,
+            "description": "AnimeMagic v1.0.0-alpha"
         }
     }
     (PACK_ROOT / "pack.mcmeta").write_text(json.dumps(pack_mcmeta, indent=2))

@@ -1,6 +1,12 @@
 {
   "pack": {
-    "pack_format": 57,
-    "description": "\u00a7dAnimeMagic \u00a77v1.0.0-alpha \u00a78\u2014 \u00a7fCinematic 32x32 pixel art + multi-cube 3D models"
+    "pack_format": 84,
+    "supported_formats": [
+      15,
+      100
+    ],
+    "min_format": 15,
+    "max_format": 100,
+    "description": "AnimeMagic v1.0.0-alpha"
   }
 }

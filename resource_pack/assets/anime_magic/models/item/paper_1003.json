@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "anime_magic:item/paper_1003"
+    "layer0": "anime_magic:item/filter_tensura"
   }
 }

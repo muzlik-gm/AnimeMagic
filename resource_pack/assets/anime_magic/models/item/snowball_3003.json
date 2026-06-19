@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "anime_magic:item/snowball_3003"
+    "layer0": "anime_magic:item/spell_rasengan"
   }
 }

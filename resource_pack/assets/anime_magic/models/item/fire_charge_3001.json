@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "anime_magic:item/fire_charge_3001"
+    "layer0": "anime_magic:item/spell_fireball"
   }
 }

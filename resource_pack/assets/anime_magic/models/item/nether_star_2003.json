@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "anime_magic:item/nether_star_2003"
+    "layer0": "anime_magic:item/icon_mushoku"
   }
 }

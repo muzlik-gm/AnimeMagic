@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "anime_magic:item/stone_5003"
+    "layer0": "anime_magic:item/spell_emperor_earth"
   }
 }

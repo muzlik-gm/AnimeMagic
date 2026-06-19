@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "anime_magic:item/obsidian_6002"
+    "layer0": "anime_magic:item/spell_armament"
   }
 }

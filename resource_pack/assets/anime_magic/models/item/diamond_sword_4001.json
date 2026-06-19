@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "anime_magic:item/diamond_sword_4001"
+    "layer0": "anime_magic:item/spell_magicule_blade"
   }
 }

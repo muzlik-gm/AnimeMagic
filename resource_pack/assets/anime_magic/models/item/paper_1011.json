@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "anime_magic:item/paper_1011"
+    "layer0": "anime_magic:item/nav_prev"
   }
 }

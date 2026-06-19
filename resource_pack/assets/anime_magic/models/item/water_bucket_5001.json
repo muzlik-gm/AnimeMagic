@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "anime_magic:item/water_bucket_5001"
+    "layer0": "anime_magic:item/spell_saint_water"
   }
 }
