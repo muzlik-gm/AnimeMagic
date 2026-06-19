@@ -2,6 +2,8 @@ package com.anime.magic.commands;
 
 import com.anime.magic.AnimeMagicPlugin;
 import com.anime.magic.controls.ComboControl;
+import com.anime.magic.controls.DoubleJumpCastControl;
+import com.anime.magic.controls.LookCastControl;
 import com.anime.magic.controls.SneakCastControl;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,7 +17,7 @@ import java.util.stream.Collectors;
 /** Bind command: maps a control scheme slot/sequence to a spell. */
 public final class BindCommand implements CommandExecutor, TabCompleter {
     private final AnimeMagicPlugin plugin;
-    private static final List<String> SUBS = Arrays.asList("hotbar", "sneak", "combo", "list", "help");
+    private static final List<String> SUBS = Arrays.asList("hotbar", "sneak", "combo", "look", "doublejump", "list", "help");
 
     public BindCommand(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
@@ -78,6 +80,34 @@ public final class BindCommand implements CommandExecutor, TabCompleter {
                 plugin.getControlManager().save();
             }
             case "list" -> listBindings(p);
+            case "look" -> {
+                var lc = (LookCastControl) plugin.getControlManager().get("look");
+                if (lc == null) { sender.sendMessage("§cLook-cast control not enabled."); return true; }
+                String spellId = args.length >= 2 ? args[1] : null;
+                if (spellId != null && plugin.getSpellRegistry().get(spellId) == null) {
+                    plugin.getMessages().send(sender, "spell.unknown", "%id%", spellId); return true;
+                }
+                lc.bind(p.getUniqueId(), spellId);
+                if (spellId == null) sender.sendMessage("§aCleared look-cast binding.");
+                else {
+                    var spell = plugin.getSpellRegistry().get(spellId);
+                    sender.sendMessage("§aBound look-cast to §e" + spell.displayName());
+                }
+            }
+            case "doublejump" -> {
+                var djc = (DoubleJumpCastControl) plugin.getControlManager().get("doublejump");
+                if (djc == null) { sender.sendMessage("§cDouble-jump control not enabled."); return true; }
+                String spellId = args.length >= 2 ? args[1] : null;
+                if (spellId != null && plugin.getSpellRegistry().get(spellId) == null) {
+                    plugin.getMessages().send(sender, "spell.unknown", "%id%", spellId); return true;
+                }
+                djc.bind(p.getUniqueId(), spellId);
+                if (spellId == null) sender.sendMessage("§aCleared double-jump binding.");
+                else {
+                    var spell = plugin.getSpellRegistry().get(spellId);
+                    sender.sendMessage("§aBound double-jump to §e" + spell.displayName());
+                }
+            }
             default -> sendHelp(sender);
         }
         return true;
@@ -119,9 +149,13 @@ public final class BindCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("§e/bind hotbar <0-8> [spell_id] §7- bind/clear a hotbar slot");
         sender.sendMessage("§e/bind sneak [spell_id] §7- bind/clear sneak-cast");
         sender.sendMessage("§e/bind combo <L/R seq> [spell_id] §7- bind/clear a hand-seal combo");
+        sender.sendMessage("§e/bind look [spell_id] §7- bind/clear look-cast (hold sneak + look at target 1.5s)");
+        sender.sendMessage("§e/bind doublejump [spell_id] §7- bind/clear double-jump cast");
         sender.sendMessage("§e/bind list §7- show your bindings");
         sender.sendMessage("§7Example: §e/bind hotbar 1 naruto:fireball");
         sender.sendMessage("§7Example: §e/bind combo LRL naruto:chidori");
+        sender.sendMessage("§7Example: §e/bind look onepiece:conquerors_haki");
+        sender.sendMessage("§7Example: §e/bind doublejump onepiece:gomu_pistol");
     }
 
     @Override
@@ -133,6 +167,8 @@ public final class BindCommand implements CommandExecutor, TabCompleter {
             if (args.length == 3) return spellSuggestions(args[2]);
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("sneak")) return spellSuggestions(args[1]);
+        if (args.length == 2 && args[0].equalsIgnoreCase("look")) return spellSuggestions(args[1]);
+        if (args.length == 2 && args[0].equalsIgnoreCase("doublejump")) return spellSuggestions(args[1]);
         if (args.length >= 2 && args[0].equalsIgnoreCase("combo")) {
             if (args.length == 2) return List.of("L", "R", "LR", "RL", "LLR", "LRL", "RLR", "RRL");
             if (args.length == 3) return spellSuggestions(args[2]);

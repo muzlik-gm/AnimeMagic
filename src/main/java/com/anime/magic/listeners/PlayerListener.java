@@ -21,6 +21,10 @@ public final class PlayerListener implements Listener {
         plugin.getManaManager().load(p.getUniqueId());
         int bonus = plugin.getManaManager().permissionBonus(p.getUniqueId());
         plugin.getManaManager().setMaxBonus(p.getUniqueId(), bonus);
+        // Apply default hotbar loadout (Naruto by default) on first join
+        if (plugin.getDefaultBindings() != null) {
+            plugin.getDefaultBindings().applyDefaultOnFirstJoin(p);
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

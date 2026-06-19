@@ -1,0 +1,36 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.haki.burst": {
+      "loop": false,
+      "length": 1.5,
+      "bones": {
+        "root": {
+          "scale": {
+            "0.0": [0.1, 0.1, 0.1],
+            "0.3": { "vector": [1.5, 1.5, 1.5], "easing": "easeOutExpo" },
+            "0.6": { "vector": [2.5, 2.5, 2.5], "easing": "easeOutCubic" },
+            "1.0": { "vector": [3.0, 3.0, 3.0], "easing": "easeOutQuad" },
+            "1.5": [0.0, 0.0, 0.0]
+          },
+          "rotation": {
+            "0.0": [0, 0, 0],
+            "1.5": [0, 360, 0]
+          }
+        }
+      }
+    },
+    "animation.haki.collapse": {
+      "loop": false,
+      "length": 0.3,
+      "bones": {
+        "root": {
+          "scale": {
+            "0.0": [3.0, 3.0, 3.0],
+            "0.3": [0.0, 0.0, 0.0]
+          }
+        }
+      }
+    }
+  }
+}

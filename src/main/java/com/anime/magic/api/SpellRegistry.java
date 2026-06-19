@@ -1,5 +1,7 @@
 package com.anime.magic.api;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -1,6 +1,7 @@
 package com.anime.magic.controls;
 
 import com.anime.magic.AnimeMagicPlugin;
+import com.anime.magic.api.Spell;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

@@ -20,29 +20,41 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * <b>Katon: Gōkakyū no Jutsu</b> — Fire Style: Fireball Jutsu.
+ * <b>Fireball Jutsu v2 — Production Overhaul (Katon: Gōkakyū no Jutsu)</b>
  *
- * <p>The caster charges up the fireball in their hand for 1 second, visualized by
- * a 3D {@code magic_orb} model playing the {@code cast_charge} animation in front
- * of the hand. Then a stream of fire particles travels along a Bézier curve toward
- * the target. On impact, the orb model is removed and a sphere of expanding flame
- * particles bursts out, dealing fire damage to all living entities within 4 blocks.
- * A ring of lava particles expands outward for the visual blast wave.</p>
+ * <p>Multi-phase anime-accurate fireball:</p>
+ *
+ * <ol>
+ *   <li><b>Phase 1 — Hand Seal (15 ticks / 0.75s):</b> Player sneaks to form the seal.
+ *       A 3D {@code fireball_orb} model spawns in front of the mouth, playing
+ *       {@code animation.fireball.charge_v2}. Flame particles curl around the orb,
+ *       growing in intensity. Sound: ambient fire crackle.</li>
+ *
+ *   <li><b>Phase 2 — Inhale (5 ticks / 0.25s):</b> The orb shrinks slightly and brightens.
+ *       Sound: deep inhale.</li>
+ *
+ *   <li><b>Phase 3 — Exhale Launch:</b> The orb detaches and travels along a Bezier
+ *       curve toward the target. Flame particles trail behind. Sound: dragon breath.</li>
+ *
+ *   <li><b>Phase 4 — Impact:</b> On hit, three expanding spheres (FLAME, LAVA, SMOKE)
+ *       ripple outward. All entities within 5 blocks take 12 damage + 4 seconds of fire.
+ *       A ring of lava particles expands for the blast wave.</li>
+ * </ol>
  */
 public final class FireballJutsu implements Spell {
-
     private final AnimeMagicPlugin plugin;
 
     public FireballJutsu(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "naruto:fireball"; }
-    @Override public @NotNull String displayName() { return "§6Katon §8» §cGōkakyū no Jutsu"; }
+    @Override public @NotNull String displayName() { return "§6§lKaton §8» §c§lGōkakyū no Jutsu"; }
     @Override public @NotNull SchoolId school() { return SchoolId.NARUTO; }
-    @Override public int manaCost() { return 25; }
-    @Override public long cooldownMs() { return 4000; }
+    @Override public int manaCost() { return 30; }
+    @Override public long cooldownMs() { return 5000; }
     @Override public int requiredLevel() { return 5; }
     @Override public @NotNull String description() {
-        return "Exhale a great fireball that explodes on impact, scorching nearby foes.";
+        return "Exhale a great fireball that explodes on impact, scorching nearby foes. "
+                + "4-phase cast: Hand Seal -> Inhale -> Exhale -> Impact.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("FIRE_CHARGE", 3001, "§cFireball Jutsu");
@@ -52,76 +64,97 @@ public final class FireballJutsu implements Spell {
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
 
-        // --- Charge phase: 3D orb model with cast_charge animation in hand ---
-        ModelDisplay chargeOrb = SpellEffects.spawnInHand(plugin, p, "magic_orb", "cast_charge", 30);
-        // Apply a slight orange tint effect by spawning flame particles around the model
+        // Phase 1: Hand seal — spawn fireball orb model with charge animation
+        Location mouthLoc = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.6));
+        ModelDisplay orb = SpellEffects.spawnAnimated(plugin, p, "fireball_orb", "animation.fireball.charge_v2",
+                mouthLoc, 25, null);
+
+        // Flame particles curling around orb during phase 1
         new BukkitRunnable() {
             int t = 0;
             @Override public void run() {
-                if (t++ > 30) { cancel(); return; }
-                Location hand = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.8));
-                if (hand.getWorld() == null) return;
-                hand.getWorld().spawnParticle(Particle.FLAME, hand, 3, 0.2, 0.2, 0.2, 0.05);
-                if (t % 5 == 0) {
-                    LocationUtil.sound(hand, Sound.BLOCK_FIRE_AMBIENT, 0.5f, 1.2f);
+                if (t >= 20) { cancel(); return; }
+                Location mouth = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.6));
+                if (mouth.getWorld() == null) return;
+                // Curl flames
+                int count = 2 + t / 5; // 2 to 6 over time
+                for (int i = 0; i < count; i++) {
+                    double angle = (t * 0.5) + (i * Math.PI * 2 / count);
+                    double r = 0.3 + t * 0.03;
+                    Location flame = mouth.clone().add(Math.cos(angle) * r, 0, Math.sin(angle) * r);
+                    mouth.getWorld().spawnParticle(Particle.FLAME, flame, 1, 0.05, 0.05, 0.05, 0.02);
                 }
+                if (t % 5 == 0) {
+                    LocationUtil.sound(mouth, Sound.BLOCK_FIRE_AMBIENT, 0.4f + t * 0.02f, 0.8f + t * 0.03f);
+                }
+                t++;
             }
         }.runTaskTimer(plugin, 0L, 1L);
 
-        // --- After 1.5s charge, launch the fireball ---
+        // Phase 2 + 3: Inhale then launch at 20 ticks
         new BukkitRunnable() {
             @Override public void run() {
-                if (chargeOrb != null) chargeOrb.remove(); // The charge orb is "consumed" by the launch
-                launch(caster, p);
+                // Brief inhale: orb shrinks + brightens
+                if (orb != null && !orb.isDead()) {
+                    orb.setTransform(0, 0, 0, 0, 0, 0, 0.7f, 0.7f, 0.7f);
+                }
+                Location mouth = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.6));
+                LocationUtil.sound(mouth, Sound.ENTITY_PLAYER_BREATH, 1.0f, 0.5f);
+                // Launch after 5 ticks
+                new BukkitRunnable() {
+                    @Override public void run() { launch(caster, p, orb); }
+                }.runTaskLater(plugin, 5L);
             }
-        }.runTaskLater(plugin, 30L);
+        }.runTaskLater(plugin, 20L);
 
         return true;
     }
 
-    private void launch(Caster caster, Player p) {
-        Location start = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.5));
-        LivingEntity target = caster.targetEntity(40);
+    private void launch(Caster caster, Player p, ModelDisplay orb) {
+        // Remove the orb model — it's "consumed" by the launch
+        if (orb != null) orb.remove();
+
+        Location start = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.6));
+        LivingEntity target = caster.targetEntity(45);
         Location end = target != null ? target.getEyeLocation()
-                : start.clone().add(p.getLocation().getDirection().multiply(30));
+                : start.clone().add(p.getLocation().getDirection().multiply(35));
 
-        // Bezier trail from mouth → target
+        // Phase 3: Bezier flame trail from mouth to target
         plugin.getParticleEngine().play(
-                new BezierCurve(plugin, p, start, end,
-                        Particle.FLAME, 30, 1.5));
+                new BezierCurve(plugin, p, start, end, Particle.FLAME, 25, 1.5));
+        // Secondary smoke trail
+        plugin.getParticleEngine().play(
+                new BezierCurve(plugin, p, start, end, Particle.LARGE_SMOKE, 25, 1.0));
 
-        // Smoke trail at the start
-        new BukkitRunnable() {
-            int ticks = 0;
-            @Override public void run() {
-                if (ticks++ > 10) { cancel(); return; }
-                LocationUtil.sound(start, Sound.ENTITY_BLAZE_SHOOT, 0.5f, 1.4f);
-            }
-        }.runTaskTimer(plugin, 0L, 2L);
+        LocationUtil.sound(start, Sound.ENTITY_ENDER_DRAGON_SHOOT, 1.2f, 0.7f);
+        LocationUtil.sound(start, Sound.ENTITY_BLAZE_SHOOT, 1.0f, 0.8f);
 
-        // Delayed explosion at end
-        int delay = 30;
+        // Phase 4: Impact at end of bezier duration
         new BukkitRunnable() {
             @Override public void run() {
                 if (end.getWorld() == null) return;
-                // Visual: expanding spheres of flame + lava + smoke ring
+                // Three expanding spheres
                 plugin.getParticleEngine().play(
-                        new SphereAnimation(plugin, p, end, Particle.FLAME, 20, 1.0, 4.0, 80));
+                        new SphereAnimation(plugin, p, end, Particle.FLAME, 15, 1.0, 5.0, 100));
                 plugin.getParticleEngine().play(
-                        new SphereAnimation(plugin, p, end, Particle.LAVA, 15, 0.5, 3.0, 40));
+                        new SphereAnimation(plugin, p, end, Particle.LAVA, 12, 0.5, 4.0, 50));
                 plugin.getParticleEngine().play(
-                        new RingBurst(plugin, p, end, Particle.LARGE_SMOKE, 15, 6.0, 48));
-                LocationUtil.sound(end, Sound.ENTITY_GENERIC_EXPLODE, 1.5f, 0.8f);
+                        new SphereAnimation(plugin, p, end, Particle.LARGE_SMOKE, 10, 0.3, 3.0, 40));
+                // Ring burst
+                plugin.getParticleEngine().play(
+                        new RingBurst(plugin, p, end, Particle.LAVA, 15, 7.0, 64));
 
-                // Damage
-                double dmg = 8.0 * plugin.getConfig().getDouble("schools.naruto.damage-multiplier", 1.0);
-                List<LivingEntity> hit = LocationUtil.nearbyLiving(end, 4.0, p.getUniqueId());
+                LocationUtil.sound(end, Sound.ENTITY_GENERIC_EXPLODE, 1.8f, 0.7f);
+                LocationUtil.sound(end, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 1.5f, 0.8f);
+
+                double dmg = 12.0 * plugin.getConfig().getDouble("schools.naruto.damage-multiplier", 1.0);
+                List<LivingEntity> hit = LocationUtil.nearbyLiving(end, 5.0, p.getUniqueId());
                 for (LivingEntity e : hit) {
                     e.damage(dmg, p);
-                    e.setFireTicks(80);
-                    LocationUtil.knockback(e, end, 0.8);
+                    e.setFireTicks(100); // 5 seconds of fire
+                    LocationUtil.knockback(e, end, 1.2);
                 }
             }
-        }.runTaskLater(plugin, delay);
+        }.runTaskLater(plugin, 25L);
     }
 }

@@ -37,9 +37,14 @@ commands:
     aliases: [grimoire, book]
     permission: animemagic.command.spellbook
   bind:
-    description: Bind spells to control schemes (hotbar/sneak/combo)
-    usage: /bind <hotbar|sneak|combo|list|help> [args]
+    description: Bind spells to control schemes (hotbar/sneak/combo/look/doublejump)
+    usage: /bind <hotbar|sneak|combo|look|doublejump|list|help> [args]
     permission: animemagic.command.bind
+  school:
+    description: Open the school selector GUI or switch active school loadout
+    usage: /school [naruto|tensura|mushoku|onepiece|mastery|help]
+    aliases: [loadout]
+    permission: animemagic.command.school
 
 permissions:
   animemagic.*:
@@ -62,6 +67,7 @@ permissions:
       animemagic.command.arena: true
       animemagic.command.spellbook: true
       animemagic.command.bind: true
+      animemagic.command.school: true
     default: op
   animemagic.command.magic:
     description: Allows /magic
@@ -74,6 +80,9 @@ permissions:
     default: true
   animemagic.command.bind:
     description: Allows /bind (control scheme bindings)
+    default: true
+  animemagic.command.school:
+    description: Allows /school (school selector + loadout switching)
     default: true
   animemagic.command.mana:
     description: Allows /mana show on self

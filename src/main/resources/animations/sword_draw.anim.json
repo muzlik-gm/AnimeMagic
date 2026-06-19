@@ -1,0 +1,52 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.sword.draw": {
+      "loop": false,
+      "length": 0.5,
+      "bones": {
+        "root": {
+          "position": {
+            "0.0": [0.5, -0.5, 0.0],
+            "0.2": { "vector": [0.8, 0.0, 0.0], "easing": "easeOutCubic" },
+            "0.5": [0.0, 0.0, 0.0]
+          },
+          "rotation": {
+            "0.0": [0, -90, 0],
+            "0.2": { "vector": [0, -45, 0], "easing": "easeOutBack" },
+            "0.5": [0, 0, 0]
+          },
+          "scale": {
+            "0.0": [0.5, 0.5, 0.5],
+            "0.5": [1.0, 1.0, 1.0]
+          }
+        }
+      }
+    },
+    "animation.sword.slash_heavy": {
+      "loop": false,
+      "length": 0.8,
+      "bones": {
+        "root": {
+          "rotation": {
+            "0.0": [0, -90, 0],
+            "0.3": { "vector": [0, 0, 0], "easing": "easeOutQuart" },
+            "0.6": { "vector": [0, 90, 0], "easing": "easeInOutCubic" },
+            "0.8": [0, 0, 0]
+          },
+          "position": {
+            "0.0": [0, 0, 0],
+            "0.3": [1.0, 0, 0],
+            "0.6": [0.5, 0, 0],
+            "0.8": [0, 0, 0]
+          },
+          "scale": {
+            "0.0": [1.0, 1.0, 1.0],
+            "0.3": [1.5, 1.5, 1.5],
+            "0.8": [1.0, 1.0, 1.0]
+          }
+        }
+      }
+    }
+  }
+}

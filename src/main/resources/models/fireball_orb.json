@@ -1,0 +1,12 @@
+{
+  "id": "fireball_orb",
+  "item": "FIRE_CHARGE",
+  "customModelData": 7004,
+  "display": "FIXED",
+  "billboard": "CENTER",
+  "defaultScale": { "x": 0.5, "y": 0.5, "z": 0.5 },
+  "defaultTranslation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+  "defaultRotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+  "glow": true,
+  "shadowRadius": 0.0
+}

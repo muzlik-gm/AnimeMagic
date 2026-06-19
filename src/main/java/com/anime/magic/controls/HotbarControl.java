@@ -8,8 +8,13 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Hotbar Control — bind spells to hotbar slots 1-9, then right-click with the
- * corresponding item to cast. Bind via /bind hotbar <slot> <spell>.
+ * <b>Hotbar Control v2</b> — bind spells to hotbar slots with sneak-modifier support.
+ *
+ * <p>Right-click a hotbar item → casts the slot's normal spell.
+ * Sneak + right-click → casts the slot's sneak-variant spell (if bound).</p>
+ *
+ * <p>Default loadouts per school are applied via {@link DefaultBindings#applyLoadout}.
+ * Use {@code /school <naruto|tensura|mushoku|onepiece>} to swap loadouts.</p>
  */
 public final class HotbarControl implements ControlScheme {
     private final AnimeMagicPlugin plugin;
@@ -19,7 +24,7 @@ public final class HotbarControl implements ControlScheme {
     @Override public @NotNull String id() { return "hotbar"; }
     @Override public @NotNull String displayName() { return "Hotbar Binding"; }
     @Override public @NotNull String description() {
-        return "Bind spells to hotbar slots; right-click the bound item to cast.";
+        return "Right-click a hotbar item to cast; sneak+right-click for the variant spell.";
     }
 
     @Override
@@ -29,11 +34,27 @@ public final class HotbarControl implements ControlScheme {
             default -> { return; }
         }
         int slot = player.getInventory().getHeldItemSlot();
-        String spellId = plugin.getControlManager().boundSpell(player.getUniqueId(), slot);
+        boolean sneaking = player.isSneaking();
+
+        // Sneak variant takes precedence
+        String spellId = null;
+        if (sneaking && plugin.getDefaultBindings() != null) {
+            spellId = plugin.getDefaultBindings().sneakSpellFor(player.getUniqueId(), slot);
+        }
+        if (spellId == null) {
+            spellId = plugin.getControlManager().boundSpell(player.getUniqueId(), slot);
+        }
         if (spellId == null) return;
+
         Spell spell = plugin.getSpellRegistry().get(spellId);
         if (spell == null) return;
         e.setCancelled(true);
+
+        // Visual feedback on the action bar before cast
+        player.sendActionBar(plugin.getMessages().format("controls.hotbar.casting",
+                "%spell%", spell.displayName(),
+                "%mode%", sneaking ? "§d[Sneak]" : "§a[Normal]"));
+
         CastingService cs = new CastingService(plugin);
         CastingService.Result result = cs.cast(player, spell);
         if (result == CastingService.Result.SUCCESS) {
@@ -44,13 +65,17 @@ public final class HotbarControl implements ControlScheme {
     @Override
     public void onSlotChange(@NotNull Player player, @NotNull PlayerItemHeldEvent e) {
         plugin.getControlManager().selectedSlot(player.getUniqueId(), e.getNewSlot());
-        String bound = plugin.getControlManager().boundSpell(player.getUniqueId(), e.getNewSlot());
-        if (bound != null) {
-            Spell s = plugin.getSpellRegistry().get(bound);
-            if (s != null) {
-                player.sendActionBar(plugin.getMessages().format("controls.hotbar.equipped",
-                        "%spell%", s.displayName()));
-            }
+        if (!plugin.getConfig().getBoolean("controls.hotbar.show-equipped-message", true)) return;
+        String normal = plugin.getControlManager().boundSpell(player.getUniqueId(), e.getNewSlot());
+        String sneak = plugin.getDefaultBindings() != null
+                ? plugin.getDefaultBindings().sneakSpellFor(player.getUniqueId(), e.getNewSlot())
+                : null;
+        if (normal != null) {
+            Spell s = plugin.getSpellRegistry().get(normal);
+            Spell ss = sneak != null ? plugin.getSpellRegistry().get(sneak) : null;
+            String msg = "§7» §a" + (s != null ? s.displayName() : normal);
+            if (ss != null) msg += " §7+ §d[sneak] " + ss.displayName();
+            player.sendActionBar(msg);
         }
     }
 }

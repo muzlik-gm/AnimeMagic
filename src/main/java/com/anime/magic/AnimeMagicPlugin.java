@@ -50,7 +50,9 @@ public final class AnimeMagicPlugin extends JavaPlugin {
     private ModelRegistry modelRegistry;
     private AnimationRegistry animationRegistry;
     private ControlManager controlManager;
+    private DefaultBindings defaultBindings;
     private BukkitTask controlTickerTask;
+    private DoubleJumpCastControl doubleJumpControl;
 
     @Override
     public void onEnable() {
@@ -92,6 +94,7 @@ public final class AnimeMagicPlugin extends JavaPlugin {
 
         this.controlManager = new ControlManager(this);
         this.controlManager.load();
+        this.defaultBindings = new DefaultBindings(this);
         registerControls();
         this.controlTickerTask = Bukkit.getScheduler().runTaskTimer(this, () -> controlManager.tickAll(), 1L, 1L);
 
@@ -100,6 +103,10 @@ public final class AnimeMagicPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new GUIListener(this), this);
         Bukkit.getPluginManager().registerEvents(new ControlListener(this), this);
         Bukkit.getPluginManager().registerEvents(arenaManager, this);
+        // DoubleJumpCastControl needs to listen for PlayerToggleFlightEvent
+        if (doubleJumpControl != null) {
+            Bukkit.getPluginManager().registerEvents(doubleJumpControl, this);
+        }
 
         getCommand("magic").setExecutor(new MagicCommand(this));
         getCommand("magic").setTabCompleter(new MagicCommand(this));
@@ -112,6 +119,8 @@ public final class AnimeMagicPlugin extends JavaPlugin {
         getCommand("spellbook").setExecutor(new SpellbookCommand(this));
         getCommand("bind").setExecutor(new BindCommand(this));
         getCommand("bind").setTabCompleter(new BindCommand(this));
+        getCommand("school").setExecutor(new SchoolCommand(this));
+        getCommand("school").setTabCompleter(new SchoolCommand(this));
 
         if (getConfig().getBoolean("metrics.enabled", true)) {
             int id = getConfig().getInt("metrics.plugin-id", 0);
@@ -164,6 +173,9 @@ public final class AnimeMagicPlugin extends JavaPlugin {
         controlManager.register(new SneakCastControl(this));
         controlManager.register(new ComboControl(this));
         controlManager.register(new CastBarControl(this));
+        controlManager.register(new LookCastControl(this));
+        this.doubleJumpControl = new DoubleJumpCastControl(this);
+        controlManager.register(doubleJumpControl);
     }
 
     @Override
@@ -203,4 +215,5 @@ public final class AnimeMagicPlugin extends JavaPlugin {
     public ModelRegistry getModelRegistry() { return modelRegistry; }
     public AnimationRegistry getAnimationRegistry() { return animationRegistry; }
     public ControlManager getControlManager() { return controlManager; }
+    public DefaultBindings getDefaultBindings() { return defaultBindings; }
 }

@@ -91,6 +91,9 @@ help.arena: |
   &e/arena list &7- List arenas
 
 controls.hotbar.equipped: "&7Equipped: &e%spell%"
+controls.hotbar.casting: "&7» Casting %mode% &e%spell%"
+school.default-applied: "&aDefault loadout applied: &e%school%&a. Use &e/school &ato switch."
+school.switched: "&aSwitched to &e%school% &aschool loadout."
 controls.wheel.title: "&dSpell Wheel &7- &fClick to cast"
 controls.wheel.click-to-cast: "&aClick to cast"
 controls.wheel.empty: "&7No recent spells — cast one first."
