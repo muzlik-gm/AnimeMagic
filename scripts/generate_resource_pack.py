@@ -2818,7 +2818,7 @@ def main():
     # 3) pack.mcmeta
     pack_mcmeta = {
         "pack": {
-            "pack_format": 84,
+            "pack_format": 57,
             "supported_formats": [15, 100],
             "min_format": 15,
             "max_format": 100,

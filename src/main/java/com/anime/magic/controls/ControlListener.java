@@ -8,19 +8,44 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 /**
- * Routes input events to ControlManager. No item-prevention logic — abilities
- * are bound to slot NUMBERS, not items, so the player's inventory is untouched.
+ * Routes ALL input events to ControlManager.
+ *
+ * CRITICAL: Uses PlayerAnimationEvent for left-click detection because
+ * Bukkit's LEFT_CLICK_AIR only fires when holding an item. When the hand
+ * is empty, PlayerAnimationEvent is the ONLY way to detect left-clicks.
  */
 public final class ControlListener implements Listener {
     private final AnimeMagicPlugin plugin;
 
     public ControlListener(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
+    /**
+     * PlayerAnimationEvent fires on EVERY arm swing (left-click), regardless of:
+     * - Whether the player is holding an item or has empty hands
+     * - Whether they're pointing at a block or at nothing
+     * - Whether they're in survival or creative
+     *
+     * This is the PRIMARY ability trigger.
+     */
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onArmSwing(PlayerAnimationEvent e) {
+        Player p = e.getPlayer();
+        var hotbar = plugin.getControlManager().get("hotbar");
+        if (hotbar instanceof HotbarControl hc) {
+            hc.onArmSwing(p);
+        }
+    }
+
+    /**
+     * PlayerInteractEvent — handles RIGHT-click only (left-clicks handled by onArmSwing).
+     * Also routes to other control schemes (SpellWheel, etc.).
+     */
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent e) {
         if (e.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) return;
@@ -48,7 +73,6 @@ public final class ControlListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent e) {
         if (!(e.getWhoClicked() instanceof Player p)) return;
-        // Only handle SpellWheelGUI clicks — don't touch player inventory at all
         if (!(e.getInventory().getHolder() instanceof SpellWheelGUI gui)) return;
         e.setCancelled(true);
         if (e.getClickedInventory() == null || !e.getClickedInventory().equals(gui.getInventory())) return;

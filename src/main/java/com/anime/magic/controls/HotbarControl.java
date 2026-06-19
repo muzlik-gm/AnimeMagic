@@ -4,21 +4,21 @@ import com.anime.magic.AnimeMagicPlugin;
 import com.anime.magic.api.CastingService;
 import com.anime.magic.api.Spell;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Hotbar Control v6 — NO INVENTORY ITEMS.
+ * Hotbar Control v7 — fixes left-click in air.
  *
- * Abilities are bound to hotbar SLOT NUMBERS (0-8), not to items.
- * The player's hotbar stays as their normal inventory — we don't touch it.
+ * Bukkit's LEFT_CLICK_AIR only fires when holding an item. When the hand is
+ * empty, it never fires. We use PlayerAnimationEvent (fires on every arm
+ * swing = every left-click) as the primary trigger, plus PlayerInteractEvent
+ * as backup for when the player IS holding an item.
  *
- * - Left-click casts the ability bound to the current slot number
- * - Switching slots shows the ability name in the action bar
- * - Sneak+click casts the variant ability
- * - No items are given, modified, or prevented from moving
+ * Abilities are bound to slot NUMBERS, not items. No inventory items given.
  */
 public final class HotbarControl implements ControlScheme {
     private final AnimeMagicPlugin plugin;
@@ -28,20 +28,37 @@ public final class HotbarControl implements ControlScheme {
     @Override public @NotNull String id() { return "hotbar"; }
     @Override public @NotNull String displayName() { return "Hotbar Binding"; }
     @Override public @NotNull String description() {
-        return "Left-click casts ability bound to current slot. No inventory items.";
+        return "Left-click (arm swing) casts ability. Works with empty hands.";
     }
 
+    /**
+     * Called from PlayerAnimationEvent — fires on EVERY left-click (arm swing),
+     * regardless of whether the player is holding an item or pointing at a block.
+     * This is the PRIMARY trigger for ability casting.
+     */
+    public void onArmSwing(@NotNull Player player) {
+        tryCast(player, player.isSneaking());
+    }
+
+    /**
+     * Called from PlayerInteractEvent — backup trigger for when the player
+     * IS holding an item and left/right-clicks. We handle RIGHT_CLICK only here
+     * since left-clicks are handled by onArmSwing.
+     */
     @Override
     public void onInteract(@NotNull Player player, @NotNull PlayerInteractEvent e) {
         Action action = e.getAction();
         if (action == Action.PHYSICAL) return;
-        if (action != Action.LEFT_CLICK_AIR && action != Action.LEFT_CLICK_BLOCK
-            && action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return;
+        // Only handle RIGHT clicks here — left clicks are handled by onArmSwing
+        if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return;
 
+        // Don't cancel — let vanilla right-click work too (eating, placing blocks, etc.)
+        tryCast(player, player.isSneaking());
+    }
+
+    private void tryCast(Player player, boolean sneaking) {
         int slot = player.getInventory().getHeldItemSlot();
-        boolean sneaking = player.isSneaking();
 
-        // Check sneak variant first
         String spellId = null;
         if (sneaking && plugin.getDefaultBindings() != null) {
             spellId = plugin.getDefaultBindings().sneakSpellFor(player.getUniqueId(), slot);
@@ -53,9 +70,6 @@ public final class HotbarControl implements ControlScheme {
 
         Spell spell = plugin.getSpellRegistry().get(spellId);
         if (spell == null) return;
-
-        // Do NOT cancel the event — let vanilla item interactions happen too
-        // (player can still mine blocks with their pickaxe while having abilities bound)
 
         CastingService cs = new CastingService(plugin);
         CastingService.Result result = cs.cast(player, spell);
@@ -72,17 +86,29 @@ public final class HotbarControl implements ControlScheme {
         Spell spell = plugin.getSpellRegistry().get(spellId);
         if (spell == null) return;
 
-        // Show ability name + mana cost in action bar
         String sneakId = plugin.getDefaultBindings() != null
                 ? plugin.getDefaultBindings().sneakSpellFor(player.getUniqueId(), newSlot) : null;
         Spell sneak = sneakId != null ? plugin.getSpellRegistry().get(sneakId) : null;
 
         StringBuilder msg = new StringBuilder();
-        msg.append("\u00a76Slot ").append(newSlot + 1).append(": \u00a7e").append(spell.displayName());
-        msg.append(" \u00a77(").append(spell.manaCost()).append(" mana)");
+        msg.append("\u00a76[\u00a7e").append(newSlot + 1).append("\u00a76] ");
+        msg.append("\u00a7e").append(spell.displayName());
+        msg.append(" \u00a77(\u00a7b").append(spell.manaCost()).append(" mana\u00a77)");
         if (sneak != null) {
-            msg.append(" \u00a7d+ [Sneak] ").append(sneak.displayName());
+            msg.append(" \u00a7d| Shift+Click: ").append(sneak.displayName());
         }
+
+        // Show cooldown if active
+        Long lastCast = plugin.getManaManager().lastSpellCast(player.getUniqueId(), spell.id());
+        if (lastCast != null) {
+            long now = System.currentTimeMillis();
+            long cdMs = spell.cooldownMs();
+            long remaining = cdMs - (now - lastCast);
+            if (remaining > 0) {
+                msg.append(" \u00a7c[CD: ").append(remaining / 1000 + 1).append("s]");
+            }
+        }
+
         player.sendActionBar(msg.toString());
     }
 }
