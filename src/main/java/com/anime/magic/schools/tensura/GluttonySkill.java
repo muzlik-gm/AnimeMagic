@@ -78,21 +78,20 @@ public final class GluttonySkill implements Spell {
                 if (t >= 10 || target.isDead()) { cancel(); return; }
                 if (target.getWorld() == null) { cancel(); return; }
                 // Spawn 5 tendrils
-                for (int i = 0; i < 5; i++) {
-                    double angle = (t * 0.5) + (i * Math.PI * 2 / 5);
+                for (int i = 0; i < 3; i++) {
+                    double angle = (t * 0.5) + (i * Math.PI * 2 / 3);
                     double r = 0.8;
                     Location from = target.getEyeLocation().add(Math.cos(angle) * r, -0.5, Math.sin(angle) * r);
                     Location to = orbLoc.clone();
                     Vector dir = to.toVector().subtract(from.toVector()).multiply(0.1);
-                    target.getWorld().spawnParticle(Particle.SQUID_INK, from, 1,
-                            dir.getX(), dir.getY(), dir.getZ(), 0.05);
+                    try { target.getWorld().spawnParticle(Particle.SQUID_INK, from, 1, dir.getX(), dir.getY(), dir.getZ(), 0.05); } catch (Throwable ignored) {}
                 }
                 if (t % 3 == 0) {
                     LocationUtil.sound(target.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.4f, 0.6f);
                 }
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 4L);
+        }.runTaskTimer(plugin, 0L, 10L);
 
         // Phase 2: Drain beam — 40 ticks starting at 10
         new BukkitRunnable() {
@@ -122,14 +121,14 @@ public final class GluttonySkill implements Spell {
                     Location orbAt = orb != null && !orb.isDead() ? orb.entity().getLocation() : orbLoc;
                     for (double d = 0; d <= 1.0; d += 0.5) {
                         Location loc = fromTarget.clone().add(orbAt.toVector().subtract(fromTarget.toVector()).multiply(d));
-                        target.getWorld().spawnParticle(Particle.SQUID_INK, loc, 1, 0.05, 0.05, 0.05, 0.0);
-                        target.getWorld().spawnParticle(Particle.DRAGON_BREATH, loc, 1, 0.05, 0.05, 0.05, 0.0);
+                        try { target.getWorld().spawnParticle(Particle.SQUID_INK, loc, 1, 0.05, 0.05, 0.05, 0.0); } catch (Throwable ignored) {}
+                        try { target.getWorld().spawnParticle(Particle.DRAGON_BREATH, loc, 1, 0.05, 0.05, 0.05, 0.0); } catch (Throwable ignored) {}
                     }
                     // Beam from orb -> caster chest
                     Location casterChest = p.getEyeLocation().add(0, -0.3, 0);
                     for (double d = 0; d <= 1.0; d += 0.5) {
                         Location loc = orbAt.clone().add(casterChest.toVector().subtract(orbAt.toVector()).multiply(d));
-                        p.getWorld().spawnParticle(Particle.WITCH, loc, 1, 0.05, 0.05, 0.05, 0.0);
+                        try { p.getWorld().spawnParticle(Particle.WITCH, loc, 1, 0.05, 0.05, 0.05, 0.0); } catch (Throwable ignored) {}
                     }
                 }
 
@@ -160,9 +159,9 @@ public final class GluttonySkill implements Spell {
             Location orbAt = orb.entity().getLocation();
             Location chest = caster.getEyeLocation().add(0, -0.3, 0);
             if (caster.getWorld() != null) {
-                for (double d = 0; d <= 1.0; d += 0.05) {
+                for (double d = 0; d <= 1.0; d += 0.5) {
                     Location loc = orbAt.clone().add(chest.toVector().subtract(orbAt.toVector()).multiply(d));
-                    caster.getWorld().spawnParticle(Particle.SQUID_INK, loc, 3, 0.1, 0.1, 0.1, 0.05);
+                    try { caster.getWorld().spawnParticle(Particle.SQUID_INK, loc, 1, 0.1, 0.1, 0.1, 0.05); } catch (Throwable ignored) {}
                 }
             }
             orb.remove();

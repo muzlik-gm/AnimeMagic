@@ -43,7 +43,7 @@ public final class GearSecondSpell implements Spell {
         // animation.steam_aura.spin (continuous rotation).
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "steam_aura", "animation.steam_aura.spin",
-                p.getLocation().clone(), 300, new org.bukkit.util.Vector(0, 1, 0));
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)).clone(), 300, new org.bukkit.util.Vector(0, 1, 0));
         plugin.getParticleEngine().play(new SpiralAnimation(plugin, p, Particle.CLOUD,
                 300, 0.4, 1.2, 0.3, 6, 0.6));
         LocationUtil.sound(p.getLocation(), Sound.ENTITY_PLAYER_BREATH, 1.5f, 1.8f);
@@ -69,8 +69,8 @@ public final class GearSecondSpell implements Spell {
                 // player's first-person view with steam particles).
                 if (ticks % 3 == 0 && p.getWorld() != null) {
                     Location above = p.getLocation().add(0, 2.0, 0);
-                    p.getWorld().spawnParticle(Particle.CLOUD, above, 1, 0.3, 0.1, 0.3, 0.1);
-                    p.getWorld().spawnParticle(Particle.DUST, above, 1, 0.3, 0.8, 0.3, 0, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(255, 110, 110), 1.0f));
+                    try { p.getWorld().spawnParticle(Particle.CLOUD, above, 1, 0.3, 0.1, 0.3, 0.1); } catch (Throwable ignored) {}
+                    try { p.getWorld().spawnParticle(Particle.DUST, above, 1, 0.3, 0.8, 0.3, 0, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(255, 110, 110), 1.0f)); } catch (Throwable ignored) {}
                 }
                 ticks++;
             }

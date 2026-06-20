@@ -46,7 +46,7 @@ public final class RazorEdgeSkill implements Spell {
         // Spawn the 3D razor_edge_blade model at the caster's eye location.
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "razor_edge_blade", "animation.razor_edge.gleam",
-                p.getEyeLocation().clone(), 60, null);
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)).clone(), 60, null);
 
         Location start = p.getEyeLocation();
         Location end = target.getEyeLocation();
@@ -73,8 +73,7 @@ public final class RazorEdgeSkill implements Spell {
                         if (ticks++ > 80 || target.isDead()) { cancel(); return; }
                         if (ticks % 20 == 0) target.damage(2.5, p);
                         if (target.getWorld() != null) {
-                            target.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR,
-                                    target.getEyeLocation(), 1, 0.3, 0.3, 0.3, 0.0);
+                            try { target.getWorld().spawnParticle(Particle.DAMAGE_INDICATOR, target.getEyeLocation(), 1, 0.3, 0.3, 0.3, 0.0); } catch (Throwable ignored) {}
                         }
                     }
                 }.runTaskTimer(plugin, 0L, 5L);

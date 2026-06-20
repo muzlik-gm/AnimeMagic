@@ -130,7 +130,7 @@ public final class RasenganSpell implements Spell {
                 if (near.isEmpty()) {
                     // Dissipate
                     if (hand.getWorld() != null) {
-                        hand.getWorld().spawnParticle(Particle.CLOUD, hand, 5, 0.5, 0.5, 0.5, 0.05);
+                        try { hand.getWorld().spawnParticle(Particle.CLOUD, hand, 1, 0.5, 0.5, 0.5, 0.05); } catch (Throwable ignored) {}
                     }
                     LocationUtil.sound(hand, Sound.ENTITY_ENDERMAN_TELEPORT, 0.5f, 0.7f);
                     return;

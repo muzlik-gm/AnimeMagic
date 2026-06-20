@@ -30,7 +30,7 @@ public final class BeelzebuthSpell implements Spell {
     public BeelzebuthSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "tensura:beelzebuth"; }
-    @Override public @NotNull String displayName() { return "§5§l§k||§r §5§lUnique: Beelzebuth §5§l§k||§r"; }
+    @Override public @NotNull String displayName() { return "§5§lUnique: Beelzebuth"; }
     @Override public @NotNull Spell.SchoolId school() { return Spell.SchoolId.TENSURA; }
     @Override public int manaCost() { return 110; }
     @Override public long cooldownMs() { return 30000; }
@@ -48,7 +48,7 @@ public final class BeelzebuthSpell implements Spell {
         // Spawn the 3D beelzebuth_maw model above the caster's head.
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "beelzebuth_maw", "animation.beelzebuth.devour",
-                p.getLocation().add(0, 2, 0).clone(), 300, null);
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)).clone(), 300, null);
 
         new BukkitRunnable() {
             int ticks = 0;
@@ -67,8 +67,8 @@ public final class BeelzebuthSpell implements Spell {
                         if (from.getWorld() != null) {
                             for (double d = 0; d <= 1.0; d += 0.5) {
                                 Location loc = from.clone().add(to.toVector().subtract(from.toVector()).multiply(d));
-                                from.getWorld().spawnParticle(Particle.SQUID_INK, loc, 1, 0.1, 0.1, 0.1, 0);
-                                from.getWorld().spawnParticle(Particle.WITCH, loc, 1, 0.1, 0.1, 0.1, 0);
+                                try { from.getWorld().spawnParticle(Particle.SQUID_INK, loc, 1, 0.1, 0.1, 0.1, 0); } catch (Throwable ignored) {}
+                                try { from.getWorld().spawnParticle(Particle.WITCH, loc, 1, 0.1, 0.1, 0.1, 0); } catch (Throwable ignored) {}
                             }
                         }
                     }
@@ -76,7 +76,7 @@ public final class BeelzebuthSpell implements Spell {
                         p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + totalHeal * 0.5));
                         // Heal particles around caster
                         if (p.getWorld() != null) {
-                            p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2.0, 0), 5, 0.5, 0.5, 0.5, 0);
+                            try { p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2.0, 0), 1, 0.5, 0.5, 0.5, 0); } catch (Throwable ignored) {}
                         }
                     }
                     LocationUtil.sound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.8f, 0.6f);
@@ -84,7 +84,7 @@ public final class BeelzebuthSpell implements Spell {
                 // Continuous aura around caster — spawn ABOVE the head (was at
                 // chest level, blinding the caster's first-person view).
                 if (ticks % 8 == 0 && p.getWorld() != null) {
-                    p.getWorld().spawnParticle(Particle.DRAGON_BREATH, p.getLocation().add(0, 2.5, 0), 3, 1.5, 1.5, 1.5, 0.02);
+                    try { p.getWorld().spawnParticle(Particle.DRAGON_BREATH, p.getLocation().add(0, 2.5, 0), 1, 1.5, 1.5, 1.5, 0.02); } catch (Throwable ignored) {}
                 }
                 ticks++;
             }

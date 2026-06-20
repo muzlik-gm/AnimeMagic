@@ -47,7 +47,7 @@ public final class DisintegrationSpell implements Spell {
 
         // Spawn the 3D disintegration beam model in front of the caster —
         // plays animation.disintegration.beam (sweeping loop).
-        Location beamSpawn = p.getEyeLocation().add(p.getLocation().getDirection().multiply(8));
+        Location beamSpawn = p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5));
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "disintegration_beam", "animation.disintegration.beam",
                 beamSpawn, 40, null);
@@ -68,10 +68,10 @@ public final class DisintegrationSpell implements Spell {
                 // × 40 ticks = ~4080/cast). Now: 11 positions × 1 particle × every 2nd
                 // tick = ~220/cast. Still visually continuous but not screen-blinding.
                 if (ticks % 2 == 0) {
-                    for (double d = 0; d <= 1.0; d += 0.2) {
+                    for (double d = 0; d <= 1.0; d += 0.5) {
                         Location loc = eye.clone().add(end.toVector().subtract(eye.toVector()).multiply(d));
                         if (loc.getWorld() == null) continue;
-                        loc.getWorld().spawnParticle(Particle.DRAGON_BREATH, loc, 1, 0.1, 0.1, 0.1, 0.0);
+                        try { loc.getWorld().spawnParticle(Particle.DRAGON_BREATH, loc, 1, 0.1, 0.1, 0.1, 0.0); } catch (Throwable ignored) {}
                     }
                 }
                 // Single entity scan per tick (was 11 scans/tick = 440/cast — catastrophic

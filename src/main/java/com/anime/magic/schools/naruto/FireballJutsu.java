@@ -60,7 +60,7 @@ public final class FireballJutsu implements Spell {
         var effects = plugin.getCinematicEffects();
 
         // Phase 1: Hand seal — energy charge + orb model
-        Location mouthLoc = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.6));
+        Location mouthLoc = p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5));
         effects.energyCharge(mouthLoc, 20, Particle.FLAME, Sound.BLOCK_FIRE_AMBIENT);
         ModelDisplay orb = SpellEffects.spawnAnimated(plugin, p, "fireball_orb", "animation.fireball.charge_v2",
                 mouthLoc, 25, null);
@@ -73,16 +73,16 @@ public final class FireballJutsu implements Spell {
                 if (t >= 20) { cancel(); return; }
                 Location mouth = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.6));
                 if (mouth.getWorld() == null) return;
-                int count = 2 + t / 5;
+                int count = Math.min(3, 2 + t / 5);
                 for (int i = 0; i < count; i++) {
                     double angle = (t * 0.5) + (i * Math.PI * 2 / count);
                     double r = 0.3 + t * 0.03;
                     Location flame = mouth.clone().add(Math.cos(angle) * r, 0, Math.sin(angle) * r);
-                    mouth.getWorld().spawnParticle(Particle.FLAME, flame, 1, 0.05, 0.05, 0.05, 0.02);
+                    try { mouth.getWorld().spawnParticle(Particle.FLAME, flame, 1, 0.05, 0.05, 0.05, 0.02); } catch (Throwable ignored) {}
                 }
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 4L);
+        }.runTaskTimer(plugin, 0L, 10L);
 
         // Phase 2 + 3: Launch at 20 ticks
         new BukkitRunnable() {

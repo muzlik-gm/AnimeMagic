@@ -73,7 +73,7 @@ public final class ConquerorsHaki implements Spell {
         }.runTaskTimer(plugin, 0L, 1L);
         effects.energyCharge(center.clone().add(0, 1, 0), 15, Particle.DRAGON_BREATH, null);
 
-        Location domeSpawn = center.clone().add(0, 0.5, 0);
+        Location domeSpawn = p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5));
         ModelDisplay dome = SpellEffects.spawnAnimated(plugin, p, "haki_dome",
                 "animation.haki.burst", domeSpawn, 35, null);
         if (dome != null) dome.setTransform(0, 0.5f, 0, 0, 0, 0, 0.1f, 0.1f, 0.1f);

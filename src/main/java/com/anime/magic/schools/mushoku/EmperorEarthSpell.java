@@ -65,7 +65,7 @@ public final class EmperorEarthSpell implements Spell {
         // Spawn the 3D emperor_earth_spike model 3 blocks ahead of the caster.
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "emperor_earth_spike", "animation.emperor_earth.rise",
-                p.getLocation().add(p.getLocation().getDirection().multiply(3)).clone(), 60, null);
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)).clone(), 60, null);
         Location center = p.getLocation();
         plugin.getParticleEngine().play(
                 new RingBurst(plugin, p, center, Particle.DUST, 30, 10.0, 96));
@@ -117,16 +117,16 @@ public final class EmperorEarthSpell implements Spell {
                 if (!p.isOnline()) { cancel(); return; }
                 if (r > 8) { cancel(); return; }
                 if (center.getWorld() == null) return;
-                for (int i = 0; i < 16; i++) {
-                    double angle = i * Math.PI * 2 / 16;
+                for (int i = 0; i < 3; i++) {
+                    double angle = i * Math.PI * 2 / 3;
                     Location at = center.clone().add(Math.cos(angle) * r, -0.5, Math.sin(angle) * r);
                     Block b = at.getBlock();
                     if (b.getType().isSolid()) {
-                        center.getWorld().spawnParticle(Particle.DUST, at, 4, 0.3, 0.3, 0.3, 0.0, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(130, 100, 70), 1.0f));
+                        try { center.getWorld().spawnParticle(Particle.DUST, at, 1, 0.3, 0.3, 0.3, 0.0, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(130, 100, 70), 1.0f)); } catch (Throwable ignored) {}
                     }
                 }
                 r++;
             }
-        }.runTaskTimer(plugin, 5L, 4L);
+        }.runTaskTimer(plugin, 5L, 10L);
     }
 }

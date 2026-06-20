@@ -52,7 +52,7 @@ public final class StormSpell implements Spell {
         // Spawn the 3D storm_vortex model 8 blocks ahead of the caster.
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "storm_vortex", "animation.storm.swirl",
-                p.getLocation().add(p.getLocation().getDirection().multiply(8)).clone(), 60, null);
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)).clone(), 60, null);
         plugin.getParticleEngine().play(new SpiralAnimation(plugin, p, Particle.CLOUD,
                 160, 0.5, 3.0, 0.4, 10, 0.6));
         plugin.getParticleEngine().play(new SpiralAnimation(plugin, p, Particle.SWEEP_ATTACK,

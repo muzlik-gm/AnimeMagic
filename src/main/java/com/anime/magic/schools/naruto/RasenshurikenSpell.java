@@ -68,17 +68,16 @@ public final class RasenshurikenSpell implements Spell {
                 if (t >= 30) { cancel(); return; }
                 Location hand = p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.0));
                 if (hand.getWorld() == null) return;
-                for (int i = 0; i < 8; i++) {
-                    double angle = (t * 0.3) + (i * Math.PI / 4);
+                for (int i = 0; i < 3; i++) {
+                    double angle = (t * 0.3) + (i * Math.PI / 3);
                     double r = 2.0 - t * 0.06;
                     Location from = hand.clone().add(Math.cos(angle) * r, 0, Math.sin(angle) * r);
-                    hand.getWorld().spawnParticle(Particle.CLOUD, from, 1,
-                            -Math.cos(angle) * 0.2, -0.05, -Math.sin(angle) * 0.2, 0.05);
+                    try { hand.getWorld().spawnParticle(Particle.CLOUD, from, 1, -Math.cos(angle) * 0.2, -0.05, -Math.sin(angle) * 0.2, 0.05); } catch (Throwable ignored) {}
                 }
                 if (t % 10 == 0) LocationUtil.sound(hand, Sound.ENTITY_ENDERMAN_AMBIENT, 0.6f, 1.8f);
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 4L);
+        }.runTaskTimer(plugin, 0L, 10L);
 
         // Wait for player to sneak to throw (or auto-throw after 2s)
         new BukkitRunnable() {

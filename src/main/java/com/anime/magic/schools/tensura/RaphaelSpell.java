@@ -39,7 +39,7 @@ public final class RaphaelSpell implements Spell {
     public RaphaelSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "tensura:raphael"; }
-    @Override public @NotNull String displayName() { return "§b§l§k||§r §b§lUltimate: Raphael §b§l§k||§r"; }
+    @Override public @NotNull String displayName() { return "§b§lUltimate: Raphael"; }
     @Override public @NotNull Spell.SchoolId school() { return Spell.SchoolId.TENSURA; }
     @Override public int manaCost() { return 130; }
     @Override public long cooldownMs() { return 90000; }
@@ -57,7 +57,7 @@ public final class RaphaelSpell implements Spell {
         // Spawn the 3D raphael_halo model above the caster's head.
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "raphael_halo", "animation.raphael.float",
-                p.getLocation().add(0, 2.5, 0).clone(), 300, null);
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)).clone(), 300, null);
         // Initial aura
         plugin.getParticleEngine().play(new HelixEffect(plugin, p, Particle.END_ROD, 40, 1.5, 0.5, 12, 0.5));
         plugin.getParticleEngine().play(new SpiralAnimation(plugin, p, Particle.END_ROD,
@@ -91,8 +91,8 @@ public final class RaphaelSpell implements Spell {
                 if (ticks % 4 == 0 && p.getWorld() != null) {
                     double angle = ticks * 0.1;
                     Location orb = p.getLocation().add(0, 2.5, 0).add(Math.cos(angle) * 0.8, 0, Math.sin(angle) * 0.8);
-                    p.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0, 0, 0, 0);
-                    p.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0.05, 0.05, 0.05, 0);
+                    try { p.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0, 0, 0, 0); } catch (Throwable ignored) {}
+                    try { p.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0.05, 0.05, 0.05, 0); } catch (Throwable ignored) {}
                 }
                 ticks++;
             }

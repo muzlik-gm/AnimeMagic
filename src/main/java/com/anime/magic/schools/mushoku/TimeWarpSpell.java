@@ -30,7 +30,7 @@ public final class TimeWarpSpell implements Spell {
     public TimeWarpSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "mushoku:time_warp"; }
-    @Override public @NotNull String displayName() { return "§d§l§k||§r §d§lGod-class: Time Warp §d§l§k||§r"; }
+    @Override public @NotNull String displayName() { return "§d§lGod-class: Time Warp"; }
     @Override public @NotNull SchoolId school() { return SchoolId.MUSHOKU; }
     @Override public int manaCost() { return 180; }
     @Override public long cooldownMs() { return 60000; }
@@ -94,7 +94,7 @@ public final class TimeWarpSpell implements Spell {
                     for (int ring = 0; ring < 3; ring++) {
                         double r = 1.0 + ring * 0.3;
                         Location orb = target.getEyeLocation().add(Math.cos(angle + ring) * r, 2.0, Math.sin(angle + ring) * r);
-                        target.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0, 0, 0, 0);
+                        try { target.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0, 0, 0, 0); } catch (Throwable ignored) {}
                     }
                 }
                 if (ticks % 20 == 0) LocationUtil.sound(target.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 0.4f, 0.5f);

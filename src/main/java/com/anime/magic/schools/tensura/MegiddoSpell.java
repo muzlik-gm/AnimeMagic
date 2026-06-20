@@ -34,7 +34,7 @@ public final class MegiddoSpell implements Spell {
     public MegiddoSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "tensura:megiddo"; }
-    @Override public @NotNull String displayName() { return "§f§l§k||§r §f§lUltimate: Megiddo §f§l§k||§r"; }
+    @Override public @NotNull String displayName() { return "§fMegiddo"; }
     @Override public @NotNull Spell.SchoolId school() { return Spell.SchoolId.TENSURA; }
     @Override public int manaCost() { return 150; }
     @Override public long cooldownMs() { return 60000; }
@@ -66,20 +66,18 @@ public final class MegiddoSpell implements Spell {
                 if (!p.isOnline()) { cancel(); return; }
                 if (t >= 20) { cancel(); return; }
                 if (strike.getWorld() == null) { cancel(); return; }
-                for (int i = 0; i < 6; i++) {
+                for (int i = 0; i < 3; i++) {
                     double angle = (t * 0.4) + (i * Math.PI / 3);
                     double r = 3.0 - t * 0.14;
                     double y = 4.0 - t * 0.18;
                     Location from = strike.clone().add(Math.cos(angle) * r, y, Math.sin(angle) * r);
-                    strike.getWorld().spawnParticle(Particle.END_ROD, from, 1,
-                            -Math.cos(angle) * 0.3, -0.4, -Math.sin(angle) * 0.3, 0.0);
-                    strike.getWorld().spawnParticle(Particle.SPORE_BLOSSOM_AIR, from, 1,
-                            -Math.cos(angle) * 0.2, -0.3, -Math.sin(angle) * 0.2, 0.0);
+                    try { strike.getWorld().spawnParticle(Particle.END_ROD, from, 1, -Math.cos(angle) * 0.3, -0.4, -Math.sin(angle) * 0.3, 0.0); } catch (Throwable ignored) {}
+                    try { strike.getWorld().spawnParticle(Particle.SPORE_BLOSSOM_AIR, from, 1, -Math.cos(angle) * 0.2, -0.3, -Math.sin(angle) * 0.2, 0.0); } catch (Throwable ignored) {}
                 }
                 if (t % 4 == 0) LocationUtil.sound(strike, Sound.BLOCK_BEACON_ACTIVATE, 0.5f + t * 0.05f, 1.5f);
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 4L);
+        }.runTaskTimer(plugin, 0L, 10L);
 
         // Phase 2 + 3: Strike + damage at 20 ticks
         new BukkitRunnable() {
@@ -87,10 +85,10 @@ public final class MegiddoSpell implements Spell {
                 if (!p.isOnline()) { cancel(); return; }
                 if (strike.getWorld() == null) return;
                 // Vertical pillar from sky
-                for (int y = 0; y < 30; y++) {
+                for (int y = 0; y < 3; y++) {
                     Location pillar = strike.clone().add(0, y, 0);
-                    strike.getWorld().spawnParticle(Particle.END_ROD, pillar, 2, 0.1, 0, 0.1, 0);
-                    strike.getWorld().spawnParticle(Particle.FLASH, pillar, 1, 0.2, 0, 0.2, 0);
+                    try { strike.getWorld().spawnParticle(Particle.END_ROD, pillar, 1, 0.1, 0, 0.1, 0); } catch (Throwable ignored) {}
+                    try { strike.getWorld().spawnParticle(Particle.FLASH, pillar, 1, 0.2, 0, 0.2, 0); } catch (Throwable ignored) {}
                 }
                 // Expanding sphere
                 plugin.getParticleEngine().play(new SphereAnimation(plugin, p, strike, Particle.END_ROD, 25, 0.5, 6.0, 100));

@@ -27,7 +27,7 @@ public final class QuakeSpell implements Spell {
     public QuakeSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "mushoku:quake"; }
-    @Override public @NotNull String displayName() { return "§6§l§k||§r §6§lEmperor-class: Quake §6§l§k||§r"; }
+    @Override public @NotNull String displayName() { return "§6§lEmperor-class: Quake"; }
     @Override public @NotNull SchoolId school() { return SchoolId.MUSHOKU; }
     @Override public int manaCost() { return 130; }
     @Override public long cooldownMs() { return 40000; }
@@ -52,7 +52,7 @@ public final class QuakeSpell implements Spell {
         // Spawn the 3D quake_cracks model 5 blocks ahead of the caster.
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "quake_cracks", "animation.quake.erupt",
-                p.getLocation().add(p.getLocation().getDirection().multiply(5)).clone(), 60, null);
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)).clone(), 60, null);
         Location center = p.getLocation();
 
         // 5 expanding crack rings over 2 seconds

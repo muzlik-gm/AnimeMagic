@@ -14,25 +14,14 @@ import java.util.UUID;
 /**
  * Persistent action-bar HUD with custom texture icons via PUA Unicode font.
  *
- * <p>Uses Private Use Area (PUA) codepoints (U+E001–U+E057) that are
- * mapped to custom texture sprites in the resource pack's font/default.json.
- * When the resource pack is applied, these codepoints render as actual
- * spell/school icons in the actionbar — real textures, not emoji.</p>
- *
- * <p>Layout:
- * <pre>
- *   [school_icon] Spell Name  [mana_icon] cost/max  [cd_icon] Ready/3s  [L-Click]
- * </pre>
- * </p>
+ * <p>Each spell has its OWN unique icon (not just a school icon). The icons
+ * are mapped via Private Use Area codepoints in the resource pack's font
+ * atlas. When the resource pack is applied, these render as actual textures.</p>
  */
 public final class ActionBarTask extends BukkitRunnable {
     private final AnimeMagicPlugin plugin;
 
-    // PUA codepoints for icons (must match generate_font_atlas.py)
-    private static final String ICON_NARUTO   = "\uE001";
-    private static final String ICON_TENSURA  = "\uE002";
-    private static final String ICON_MUSHOKU  = "\uE003";
-    private static final String ICON_ONEPIECE = "\uE004";
+    // Status icons
     private static final String ICON_READY    = "\uE010";
     private static final String ICON_COOLDOWN = "\uE011";
     private static final String ICON_MANA     = "\uE012";
@@ -74,12 +63,12 @@ public final class ActionBarTask extends BukkitRunnable {
 
         StringBuilder sb = new StringBuilder();
 
-        // School icon (PUA texture) + spell name
+        // Spell-specific icon (PUA texture) + spell name
         Spell primary = spell != null ? spell : sneak;
-        sb.append(schoolIcon(primary.school()));
+        sb.append(spellIcon(primary.id()));
         sb.append(" ").append(primary.displayName());
 
-        // Mana icon (PUA texture) + cost/pool
+        // Mana icon + cost/pool
         if (manaEnabled && primary.manaCost() > 0) {
             int cur = plugin.getManaManager().current(id);
             int max = plugin.getManaManager().max(id);
@@ -88,7 +77,7 @@ public final class ActionBarTask extends BukkitRunnable {
               .append(primary.manaCost()).append("§7/§b").append(max);
         }
 
-        // Cooldown icon (PUA texture)
+        // Cooldown icon
         String cd = cooldownText(id, primary);
         sb.append("  ").append(cd);
 
@@ -102,12 +91,49 @@ public final class ActionBarTask extends BukkitRunnable {
         p.sendActionBar(sb.toString());
     }
 
-    private String schoolIcon(Spell.SchoolId school) {
-        return switch (school) {
-            case NARUTO  -> "§6" + ICON_NARUTO;
-            case TENSURA -> "§5" + ICON_TENSURA;
-            case MUSHOKU -> "§3" + ICON_MUSHOKU;
-            case ONEPIECE -> "§b" + ICON_ONEPIECE;
+    /** Get the spell-specific PUA icon codepoint based on the spell's full id. */
+    private String spellIcon(String spellId) {
+        if (spellId == null) return "";
+        return switch (spellId) {
+            // Naruto (U+E020–E028)
+            case "naruto:fireball"       -> "\uE020";
+            case "naruto:chidori"        -> "\uE021";
+            case "naruto:rasengan"       -> "\uE022";
+            case "naruto:rasenshuriken"  -> "\uE023";
+            case "naruto:phoenix_flower" -> "\uE024";
+            case "naruto:kirin"          -> "\uE025";
+            case "naruto:sage_mode"      -> "\uE026";
+            case "naruto:shadow_clone"   -> "\uE027";
+            case "naruto:six_paths"      -> "\uE028";
+            // Tensura (U+E030–E037)
+            case "tensura:magicule_blade"  -> "\uE030";
+            case "tensura:gluttony"        -> "\uE031";
+            case "tensura:razor_edge"      -> "\uE032";
+            case "tensura:beelzebuth"      -> "\uE033";
+            case "tensura:disintegration"  -> "\uE034";
+            case "tensura:megiddo"         -> "\uE035";
+            case "tensura:raphael"         -> "\uE036";
+            case "tensura:true_dragon"     -> "\uE037";
+            // Mushoku (U+E040–E047)
+            case "mushoku:saint_water"   -> "\uE040";
+            case "mushoku:saint_fire"    -> "\uE041";
+            case "mushoku:emperor_earth" -> "\uE042";
+            case "mushoku:storm"         -> "\uE043";
+            case "mushoku:atomic_flare"  -> "\uE044";
+            case "mushoku:gravity"       -> "\uE045";
+            case "mushoku:quake"         -> "\uE046";
+            case "mushoku:time_warp"     -> "\uE047";
+            // One Piece (U+E050–E057)
+            case "onepiece:gomu_pistol"       -> "\uE050";
+            case "onepiece:conquerors_haki"   -> "\uE051";
+            case "onepiece:armament_haki"     -> "\uE052";
+            case "onepiece:observation_haki"  -> "\uE053";
+            case "onepiece:gear_second"       -> "\uE054";
+            case "onepiece:gear_third"        -> "\uE055";
+            case "onepiece:gear_fourth"       -> "\uE056";
+            case "onepiece:voice_of_all_things" -> "\uE057";
+            // Fallback: school icon
+            default -> "\uE001"; // generic
         };
     }
 

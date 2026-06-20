@@ -59,19 +59,15 @@ public final class CinematicEffects {
                 double progress = (double) tick / durationTicks;
                 Location current = start.clone().add(direction.clone().multiply(totalDistance * progress));
                 // Spawn particles at current position with velocity in the travel direction
-                for (int i = 0; i < density; i++) {
+                for (int i = 0; i < Math.min(3, density); i++) {
                     // Small random spread perpendicular to travel direction
                     Vector perp1 = new Vector(-direction.getZ(), 0, direction.getX()).normalize().multiply((Math.random() - 0.5) * 0.3);
                     Vector perp2 = new Vector(0, 1, 0).multiply((Math.random() - 0.5) * 0.3);
                     Location spawnAt = current.clone().add(perp1).add(perp2);
                     if (particle == Particle.DUST && color != null) {
-                        world.spawnParticle(particle, spawnAt, 0,
-                                direction.getX() * 0.3, direction.getY() * 0.3, direction.getZ() * 0.3,
-                                0.0, color);
+                        try { world.spawnParticle(particle, spawnAt, 1, direction.getX() * 0.3, direction.getY() * 0.3, direction.getZ() * 0.3, 0.0, color); } catch (Throwable ignored) {}
                     } else {
-                        world.spawnParticle(particle, spawnAt, 0,
-                                direction.getX() * 0.3, direction.getY() * 0.3, direction.getZ() * 0.3,
-                                0.0);
+                        try { world.spawnParticle(particle, spawnAt, 1, direction.getX() * 0.3, direction.getY() * 0.3, direction.getZ() * 0.3, 0.0); } catch (Throwable ignored) {}
                     }
                 }
                 tick++;
@@ -98,7 +94,7 @@ public final class CinematicEffects {
                 if (tick >= durationTicks || world == null) { cancel(); return; }
                 double progress = (double) tick / durationTicks;
                 // Increasing density (1 to 6 particles per tick)
-                int count = 1 + (int)(progress * 5);
+                int count = Math.min(3, 1 + (int)(progress * 5));
                 // Decreasing radius (3.0 → 0.3)
                 double radius = 3.0 * (1.0 - progress) + 0.3;
                 // Converging particles
@@ -107,7 +103,7 @@ public final class CinematicEffects {
                     double y = Math.random() * 2.0;
                     Location from = center.clone().add(Math.cos(angle) * radius, y - 1.0, Math.sin(angle) * radius);
                     Vector toCenter = center.toVector().subtract(from.toVector()).normalize().multiply(0.2);
-                    world.spawnParticle(particle, from, 0, toCenter.getX(), toCenter.getY(), toCenter.getZ(), 0.02);
+                    try { world.spawnParticle(particle, from, 1, toCenter.getX(), toCenter.getY(), toCenter.getZ(), 0.02); } catch (Throwable ignored) {}
                 }
                 // Escalating sound
                 if (tick % 4 == 0) {
@@ -140,14 +136,14 @@ public final class CinematicEffects {
                 double progress = (double) tick / durationTicks;
                 double radius = maxRadius * progress;
                 // Ring of particles at current radius
-                int segments = (int)(24 + radius * 4);
+                int segments = 3;
                 for (int i = 0; i < segments; i++) {
                     double angle = (i * Math.PI * 2 / segments) + (tick * 0.1);
                     Location ringPoint = center.clone().add(Math.cos(angle) * radius, 0.2, Math.sin(angle) * radius);
-                    world.spawnParticle(particle, ringPoint, 1, 0.1, 0.1, 0.1, 0.05);
+                    try { world.spawnParticle(particle, ringPoint, 1, 0.1, 0.1, 0.1, 0.05); } catch (Throwable ignored) {}
                     // Kick up dust
                     if (i % 3 == 0) {
-                        world.spawnParticle(Particle.CLOUD, ringPoint, 1, 0.05, 0.1, 0.05, 0.02);
+                        try { world.spawnParticle(Particle.CLOUD, ringPoint, 1, 0.05, 0.1, 0.05, 0.02); } catch (Throwable ignored) {}
                     }
                 }
                 // Sound at each ring expansion step
@@ -181,16 +177,16 @@ public final class CinematicEffects {
 
                 switch (type.toLowerCase()) {
                     case "smoke" -> {
-                        world.spawnParticle(Particle.LARGE_SMOKE, center, (int)(3 * fade), 0.8, 0.5, 0.8, 0.02);
-                        if (tick % 5 == 0) world.spawnParticle(Particle.CAMPFIRE_COSY_SMOKE, center, 1, 0.5, 0.3, 0.5, 0.01);
+                        try { world.spawnParticle(Particle.LARGE_SMOKE, center, 1, 0.8, 0.5, 0.8, 0.02); } catch (Throwable ignored) {}
+                        if (tick % 5 == 0) try { world.spawnParticle(Particle.CAMPFIRE_COSY_SMOKE, center, 1, 0.5, 0.3, 0.5, 0.01); } catch (Throwable ignored) {}
                     }
                     case "embers" -> {
-                        world.spawnParticle(Particle.FLAME, center, (int)(2 * fade), 0.6, 0.6, 0.6, 0.03);
-                        if (tick % 3 == 0) world.spawnParticle(Particle.LAVA, center, 1, 0.3, 0.3, 0.3, 0.0);
+                        try { world.spawnParticle(Particle.FLAME, center, 1, 0.6, 0.6, 0.6, 0.03); } catch (Throwable ignored) {}
+                        if (tick % 3 == 0) try { world.spawnParticle(Particle.LAVA, center, 1, 0.3, 0.3, 0.3, 0.0); } catch (Throwable ignored) {}
                     }
                     case "dust" -> {
-                        world.spawnParticle(Particle.CLOUD, center, (int)(2 * fade), 0.8, 0.2, 0.8, 0.01);
-                        if (tick % 4 == 0) world.spawnParticle(Particle.SMOKE, center, 1, 0.5, 0.1, 0.5, 0.01);
+                        try { world.spawnParticle(Particle.CLOUD, center, 1, 0.8, 0.2, 0.8, 0.01); } catch (Throwable ignored) {}
+                        if (tick % 4 == 0) try { world.spawnParticle(Particle.SMOKE, center, 1, 0.5, 0.1, 0.5, 0.01); } catch (Throwable ignored) {}
                     }
                 }
                 tick++;
@@ -216,8 +212,8 @@ public final class CinematicEffects {
             @Override public void run() {
                 if (tick >= durationTicks || world == null) { cancel(); return; }
                 double progress = (double) tick / durationTicks;
-                int arms = 4;
-                int density = 2 + (int)(progress * 4);
+                int arms = 3;
+                int density = Math.min(3, 2 + (int)(progress * 4));
                 double radius = 4.0 * (1.0 - progress) + 0.5;
 
                 for (int arm = 0; arm < arms; arm++) {
@@ -229,9 +225,9 @@ public final class CinematicEffects {
                         Location from = center.clone().add(Math.cos(angle) * r, y, Math.sin(angle) * r);
                         Vector inward = center.toVector().subtract(from.toVector()).normalize().multiply(0.15);
                         if (particle == Particle.DUST && color != null) {
-                            world.spawnParticle(particle, from, 0, inward.getX(), inward.getY(), inward.getZ(), 0.0, color);
+                            try { world.spawnParticle(particle, from, 1, inward.getX(), inward.getY(), inward.getZ(), 0.0, color); } catch (Throwable ignored) {}
                         } else {
-                            world.spawnParticle(particle, from, 0, inward.getX(), inward.getY(), inward.getZ(), 0.0);
+                            try { world.spawnParticle(particle, from, 1, inward.getX(), inward.getY(), inward.getZ(), 0.0); } catch (Throwable ignored) {}
                         }
                     }
                 }

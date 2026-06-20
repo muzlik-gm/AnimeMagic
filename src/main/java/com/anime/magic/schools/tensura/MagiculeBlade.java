@@ -81,19 +81,18 @@ public final class MagiculeBlade implements Spell {
                 if (t >= 10) { cancel(); return; }
                 Location hand = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.8));
                 if (hand.getWorld() == null) return;
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 3; i++) {
                     double angle = Math.random() * Math.PI * 2;
                     double r = 2.0 - t * 0.18;
                     Location from = hand.clone().add(Math.cos(angle) * r, Math.random() * 2 - 1, Math.sin(angle) * r);
-                    hand.getWorld().spawnParticle(Particle.PORTAL, from, 1,
-                            -Math.cos(angle) * 0.15, -0.1, -Math.sin(angle) * 0.15, 0.05);
+                    try { hand.getWorld().spawnParticle(Particle.PORTAL, from, 1, -Math.cos(angle) * 0.15, -0.1, -Math.sin(angle) * 0.15, 0.05); } catch (Throwable ignored) {}
                 }
                 if (t % 3 == 0) {
                     LocationUtil.sound(hand, Sound.BLOCK_BEACON_POWER_SELECT, 0.5f, 1.5f + t * 0.05f);
                 }
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 4L);
+        }.runTaskTimer(plugin, 0L, 10L);
 
         // Phase 2: Active stance — continuous spiral + buffs
         plugin.getParticleEngine().play(
@@ -160,14 +159,14 @@ public final class MagiculeBlade implements Spell {
                         Particle.DRAGON_BREATH, 8, 6, 0.05));
 
         // Slash arc particles
-        for (int i = -5; i <= 5; i++) {
+        for (int i = -1; i <= 1; i++) {
             double angle = i * Math.PI / 10;
             Vector offset = perp.clone().multiply(Math.cos(angle) * 1.5)
                     .add(new Vector(0, Math.sin(angle) * 0.5, 0));
             Location at = caster.getEyeLocation().add(dir.clone().multiply(2.5)).add(offset);
             if (at.getWorld() != null) {
-                at.getWorld().spawnParticle(Particle.PORTAL, at, 5, 0.05, 0.05, 0.05, 0.2);
-                at.getWorld().spawnParticle(Particle.DRAGON_BREATH, at, 1, 0.1, 0.1, 0.1, 0.02);
+                try { at.getWorld().spawnParticle(Particle.PORTAL, at, 1, 0.05, 0.05, 0.05, 0.2); } catch (Throwable ignored) {}
+                try { at.getWorld().spawnParticle(Particle.DRAGON_BREATH, at, 1, 0.1, 0.1, 0.1, 0.02); } catch (Throwable ignored) {}
             }
         }
 

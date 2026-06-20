@@ -45,7 +45,7 @@ public final class ArmamentHaki implements Spell {
         // Spawn the 3D armament_gauntlet model at the caster's eye location.
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "armament_gauntlet", "animation.armament.harden",
-                p.getEyeLocation().clone(), 60, null);
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)).clone(), 60, null);
         plugin.getParticleEngine().play(
                 new SpiralAnimation(plugin, p, Particle.SQUID_INK, 400, 0.4, 0.9, 0.2, 6, 0.3));
 
@@ -79,8 +79,8 @@ public final class ArmamentHaki implements Spell {
     private void strike(Player caster, LivingEntity target) {
         Location at = target.getEyeLocation();
         if (at.getWorld() == null) return;
-        at.getWorld().spawnParticle(Particle.SQUID_INK, at, 5, 0.4, 0.4, 0.4, 0.05);
-        at.getWorld().spawnParticle(Particle.CRIT, at, 3, 0.3, 0.3, 0.3, 0.3);
+        try { at.getWorld().spawnParticle(Particle.SQUID_INK, at, 1, 0.4, 0.4, 0.4, 0.05); } catch (Throwable ignored) {}
+        try { at.getWorld().spawnParticle(Particle.CRIT, at, 1, 0.3, 0.3, 0.3, 0.3); } catch (Throwable ignored) {}
 
         double dmg = 20.0 * plugin.getConfig().getDouble("schools.onepiece.damage-multiplier", 1.0);
         double current = target.getHealth();

@@ -44,7 +44,7 @@ public final class GearThirdSpell implements Spell {
         // Spawn the 3D gear_third_fist model 2 blocks ahead of the caster's eye.
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "gear_third_fist", "animation.gear_third.inflate",
-                p.getEyeLocation().add(p.getLocation().getDirection().multiply(2)).clone(), 60, null);
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)).clone(), 60, null);
         plugin.getParticleEngine().play(new SpiralAnimation(plugin, p, Particle.CLOUD,
                 400, 0.5, 1.5, 0.4, 8, 0.4));
         LocationUtil.sound(p.getLocation(), Sound.ENTITY_SLIME_SQUISH, 2.0f, 0.5f);
@@ -80,9 +80,9 @@ public final class GearThirdSpell implements Spell {
     private void giantHit(Player caster, LivingEntity target) {
         Location at = target.getEyeLocation();
         if (at.getWorld() == null) return;
-        at.getWorld().spawnParticle(Particle.CLOUD, at, 5, 0.8, 0.8, 0.8, 0.1);
-        at.getWorld().spawnParticle(Particle.DUST, at, 5, 0.5, 0.5, 0.5, 0.2, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(225, 65, 65), 1.5f));
-        at.getWorld().spawnParticle(Particle.SWEEP_ATTACK, at, 3, 0.5, 0.5, 0.5, 0);
+        try { at.getWorld().spawnParticle(Particle.CLOUD, at, 1, 0.8, 0.8, 0.8, 0.1); } catch (Throwable ignored) {}
+        try { at.getWorld().spawnParticle(Particle.DUST, at, 1, 0.5, 0.5, 0.5, 0.2, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(225, 65, 65), 1.5f)); } catch (Throwable ignored) {}
+        try { at.getWorld().spawnParticle(Particle.SWEEP_ATTACK, at, 1, 0.5, 0.5, 0.5, 0); } catch (Throwable ignored) {}
         LocationUtil.sound(at, Sound.ENTITY_PLAYER_ATTACK_STRONG, 2.0f, 0.5f);
         LocationUtil.sound(at, Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 0.8f);
 

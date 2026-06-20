@@ -29,7 +29,7 @@ public final class GravitySpell implements Spell {
     public GravitySpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "mushoku:gravity"; }
-    @Override public @NotNull String displayName() { return "§5§l§k||§r §5§lKing-class: Gravity §5§l§k||§r"; }
+    @Override public @NotNull String displayName() { return "§5§lKing-class: Gravity"; }
     @Override public @NotNull SchoolId school() { return SchoolId.MUSHOKU; }
     @Override public int manaCost() { return 120; }
     @Override public long cooldownMs() { return 30000; }
@@ -74,10 +74,8 @@ public final class GravitySpell implements Spell {
                         double angle = (ticks * 0.3) + (i * Math.PI / 4);
                         double r = 5.0 - (ticks / 60.0) * 4.5;
                         Location from = center.clone().add(Math.cos(angle) * r, Math.sin(ticks * 0.2) * 1.0, Math.sin(angle) * r);
-                        center.getWorld().spawnParticle(Particle.DRAGON_BREATH, from, 1,
-                                -Math.cos(angle) * 0.3, -0.1, -Math.sin(angle) * 0.3, 0.0);
-                        center.getWorld().spawnParticle(Particle.SQUID_INK, from, 1,
-                                -Math.cos(angle) * 0.2, 0, -Math.sin(angle) * 0.2, 0.0);
+                        try { center.getWorld().spawnParticle(Particle.DRAGON_BREATH, from, 1, -Math.cos(angle) * 0.3, -0.1, -Math.sin(angle) * 0.3, 0.0); } catch (Throwable ignored) {}
+                        try { center.getWorld().spawnParticle(Particle.SQUID_INK, from, 1, -Math.cos(angle) * 0.2, 0, -Math.sin(angle) * 0.2, 0.0); } catch (Throwable ignored) {}
                     }
                 }
                 // Pull entities inward

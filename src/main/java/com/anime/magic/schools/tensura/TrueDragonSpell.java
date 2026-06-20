@@ -42,7 +42,7 @@ public final class TrueDragonSpell implements Spell {
     public TrueDragonSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "tensura:true_dragon"; }
-    @Override public @NotNull String displayName() { return "§8§l§k||§r §5§lTrue Dragon Form §8§l§k||§r"; }
+    @Override public @NotNull String displayName() { return "§5§lTrue Dragon Form"; }
     @Override public @NotNull Spell.SchoolId school() { return Spell.SchoolId.TENSURA; }
     @Override public int manaCost() { return 250; }
     @Override public long cooldownMs() { return 180000; }
@@ -69,7 +69,7 @@ public final class TrueDragonSpell implements Spell {
             p.setAllowFlight(true);
             p.setFlying(true);
         }
-        ModelDisplay aura = SpellEffects.spawnAnimated(plugin, p, "sage_aura", "animation.dragon.transform", p.getLocation(), 660, null);
+        ModelDisplay aura = SpellEffects.spawnAnimated(plugin, p, "sage_aura", "animation.dragon.transform", p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)), 660, null);
         if (aura != null) aura.followPlayer(p.getUniqueId(), new org.bukkit.util.Vector(0, 0, 0));
 
         plugin.getParticleEngine().play(new HelixEffect(plugin, p, Particle.DRAGON_BREATH, 50, 1.5, 0.7, 12, 0.4));
@@ -116,8 +116,8 @@ public final class TrueDragonSpell implements Spell {
                 // Dragon breath trail
                 if (ticks % 3 == 0 && p.getWorld() != null) {
                     Location feet = p.getLocation().add(0, 0.5, 0);
-                    p.getWorld().spawnParticle(Particle.DRAGON_BREATH, feet, 2, 0.5, 0.1, 0.5, 0.02);
-                    p.getWorld().spawnParticle(Particle.FLAME, feet, 1, 0.3, 0.1, 0.3, 0.02);
+                    try { p.getWorld().spawnParticle(Particle.DRAGON_BREATH, feet, 1, 0.5, 0.1, 0.5, 0.02); } catch (Throwable ignored) {}
+                    try { p.getWorld().spawnParticle(Particle.FLAME, feet, 1, 0.3, 0.1, 0.3, 0.02); } catch (Throwable ignored) {}
                 }
                 ticks++;
             }

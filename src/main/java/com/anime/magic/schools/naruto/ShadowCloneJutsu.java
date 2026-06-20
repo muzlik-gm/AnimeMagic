@@ -55,7 +55,7 @@ public final class ShadowCloneJutsu implements Spell {
         // Spawn the 3D clone_haze model at the caster's location.
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "clone_haze", "animation.clone_haze.poof",
-                p.getLocation().clone(), 60, null);
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)).clone(), 60, null);
         // Resolve the caster's target ONCE so all clones attack the same enemy.
         LivingEntity target = caster.targetEntity(30);
         Location base = p.getLocation().add(p.getLocation().getDirection().multiply(2));
@@ -79,7 +79,7 @@ public final class ShadowCloneJutsu implements Spell {
             z.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 300, 2));
             z.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 300, 1));
             z.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 300, 0));
-            spawn.getWorld().spawnParticle(Particle.LARGE_SMOKE, spawn, 5, 0.5, 1.0, 0.5, 0.05);
+            try { spawn.getWorld().spawnParticle(Particle.LARGE_SMOKE, spawn, 1, 0.5, 1.0, 0.5, 0.05); } catch (Throwable ignored) {}
             LocationUtil.sound(spawn, Sound.ENTITY_ENDERMAN_TELEPORT, 0.8f, 0.7f);
             clones.add(z);
         }
@@ -107,7 +107,7 @@ public final class ShadowCloneJutsu implements Spell {
                     if (z.isValid() && !z.isDead()) {
                         Location loc = z.getLocation();
                         if (loc.getWorld() != null) {
-                            loc.getWorld().spawnParticle(Particle.LARGE_SMOKE, loc, 5, 0.4, 0.8, 0.4, 0.05);
+                            try { loc.getWorld().spawnParticle(Particle.LARGE_SMOKE, loc, 1, 0.4, 0.8, 0.4, 0.05); } catch (Throwable ignored) {}
                             LocationUtil.sound(loc, Sound.ENTITY_ENDERMAN_TELEPORT, 0.7f, 0.5f);
                         }
                         z.remove();

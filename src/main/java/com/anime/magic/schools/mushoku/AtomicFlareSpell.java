@@ -34,7 +34,7 @@ public final class AtomicFlareSpell implements Spell {
     public AtomicFlareSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "mushoku:atomic_flare"; }
-    @Override public @NotNull String displayName() { return "§4§l§k||§r §4§lKing-class: Atomic Flare §4§l§k||§r"; }
+    @Override public @NotNull String displayName() { return "§4§lKing-class: Atomic Flare"; }
     @Override public @NotNull SchoolId school() { return SchoolId.MUSHOKU; }
     @Override public int manaCost() { return 140; }
     @Override public long cooldownMs() { return 45000; }
@@ -68,7 +68,7 @@ public final class AtomicFlareSpell implements Spell {
         // animation.atomic_flare.burst (expand + spin + fade).
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "atomic_flare", "animation.atomic_flare.burst",
-                center.clone(), 60, null);
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)).clone(), 60, null);
         // Charge phase: growing sphere
         new BukkitRunnable() {
             int t = 0;
@@ -77,18 +77,18 @@ public final class AtomicFlareSpell implements Spell {
                 if (t >= 20) { cancel(); detonate(p, center); return; }
                 if (center.getWorld() == null) { cancel(); return; }
                 double r = 0.3 + t * 0.06;
-                for (int i = 0; i < 30; i++) {
-                    double phi = Math.acos(1 - 2 * (i + 0.5) / 30);
+                for (int i = 0; i < 3; i++) {
+                    double phi = Math.acos(1 - 2 * (i + 0.5) / 3);
                     double theta = Math.PI * (1 + Math.sqrt(5)) * i + t * 0.3;
                     double x = r * Math.cos(theta) * Math.sin(phi);
                     double y = r * Math.sin(theta) * Math.sin(phi);
                     double z = r * Math.cos(phi);
-                    center.getWorld().spawnParticle(Particle.FLAME, center.clone().add(x, y, z), 0, 0, 0, 0, 0.02);
+                    try { center.getWorld().spawnParticle(Particle.FLAME, center.clone().add(x, y, z), 1, 0, 0, 0, 0.02); } catch (Throwable ignored) {}
                 }
                 if (t % 4 == 0) LocationUtil.sound(center, Sound.BLOCK_FIRE_AMBIENT, 0.5f + t * 0.05f, 0.6f + t * 0.04f);
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 4L);
+        }.runTaskTimer(plugin, 0L, 10L);
     }
 
     private void detonate(Player p, Location center) {

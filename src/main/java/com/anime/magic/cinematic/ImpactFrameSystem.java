@@ -60,9 +60,9 @@ public final class ImpactFrameSystem {
         }
 
         // 2. Flash burst
-        impactPoint.getWorld().spawnParticle(Particle.FLASH, impactPoint, 1, 0, 0, 0, 0);
-        impactPoint.getWorld().spawnParticle(Particle.END_ROD, impactPoint, (int)(8 * intensity), 0.3, 0.3, 0.3, 0.1);
-        impactPoint.getWorld().spawnParticle(Particle.FIREWORK, impactPoint, (int)(5 * intensity), 0.4, 0.4, 0.4, 0.15);
+        try { impactPoint.getWorld().spawnParticle(Particle.FLASH, impactPoint, 1, 0, 0, 0, 0); } catch (Throwable ignored) {}
+        try { impactPoint.getWorld().spawnParticle(Particle.END_ROD, impactPoint, 1, 0.3, 0.3, 0.3, 0.1); } catch (Throwable ignored) {}
+        try { impactPoint.getWorld().spawnParticle(Particle.FIREWORK, impactPoint, 1, 0.4, 0.4, 0.4, 0.15); } catch (Throwable ignored) {}
 
         // 3. Impact sound (layered for weight)
         impactPoint.getWorld().playSound(impactPoint, Sound.ENTITY_GENERIC_EXPLODE, 1.5f * (float)intensity, 0.5f);
@@ -80,14 +80,14 @@ public final class ImpactFrameSystem {
             @Override public void run() {
                 if (tick >= 20 || impactPoint.getWorld() == null) { cancel(); return; }
                 // Smoke rises
-                impactPoint.getWorld().spawnParticle(Particle.LARGE_SMOKE, impactPoint, 2, 0.5, 0.3, 0.5, 0.02);
+                try { impactPoint.getWorld().spawnParticle(Particle.LARGE_SMOKE, impactPoint, 1, 0.5, 0.3, 0.5, 0.02); } catch (Throwable ignored) {}
                 // Dust settles
                 if (tick % 3 == 0) {
-                    impactPoint.getWorld().spawnParticle(Particle.CLOUD, impactPoint, 1, 0.8, 0.1, 0.8, 0.01);
+                    try { impactPoint.getWorld().spawnParticle(Particle.CLOUD, impactPoint, 1, 0.8, 0.1, 0.8, 0.01); } catch (Throwable ignored) {}
                 }
                 tick++;
             }
-        }.runTaskTimer(plugin, 1L, 1L);
+        }.runTaskTimer(plugin, 1L, 10L);
     }
 
     /**

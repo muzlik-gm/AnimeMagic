@@ -42,7 +42,7 @@ public final class SixPathsSpell implements Spell {
     public SixPathsSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "naruto:six_paths"; }
-    @Override public @NotNull String displayName() { return "§f§l§k||§r §f§lSix Paths Sage Mode §f§l§k||§r"; }
+    @Override public @NotNull String displayName() { return "§f§lSix Paths Sage Mode"; }
     @Override public @NotNull SchoolId school() { return SchoolId.NARUTO; }
     @Override public int manaCost() { return 200; }
     @Override public long cooldownMs() { return 120000; }
@@ -70,7 +70,7 @@ public final class SixPathsSpell implements Spell {
             p.setAllowFlight(true);
             p.setFlying(true);
         }
-        ModelDisplay aura = SpellEffects.spawnAnimated(plugin, p, "sage_aura", "animation.sixpaths.ascend", p.getLocation(), 460, null);
+        ModelDisplay aura = SpellEffects.spawnAnimated(plugin, p, "sage_aura", "animation.sixpaths.ascend", p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)), 460, null);
         if (aura != null) aura.followPlayer(p.getUniqueId(), new org.bukkit.util.Vector(0, 0, 0));
 
         plugin.getParticleEngine().play(new HelixEffect(plugin, p, Particle.END_ROD, 60, 1.5, 0.6, 10, 0.4));
@@ -121,12 +121,12 @@ public final class SixPathsSpell implements Spell {
                 // Truth-seeking orbs orbiting (every 4 ticks spawn orbiting particles)
                 if (ticks % 4 == 0) {
                     Location center = p.getLocation().add(0, 2.0, 0);
-                    for (int i = 0; i < 5; i++) {
-                        double angle = (ticks * 0.1) + (i * Math.PI * 2 / 5);
+                    for (int i = 0; i < 3; i++) {
+                        double angle = (ticks * 0.1) + (i * Math.PI * 2 / 3);
                         double r = 1.8;
                         Location orb = center.clone().add(Math.cos(angle) * r, Math.sin(ticks * 0.05) * 0.3, Math.sin(angle) * r);
                         if (orb.getWorld() != null) {
-                            orb.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0, 0, 0, 0);
+                            try { orb.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0, 0, 0, 0); } catch (Throwable ignored) {}
                         }
                     }
                 }

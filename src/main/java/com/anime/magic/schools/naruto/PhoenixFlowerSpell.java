@@ -60,7 +60,7 @@ public final class PhoenixFlowerSpell implements Spell {
     }
 
     private void fireOrb(Caster caster, Player p, int orbNum) {
-        Location start = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.8));
+        Location start = p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5));
         // Slight spread per orb
         double spread = (orbNum - 2.5) * 0.15; // -0.375 to +0.375 radians
         Location dir = p.getEyeLocation();
@@ -82,8 +82,8 @@ public final class PhoenixFlowerSpell implements Spell {
                     // Detonate
                     if (orb != null) orb.remove();
                     if (end.getWorld() == null) { cancel(); return; }
-                    end.getWorld().spawnParticle(Particle.FLAME, end, 5, 0.5, 0.5, 0.5, 0.1);
-                    end.getWorld().spawnParticle(Particle.LAVA, end, 3, 0.3, 0.3, 0.3, 0.05);
+                    try { end.getWorld().spawnParticle(Particle.FLAME, end, 1, 0.5, 0.5, 0.5, 0.1); } catch (Throwable ignored) {}
+                    try { end.getWorld().spawnParticle(Particle.LAVA, end, 1, 0.3, 0.3, 0.3, 0.05); } catch (Throwable ignored) {}
                     LocationUtil.sound(end, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 0.8f, 1.2f);
                     double dmg = 8.0 * plugin.getConfig().getDouble("schools.naruto.damage-multiplier", 1.0);
                     for (var e : LocationUtil.nearbyLiving(end, 2.5, p.getUniqueId())) {
@@ -101,7 +101,7 @@ public final class PhoenixFlowerSpell implements Spell {
                     Location next = orb.entity().getLocation().add(launchDir.clone().multiply(0.8));
                     orb.teleport(next);
                     if (next.getWorld() != null) {
-                        next.getWorld().spawnParticle(Particle.FLAME, next, 2, 0.1, 0.1, 0.1, 0.02);
+                        try { next.getWorld().spawnParticle(Particle.FLAME, next, 1, 0.1, 0.1, 0.1, 0.02); } catch (Throwable ignored) {}
                     }
                 }
                 t++;

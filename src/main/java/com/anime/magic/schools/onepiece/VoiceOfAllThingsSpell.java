@@ -28,7 +28,7 @@ public final class VoiceOfAllThingsSpell implements Spell {
     public VoiceOfAllThingsSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "onepiece:voice_of_all_things"; }
-    @Override public @NotNull String displayName() { return "§d§l§k||§r §f§lVoice of All Things §d§l§k||§r"; }
+    @Override public @NotNull String displayName() { return "§f§lVoice of All Things"; }
     @Override public @NotNull SchoolId school() { return SchoolId.ONEPIECE; }
     @Override public int manaCost() { return 130; }
     @Override public long cooldownMs() { return 75000; }
@@ -44,7 +44,7 @@ public final class VoiceOfAllThingsSpell implements Spell {
         // Spawn the 3D voice_waves model above the caster's head.
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "voice_waves", "animation.voice.pulse",
-                p.getLocation().add(0, 2, 0).clone(), 300, null);
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)).clone(), 300, null);
         // Initial burst
         plugin.getParticleEngine().play(new SphereAnimation(plugin, p, p.getLocation(),
                 Particle.END_ROD, 25, 1.0, 15.0, 100));
@@ -80,7 +80,7 @@ public final class VoiceOfAllThingsSpell implements Spell {
                     }
                     // Pulse particles
                     if (p.getWorld() != null) {
-                        p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2, 0), 3, 0.5, 0.3, 0.5, 0);
+                        try { p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2, 0), 1, 0.5, 0.3, 0.5, 0); } catch (Throwable ignored) {}
                     }
                     LocationUtil.sound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 0.5f, 1.5f);
                 }

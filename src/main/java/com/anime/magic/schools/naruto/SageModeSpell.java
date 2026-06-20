@@ -51,7 +51,7 @@ public final class SageModeSpell implements Spell {
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
         // Phase 1: Awaken
-        ModelDisplay aura = SpellEffects.spawnAnimated(plugin, p, "sage_aura", "animation.sage.awaken", p.getLocation(), 640, null);
+        ModelDisplay aura = SpellEffects.spawnAnimated(plugin, p, "sage_aura", "animation.sage.awaken", p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)), 640, null);
         if (aura != null && !aura.isDead()) {
             aura.followPlayer(p.getUniqueId(), new org.bukkit.util.Vector(0, 0, 0));
         }

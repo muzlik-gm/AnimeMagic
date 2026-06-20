@@ -79,8 +79,8 @@ public final class DestructionSystem {
                 }
             }
         }
-        center.getWorld().spawnParticle(Particle.CLOUD, center, 40, radius * 0.5, 0.5, radius * 0.5, 0.05);
-        center.getWorld().spawnParticle(Particle.LARGE_SMOKE, center, 30, radius * 0.4, 0.8, radius * 0.4, 0.02);
+        try { center.getWorld().spawnParticle(Particle.CLOUD, center, 1, radius * 0.5, 0.5, radius * 0.5, 0.05); } catch (Throwable ignored) {}
+        try { center.getWorld().spawnParticle(Particle.LARGE_SMOKE, center, 1, radius * 0.4, 0.8, radius * 0.4, 0.02); } catch (Throwable ignored) {}
     }
 
     /**

@@ -29,7 +29,7 @@ public final class GearFourthSpell implements Spell {
     public GearFourthSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "onepiece:gear_fourth"; }
-    @Override public @NotNull String displayName() { return "§8§l§k||§r §c§lGear §8» §0§lFourth: Boundman §8§l§k||§r"; }
+    @Override public @NotNull String displayName() { return "§c§lGear §8» §0§lFourth: Boundman"; }
     @Override public @NotNull SchoolId school() { return SchoolId.ONEPIECE; }
     @Override public int manaCost() { return 150; }
     @Override public long cooldownMs() { return 60000; }
@@ -45,7 +45,7 @@ public final class GearFourthSpell implements Spell {
         // Spawn the 3D gear_fourth_boundman model at the caster's location.
         com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
                 "gear_fourth_boundman", "animation.gear_fourth.bounce",
-                p.getLocation().clone(), 300, null);
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.5)).clone(), 300, null);
         // Transform burst
         plugin.getParticleEngine().play(new SphereAnimation(plugin, p, p.getLocation(),
                 Particle.SQUID_INK, 20, 0.5, 5.0, 80));
@@ -72,7 +72,7 @@ public final class GearFourthSpell implements Spell {
                 }
                 // Haki aura
                 if (ticks % 5 == 0 && p.getWorld() != null) {
-                    p.getWorld().spawnParticle(Particle.SQUID_INK, p.getLocation().add(0, 2.0, 0), 3, 0.6, 0.8, 0.6, 0.02);
+                    try { p.getWorld().spawnParticle(Particle.SQUID_INK, p.getLocation().add(0, 2.0, 0), 1, 0.6, 0.8, 0.6, 0.02); } catch (Throwable ignored) {}
                 }
                 // AoE hit
                 if (onCd) { onCd = false; return; }
@@ -92,8 +92,8 @@ public final class GearFourthSpell implements Spell {
     private void aoeHit(Player caster, LivingEntity target) {
         Location at = target.getLocation();
         if (at.getWorld() == null) return;
-        at.getWorld().spawnParticle(Particle.SQUID_INK, at, 10, 1.5, 1.5, 1.5, 0.1);
-        at.getWorld().spawnParticle(Particle.SWEEP_ATTACK, at, 5, 1.0, 1.0, 1.0, 0);
+        try { at.getWorld().spawnParticle(Particle.SQUID_INK, at, 1, 1.5, 1.5, 1.5, 0.1); } catch (Throwable ignored) {}
+        try { at.getWorld().spawnParticle(Particle.SWEEP_ATTACK, at, 1, 1.0, 1.0, 1.0, 0); } catch (Throwable ignored) {}
         LocationUtil.sound(at, Sound.ENTITY_PLAYER_ATTACK_STRONG, 2.0f, 0.5f);
         LocationUtil.sound(at, Sound.ENTITY_GENERIC_EXPLODE, 1.5f, 0.7f);
 

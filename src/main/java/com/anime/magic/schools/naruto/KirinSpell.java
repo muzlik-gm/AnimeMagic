@@ -128,10 +128,10 @@ public final class KirinSpell implements Spell {
                     @Override public void run() {
                         if (!p.isOnline()) { cancel(); return; }
                         if (ticks >= 40 || strike.getWorld() == null) { cancel(); return; }
-                        strike.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, strike, 3, 3, 3, 3, 0.1);
+                        try { strike.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, strike, 1, 3, 3, 3, 0.1); } catch (Throwable ignored) {}
                         ticks++;
                     }
-                }.runTaskTimer(plugin, 5L, 4L);
+                }.runTaskTimer(plugin, 5L, 10L);
             }
         }.runTaskLater(plugin, 60L);
 
