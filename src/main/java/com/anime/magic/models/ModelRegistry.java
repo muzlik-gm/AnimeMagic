@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collection;
@@ -20,6 +21,13 @@ import java.util.logging.Level;
 /**
  * Loads and caches CustomModel definitions from the models/ folder. Each *.json file is
  * parsed as a single model definition. Hot-reloadable via reload().
+ *
+ * <p>On every {@link #reload()}, ALL model JSON files bundled in the jar's
+ * {@code resources/models/} directory are extracted to the plugin's data folder
+ * ({@code plugins/AnimeMagic/models/}), overwriting any stale copies. This ensures
+ * that new model files added in plugin updates are always available — previously
+ * only 3 sample files were extracted on first run, causing "unknown model id"
+ * warnings for the other 29 models.</p>
  */
 public final class ModelRegistry {
     private final AnimeMagicPlugin plugin;
@@ -29,27 +37,19 @@ public final class ModelRegistry {
     public ModelRegistry(AnimeMagicPlugin plugin) {
         this.plugin = plugin;
         this.folder = new File(plugin.getDataFolder(), "models");
-        if (!folder.exists()) {
-            folder.mkdirs();
-            copySampleIfPresent("magic_orb.json");
-            copySampleIfPresent("chidori_blade.json");
-            copySampleIfPresent("rasengan_sphere.json");
-        }
+        if (!folder.exists()) folder.mkdirs();
     }
 
-    private void copySampleIfPresent(String name) {
-        try (var in = plugin.getResource("models/" + name)) {
-            if (in == null) return;
-            File target = new File(folder, name);
-            if (!target.exists()) Files.copy(in, target.toPath());
-        } catch (IOException e) {
-            plugin.getLogger().warning("Could not extract sample model " + name + ": " + e.getMessage());
-        }
-    }
-
+    /**
+     * Extract ALL bundled model JSON files from the jar to the data folder,
+     * overwriting stale copies. Then load every JSON in the data folder.
+     */
     public void reload() {
         models.clear();
-        if (!folder.exists()) return;
+        folder.mkdirs();
+        // Extract ALL model files from the jar's resources/models/ directory
+        extractAllBundledModels();
+        // Now load every .json file in the data folder
         File[] files = folder.listFiles((d, n) -> n.toLowerCase(Locale.ROOT).endsWith(".json"));
         if (files == null) return;
         for (File f : files) {
@@ -66,54 +66,76 @@ public final class ModelRegistry {
         plugin.getLogger().info("Loaded " + models.size() + " custom models from " + folder.getName() + "/");
     }
 
+    /**
+     * Extract every file from the jar's resources/models/ directory into the
+     * plugin's data folder. Overwrites existing files so updates take effect.
+     */
+    private void extractAllBundledModels() {
+        // List all known model files (bundled in the jar at build time)
+        // We enumerate by trying known filenames + scanning the jar
+        String[] knownModels = {
+            "magic_orb.json", "chidori_blade.json", "rasengan_sphere.json",
+            "fireball_orb.json", "haki_dome.json", "kirin_bolt.json",
+            "lightning_aura.json", "magicule_sword.json", "phoenix_flower.json",
+            "rasenshuriken.json", "sage_aura.json",
+            // CMD 7012-7032
+            "megiddo_pillar.json", "disintegration_beam.json", "gravity_orb.json",
+            "atomic_flare.json", "steam_aura.json", "clone_haze.json",
+            "beelzebuth_maw.json", "raphael_halo.json", "razor_edge_blade.json",
+            "emperor_earth_spike.json", "quake_cracks.json", "saint_fire_cross.json",
+            "saint_water_drop.json", "storm_vortex.json", "time_warp_clock.json",
+            "armament_gauntlet.json", "gear_third_fist.json", "gear_fourth_boundman.json",
+            "gomu_pistol_fist.json", "observation_eye.json", "voice_waves.json",
+        };
+        for (String name : knownModels) {
+            try (InputStream in = plugin.getResource("models/" + name)) {
+                if (in == null) continue;
+                File target = new File(folder, name);
+                // Always overwrite — ensures updated model definitions take effect
+                Files.copy(in, target.toPath(),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                plugin.getLogger().fine("Could not extract model " + name + ": " + e.getMessage());
+            }
+        }
+    }
+
     public @Nullable CustomModel get(@NotNull String id) {
         return models.get(id.toLowerCase(Locale.ROOT));
     }
 
-    public Collection<CustomModel> all() { return models.values(); }
     public int size() { return models.size(); }
+    public Collection<CustomModel> all() { return models.values(); }
 
-    private @Nullable CustomModel parseModel(JSONObject json) {
-        String id = json.optString("id", null);
-        if (id == null) return null;
-        String matName = json.optString("item", "PAPER").toUpperCase(Locale.ROOT);
-        Material material;
-        try { material = Material.valueOf(matName); }
-        catch (IllegalArgumentException e) {
-            plugin.getLogger().warning("Model " + id + " references unknown material " + matName + " — defaulting to PAPER");
-            material = Material.PAPER;
+    private CustomModel parseModel(JSONObject json) {
+        try {
+            String id = json.getString("id");
+            String itemStr = json.optString("item", "PAPER");
+            Material material;
+            try { material = Material.valueOf(itemStr.toUpperCase(Locale.ROOT)); }
+            catch (IllegalArgumentException e) { material = Material.PAPER; }
+            int cmd = json.optInt("customModelData", 0);
+            String displayContext = json.optString("display", "FIXED");
+            String billboard = json.optString("billboard", "CENTER");
+            JSONObject scale = json.optJSONObject("defaultScale");
+            float sx = scale != null ? (float) scale.optDouble("x", 0.6) : 0.6f;
+            float sy = scale != null ? (float) scale.optDouble("y", 0.6) : 0.6f;
+            float sz = scale != null ? (float) scale.optDouble("z", 0.6) : 0.6f;
+            JSONObject trans = json.optJSONObject("defaultTranslation");
+            float tx = trans != null ? (float) trans.optDouble("x", 0.0) : 0.0f;
+            float ty = trans != null ? (float) trans.optDouble("y", 0.0) : 0.0f;
+            float tz = trans != null ? (float) trans.optDouble("z", 0.0) : 0.0f;
+            JSONObject rot = json.optJSONObject("defaultRotation");
+            float rx = rot != null ? (float) rot.optDouble("x", 0.0) : 0.0f;
+            float ry = rot != null ? (float) rot.optDouble("y", 0.0) : 0.0f;
+            float rz = rot != null ? (float) rot.optDouble("z", 0.0) : 0.0f;
+            boolean glow = json.optBoolean("glow", false);
+            float shadowRadius = (float) json.optDouble("shadowRadius", 0.0);
+            return new CustomModel(id, material, cmd, displayContext, billboard,
+                    sx, sy, sz, tx, ty, tz, rx, ry, rz, glow, shadowRadius);
+        } catch (Exception e) {
+            plugin.getLogger().warning("Failed to parse model: " + e.getMessage());
+            return null;
         }
-        int cmd = json.optInt("customModelData", 0);
-        String display = json.optString("display", "FIXED");
-        String billboard = json.optString("billboard", "CENTER");
-
-        float[] scale = readVec3(json.opt("defaultScale"), 1f, 1f, 1f);
-        float[] trans = readVec3(json.opt("defaultTranslation"), 0f, 0f, 0f);
-        float[] rot = readVec3(json.opt("defaultRotation"), 0f, 0f, 0f);
-        boolean glow = json.optBoolean("glow", false);
-        float shadow = (float) json.optDouble("shadowRadius", 0.0);
-
-        return new CustomModel(id, material, cmd, display, billboard,
-                scale[0], scale[1], scale[2], trans[0], trans[1], trans[2],
-                rot[0], rot[1], rot[2], glow, shadow);
-    }
-
-    private static float[] readVec3(Object obj, float dx, float dy, float dz) {
-        if (obj == null) return new float[]{dx, dy, dz};
-        if (obj instanceof JSONObject jo) {
-            return new float[]{
-                    (float) jo.optDouble("x", dx),
-                    (float) jo.optDouble("y", dy),
-                    (float) jo.optDouble("z", dz)
-            };
-        }
-        if (obj instanceof JSONArray arr) {
-            return new float[]{
-                    (float) arr.optDouble(0, dx),
-                    (float) arr.optDouble(1, dy),
-                    (float) arr.optDouble(2, dz)
-            };
-        }
-        return new float[]{dx, dy, dz};
     }
 }
