@@ -8,20 +8,34 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
- * Persistent action-bar HUD — plain text only (no emoji/symbols).
+ * Persistent action-bar HUD with custom texture icons via PUA Unicode font.
  *
- * <p>Minecraft's vanilla action-bar API only accepts plain text. Item
- * textures/sprites CANNOT be embedded in the action bar via the Bukkit
- * API — that requires NMS packets or a client-side mod. This class uses
- * clean text formatting with color codes only.</p>
+ * <p>Uses Private Use Area (PUA) codepoints (U+E001–U+E057) that are
+ * mapped to custom texture sprites in the resource pack's font/default.json.
+ * When the resource pack is applied, these codepoints render as actual
+ * spell/school icons in the actionbar — real textures, not emoji.</p>
  *
- * <p>Layout: [School] Spell Name  |  Mana: cost/max  |  CD: Xs/Ready  |  Key: L-Click/Shift</p>
+ * <p>Layout:
+ * <pre>
+ *   [school_icon] Spell Name  [mana_icon] cost/max  [cd_icon] Ready/3s  [L-Click]
+ * </pre>
+ * </p>
  */
 public final class ActionBarTask extends BukkitRunnable {
     private final AnimeMagicPlugin plugin;
+
+    // PUA codepoints for icons (must match generate_font_atlas.py)
+    private static final String ICON_NARUTO   = "\uE001";
+    private static final String ICON_TENSURA  = "\uE002";
+    private static final String ICON_MUSHOKU  = "\uE003";
+    private static final String ICON_ONEPIECE = "\uE004";
+    private static final String ICON_READY    = "\uE010";
+    private static final String ICON_COOLDOWN = "\uE011";
+    private static final String ICON_MANA     = "\uE012";
 
     public ActionBarTask(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
@@ -60,25 +74,25 @@ public final class ActionBarTask extends BukkitRunnable {
 
         StringBuilder sb = new StringBuilder();
 
-        // School name in brackets + spell name
+        // School icon (PUA texture) + spell name
         Spell primary = spell != null ? spell : sneak;
-        sb.append(schoolTag(primary.school()));
+        sb.append(schoolIcon(primary.school()));
         sb.append(" ").append(primary.displayName());
 
-        // Mana cost
+        // Mana icon (PUA texture) + cost/pool
         if (manaEnabled && primary.manaCost() > 0) {
             int cur = plugin.getManaManager().current(id);
             int max = plugin.getManaManager().max(id);
             String costColor = cur >= primary.manaCost() ? "§b" : "§c";
-            sb.append("  §7| ").append(costColor).append(primary.manaCost())
-              .append("§7/").append("§b").append(max).append(" §7mana");
+            sb.append("  ").append(ICON_MANA).append(" ").append(costColor)
+              .append(primary.manaCost()).append("§7/§b").append(max);
         }
 
-        // Cooldown
+        // Cooldown icon (PUA texture)
         String cd = cooldownText(id, primary);
-        sb.append("  §7| ").append(cd);
+        sb.append("  ").append(cd);
 
-        // Keybind
+        // Keybind text
         if (sneak != null && spell != null) {
             sb.append("  §7| §eL-Click §7/ §dShift: ").append(sneak.displayName());
         } else {
@@ -88,12 +102,12 @@ public final class ActionBarTask extends BukkitRunnable {
         p.sendActionBar(sb.toString());
     }
 
-    private String schoolTag(Spell.SchoolId school) {
+    private String schoolIcon(Spell.SchoolId school) {
         return switch (school) {
-            case NARUTO  -> "§6[Naruto]";
-            case TENSURA -> "§5[Tensura]";
-            case MUSHOKU -> "§3[Mushoku]";
-            case ONEPIECE -> "§b[OnePiece]";
+            case NARUTO  -> "§6" + ICON_NARUTO;
+            case TENSURA -> "§5" + ICON_TENSURA;
+            case MUSHOKU -> "§3" + ICON_MUSHOKU;
+            case ONEPIECE -> "§b" + ICON_ONEPIECE;
         };
     }
 
@@ -106,9 +120,9 @@ public final class ActionBarTask extends BukkitRunnable {
             long remaining = cdMs - (now - lastCast);
             if (remaining > 0) {
                 long secs = (remaining + 999) / 1000;
-                return "§cCD: " + secs + "s";
+                return ICON_COOLDOWN + " §c" + secs + "s";
             }
         }
-        return "§aReady";
+        return ICON_READY + " §aReady";
     }
 }
