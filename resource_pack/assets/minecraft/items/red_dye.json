@@ -1,0 +1,22 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "cases": [
+      {
+        "when": [
+          6003.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/spell_gomu_pistol"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/red_dye"
+    }
+  }
+}

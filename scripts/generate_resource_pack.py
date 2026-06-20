@@ -2815,6 +2815,37 @@ def main():
     total_overrides = sum(len(o) for o in OVERRIDES.values())
     print(f"      OK — {total_overrides} overrides across {len(OVERRIDES)} items")
 
+
+    # 2b) Generate NEW MC 1.21.4+ item model files (items/ directory)
+    print(f"\n[2b/4] Generating NEW MC 1.21.4+ item model files...")
+    new_items_dir = VANILLA_ASSETS / "items"
+    new_items_dir.mkdir(parents=True, exist_ok=True)
+    for vanilla_item, ovrd in OVERRIDES.items():
+        cases = []
+        for cmd, model_ref in ovrd:
+            cases.append({
+                "when": [float(cmd)],
+                "model": {
+                    "type": "minecraft:model",
+                    "model": model_ref
+                }
+            })
+        new_format = {
+            "model": {
+                "type": "minecraft:select",
+                "property": "minecraft:custom_model_data",
+                "index": 0,
+                "cases": cases,
+                "fallback": {
+                    "type": "minecraft:model",
+                    "model": f"minecraft:item/{vanilla_item}"
+                }
+            }
+        }
+        (new_items_dir / f"{vanilla_item}.json").write_text(
+            json.dumps(new_format, indent=2))
+    print(f"      OK - {len(OVERRIDES)} new-format item files for MC 1.21.4+")
+
     # 3) pack.mcmeta
     pack_mcmeta = {
         "pack": {

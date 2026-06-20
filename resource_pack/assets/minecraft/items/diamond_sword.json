@@ -1,0 +1,31 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "cases": [
+      {
+        "when": [
+          4001.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/spell_magicule_blade"
+        }
+      },
+      {
+        "when": [
+          7006.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/diamond_sword_7006"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/diamond_sword"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "cases": [
+      {
+        "when": [
+          3003.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/spell_rasengan"
+        }
+      },
+      {
+        "when": [
+          7003.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/snowball_7003"
+        }
+      },
+      {
+        "when": [
+          7008.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/snowball_7008"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/snowball"
+    }
+  }
+}
