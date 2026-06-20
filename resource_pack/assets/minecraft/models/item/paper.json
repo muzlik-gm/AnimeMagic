@@ -57,6 +57,36 @@
         "custom_model_data": 7001
       },
       "model": "anime_magic:item/paper_7001"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7012
+      },
+      "model": "anime_magic:item/paper_7012"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7013
+      },
+      "model": "anime_magic:item/paper_7013"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7014
+      },
+      "model": "anime_magic:item/paper_7014"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7015
+      },
+      "model": "anime_magic:item/paper_7015"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7016
+      },
+      "model": "anime_magic:item/paper_7016"
     }
   ]
 }

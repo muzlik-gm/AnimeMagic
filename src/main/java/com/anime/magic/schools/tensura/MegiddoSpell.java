@@ -53,6 +53,12 @@ public final class MegiddoSpell implements Spell {
         if (target == null) return false;
         Location strike = target.getLocation();
 
+        // Spawn the 3D light pillar model at the strike location — descends
+        // from above and plays animation.megiddo.descend.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "megiddo_pillar", "animation.megiddo.descend",
+                strike.clone().add(0, 0, 0), 60, null);
+
         // Phase 1: Charge — converging light sphere on target
         new BukkitRunnable() {
             int t = 0;

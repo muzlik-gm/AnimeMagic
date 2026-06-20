@@ -64,6 +64,11 @@ public final class AtomicFlareSpell implements Spell {
 
     private void chargeAndDetonate(Player p) {
         Location center = p.getLocation().add(0, 3, 0);
+        // Spawn the 3D atomic flare model at the charge location — plays
+        // animation.atomic_flare.burst (expand + spin + fade).
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "atomic_flare", "animation.atomic_flare.burst",
+                center.clone(), 60, null);
         // Charge phase: growing sphere
         new BukkitRunnable() {
             int t = 0;

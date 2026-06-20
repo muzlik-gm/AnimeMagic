@@ -1,0 +1,260 @@
+{
+  "textures": {
+    "layer0": "anime_magic:item/paper_7013"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        7,
+        7
+      ],
+      "to": [
+        32,
+        9,
+        9
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            32,
+            4
+          ],
+          "texture": "#layer0"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            32,
+            4
+          ],
+          "texture": "#layer0"
+        },
+        "up": {
+          "uv": [
+            0,
+            4,
+            32,
+            8
+          ],
+          "texture": "#layer0"
+        },
+        "down": {
+          "uv": [
+            0,
+            4,
+            32,
+            8
+          ],
+          "texture": "#layer0"
+        },
+        "east": {
+          "uv": [
+            32,
+            0,
+            36,
+            4
+          ],
+          "texture": "#layer0"
+        },
+        "west": {
+          "uv": [
+            32,
+            0,
+            36,
+            4
+          ],
+          "texture": "#layer0"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        9,
+        6
+      ],
+      "to": [
+        32,
+        10,
+        10
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            0,
+            8,
+            32,
+            12
+          ],
+          "texture": "#layer0"
+        },
+        "down": {
+          "uv": [
+            0,
+            8,
+            32,
+            12
+          ],
+          "texture": "#layer0"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        6,
+        6
+      ],
+      "to": [
+        32,
+        7,
+        10
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            0,
+            8,
+            32,
+            12
+          ],
+          "texture": "#layer0"
+        },
+        "down": {
+          "uv": [
+            0,
+            8,
+            32,
+            12
+          ],
+          "texture": "#layer0"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        5,
+        5
+      ],
+      "to": [
+        2,
+        11,
+        11
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            36,
+            0,
+            40,
+            8
+          ],
+          "texture": "#layer0"
+        },
+        "south": {
+          "uv": [
+            36,
+            0,
+            40,
+            8
+          ],
+          "texture": "#layer0"
+        },
+        "up": {
+          "uv": [
+            36,
+            0,
+            40,
+            8
+          ],
+          "texture": "#layer0"
+        },
+        "down": {
+          "uv": [
+            36,
+            0,
+            40,
+            8
+          ],
+          "texture": "#layer0"
+        },
+        "east": {
+          "uv": [
+            36,
+            0,
+            40,
+            8
+          ],
+          "texture": "#layer0"
+        },
+        "west": {
+          "uv": [
+            36,
+            0,
+            40,
+            8
+          ],
+          "texture": "#layer0"
+        }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        0,
+        -90,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.25,
+        0.25,
+        0.25
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        2,
+        0
+      ],
+      "scale": [
+        0.3,
+        0.3,
+        0.3
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.3,
+        0.3,
+        0.3
+      ]
+    }
+  }
+}

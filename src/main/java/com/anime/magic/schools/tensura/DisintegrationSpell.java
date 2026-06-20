@@ -45,6 +45,13 @@ public final class DisintegrationSpell implements Spell {
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
 
+        // Spawn the 3D disintegration beam model in front of the caster —
+        // plays animation.disintegration.beam (sweeping loop).
+        Location beamSpawn = p.getEyeLocation().add(p.getLocation().getDirection().multiply(8));
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "disintegration_beam", "animation.disintegration.beam",
+                beamSpawn, 40, null);
+
         new BukkitRunnable() {
             int ticks = 0;
             @Override public void run() {

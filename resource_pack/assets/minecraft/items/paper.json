@@ -84,6 +84,51 @@
           "type": "minecraft:model",
           "model": "anime_magic:item/paper_7001"
         }
+      },
+      {
+        "when": [
+          7012.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7012"
+        }
+      },
+      {
+        "when": [
+          7013.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7013"
+        }
+      },
+      {
+        "when": [
+          7014.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7014"
+        }
+      },
+      {
+        "when": [
+          7015.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7015"
+        }
+      },
+      {
+        "when": [
+          7016.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7016"
+        }
       }
     ],
     "fallback": {

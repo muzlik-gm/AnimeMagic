@@ -39,6 +39,11 @@ public final class GearSecondSpell implements Spell {
     @Override
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
+        // Spawn the 3D steam aura model that follows the player — plays
+        // animation.steam_aura.spin (continuous rotation).
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "steam_aura", "animation.steam_aura.spin",
+                p.getLocation().clone(), 300, new org.bukkit.util.Vector(0, 1, 0));
         plugin.getParticleEngine().play(new SpiralAnimation(plugin, p, Particle.CLOUD,
                 300, 0.4, 1.2, 0.3, 6, 0.6));
         LocationUtil.sound(p.getLocation(), Sound.ENTITY_PLAYER_BREATH, 1.5f, 1.8f);

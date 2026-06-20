@@ -53,6 +53,12 @@ public final class GravitySpell implements Spell {
         LivingEntity target = caster.targetEntity(30);
         Location center = target != null ? target.getLocation() : p.getEyeLocation().add(p.getLocation().getDirection().multiply(20));
 
+        // Spawn the 3D gravity well orb at the center — plays
+        // animation.gravity.spin (continuous rotation + pulse).
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "gravity_orb", "animation.gravity.spin",
+                center.clone(), 80, null);
+
         // Phase 1: Pull (3 seconds)
         new BukkitRunnable() {
             int ticks = 0;
