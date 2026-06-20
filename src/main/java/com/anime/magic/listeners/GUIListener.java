@@ -53,12 +53,25 @@ public final class GUIListener implements Listener {
                     p.closeInventory();
                     plugin.getGuiManager().close(p.getUniqueId());
                 }
-                case "next" -> gui.openPage(gui.currentPage() + 1, null, null);
-                case "prev" -> gui.openPage(gui.currentPage() - 1, null, null);
+                // Preserve the current school filter when paginating — was being
+                // reset to null (showing all schools on page 2 even if the player
+                // filtered to one school on page 1).
+                case "next" -> gui.openPage(gui.currentPage() + 1, gui.currentFilter(), null);
+                case "prev" -> gui.openPage(gui.currentPage() - 1, gui.currentFilter(), null);
                 default -> {
                     if (action.startsWith("filter:")) {
                         String f = action.substring("filter:".length());
-                        Spell.SchoolId filter = f.equals("all") ? null : Spell.SchoolId.valueOf(f.toUpperCase());
+                        Spell.SchoolId filter;
+                        if (f.equals("all")) {
+                            filter = null;
+                        } else {
+                            try { filter = Spell.SchoolId.valueOf(f.toUpperCase()); }
+                            catch (IllegalArgumentException ex) {
+                                // Bad filter name in gui_textures.yml — log and abort
+                                plugin.getLogger().warning("Unknown school filter: " + f);
+                                return;
+                            }
+                        }
                         gui.openPage(0, filter, null);
                     } else if (action.startsWith("cast:")) {
                         String spellId = action.substring("cast:".length());

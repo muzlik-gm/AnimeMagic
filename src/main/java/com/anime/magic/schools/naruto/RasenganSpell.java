@@ -78,6 +78,7 @@ public final class RasenganSpell implements Spell {
                 final int tick = t;
                 new BukkitRunnable() {
                     @Override public void run() {
+                        if (!p.isOnline()) { cancel(); return; }
                         if (orb.isDead()) return;
                         float s = 0.3f + 0.5f * (tick / 20f);
                         orb.setTransform(0, -0.4f, 0.8f, 0, tick * 18f, 0, s, s, s);
@@ -90,6 +91,7 @@ public final class RasenganSpell implements Spell {
         effects.buildUp(handLoc, 20, Particle.CRIT, Sound.ENTITY_ENDERMAN_AMBIENT);
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 25, 1));
                 p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 25, 1));
             }
@@ -98,10 +100,12 @@ public final class RasenganSpell implements Spell {
         // Phase 3: Thrust — lunge forward at 40 ticks
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (orb != null && !orb.isDead()) {
                     orb.setTransform(0, -0.4f, 0.8f, 0, 0, 0, 1.5f, 1.5f, 1.5f);
                     new BukkitRunnable() {
                         @Override public void run() {
+                            if (!p.isOnline()) { cancel(); return; }
                             if (!orb.isDead()) orb.setTransform(0, -0.4f, 0.8f, 0, 0, 0, 1.0f, 1.0f, 1.0f);
                         }
                     }.runTaskLater(plugin, 4L);
@@ -119,6 +123,7 @@ public final class RasenganSpell implements Spell {
         // Phase 4 + 5: Impact + aftermath at 50 ticks
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 Location hand = p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.0));
                 if (orb != null) orb.remove();
                 List<LivingEntity> near = LocationUtil.nearbyLiving(hand, 4.0, p.getUniqueId());

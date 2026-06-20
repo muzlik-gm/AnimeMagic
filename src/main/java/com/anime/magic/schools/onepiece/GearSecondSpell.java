@@ -47,6 +47,7 @@ public final class GearSecondSpell implements Spell {
         new BukkitRunnable() {
             int ticks = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (ticks >= 300) {
                     LocationUtil.sound(p.getLocation(), Sound.ENTITY_PLAYER_BREATH, 1.0f, 0.8f);
                     cancel();
@@ -59,11 +60,12 @@ public final class GearSecondSpell implements Spell {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 80, 2));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 80, 1));
                 }
-                // Steam aura
+                // Steam aura — spawn ABOVE the head (was at feet, filling the
+                // player's first-person view with steam particles).
                 if (ticks % 3 == 0 && p.getWorld() != null) {
-                    Location feet = p.getLocation();
-                    p.getWorld().spawnParticle(Particle.CLOUD, feet, 1, 0.3, 0.1, 0.3, 0.1);
-                    p.getWorld().spawnParticle(Particle.DUST, feet, 1, 0.3, 0.8, 0.3, 0, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(255, 110, 110), 1.0f));
+                    Location above = p.getLocation().add(0, 2.0, 0);
+                    p.getWorld().spawnParticle(Particle.CLOUD, above, 1, 0.3, 0.1, 0.3, 0.1);
+                    p.getWorld().spawnParticle(Particle.DUST, above, 1, 0.3, 0.8, 0.3, 0, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(255, 110, 110), 1.0f));
                 }
                 ticks++;
             }

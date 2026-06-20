@@ -66,6 +66,7 @@ public final class SaintFireSpell implements Spell {
 
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 plugin.getParticleEngine().play(
                         new SphereAnimation(plugin, p, end, Particle.FLAME, 12, 0.5, 4.0, 60));
                 plugin.getParticleEngine().play(

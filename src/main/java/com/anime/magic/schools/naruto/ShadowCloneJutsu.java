@@ -98,6 +98,7 @@ public final class ShadowCloneJutsu implements Spell {
         // Lifetime expiry: poof all clones into smoke after 15s.
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 for (Zombie z : clones) {
                     if (z.isValid() && !z.isDead()) {
                         Location loc = z.getLocation();

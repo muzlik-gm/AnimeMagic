@@ -48,6 +48,7 @@ public final class ObservationHakiSpell implements Spell {
         new BukkitRunnable() {
             int ticks = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (ticks >= 600) { cancel(); return; }
                 if (ticks % 60 == 0) {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 80, 1));

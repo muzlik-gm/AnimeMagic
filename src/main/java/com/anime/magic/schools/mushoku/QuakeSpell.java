@@ -56,6 +56,7 @@ public final class QuakeSpell implements Spell {
             final int ringIdx = i;
             new BukkitRunnable() {
                 @Override public void run() {
+                    if (!p.isOnline()) { cancel(); return; }
                     double radius = 4.0 + ringIdx * 4.0;
                     plugin.getParticleEngine().play(new RingBurst(plugin, p, center, Particle.DUST, 20, radius, 80));
                     plugin.getParticleEngine().play(new SphereAnimation(plugin, p, center, Particle.DUST, 8, 0.5, ringIdx * 2.0 + 2.0, 40));

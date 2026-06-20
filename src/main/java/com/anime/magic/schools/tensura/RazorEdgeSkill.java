@@ -56,6 +56,7 @@ public final class RazorEdgeSkill implements Spell {
 
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 double dmg = 16.0 * plugin.getConfig().getDouble("schools.tensura.damage-multiplier", 1.0);
                 double current = target.getHealth();
                 target.setHealth(Math.max(0.5, current - dmg / 2));
@@ -63,6 +64,7 @@ public final class RazorEdgeSkill implements Spell {
                 new BukkitRunnable() {
                     int ticks = 0;
                     @Override public void run() {
+                        if (!p.isOnline()) { cancel(); return; }
                         if (ticks++ > 80 || target.isDead()) { cancel(); return; }
                         if (ticks % 20 == 0) target.damage(1.5, p);
                         if (target.getWorld() != null) {

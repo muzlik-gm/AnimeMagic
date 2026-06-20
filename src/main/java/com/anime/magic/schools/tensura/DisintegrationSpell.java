@@ -57,12 +57,15 @@ public final class DisintegrationSpell implements Spell {
                 dir.setYaw(dir.getYaw() + (float) sweep);
                 Location end = eye.clone().add(dir.getDirection().multiply(25));
 
-                // Beam particles along the line
-                for (double d = 0; d <= 1.0; d += 0.02) {
-                    Location loc = eye.clone().add(end.toVector().subtract(eye.toVector()).multiply(d));
-                    if (loc.getWorld() == null) continue;
-                    loc.getWorld().spawnParticle(Particle.DRAGON_BREATH, loc, 1, 0.1, 0.1, 0.1, 0.0);
-                    loc.getWorld().spawnParticle(Particle.SMOKE, loc, 1, 0.05, 0.05, 0.05, 0.0);
+                // Beam particles — drastically reduced (was 51 positions × 2 particles
+                // × 40 ticks = ~4080/cast). Now: 11 positions × 1 particle × every 2nd
+                // tick = ~220/cast. Still visually continuous but not screen-blinding.
+                if (ticks % 2 == 0) {
+                    for (double d = 0; d <= 1.0; d += 0.1) {
+                        Location loc = eye.clone().add(end.toVector().subtract(eye.toVector()).multiply(d));
+                        if (loc.getWorld() == null) continue;
+                        loc.getWorld().spawnParticle(Particle.DRAGON_BREATH, loc, 1, 0.1, 0.1, 0.1, 0.0);
+                    }
                 }
                 // Single entity scan per tick (was 11 scans/tick = 440/cast — catastrophic
                 // perf on populated worlds). Find entities near the beam midpoint with a

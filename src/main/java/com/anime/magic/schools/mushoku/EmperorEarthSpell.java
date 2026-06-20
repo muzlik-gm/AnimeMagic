@@ -70,6 +70,7 @@ public final class EmperorEarthSpell implements Spell {
             final double r = 2.0 + i * 2.5;
             new BukkitRunnable() {
                 @Override public void run() {
+                    if (!p.isOnline()) { cancel(); return; }
                     plugin.getParticleEngine().play(
                             new SphereAnimation(plugin, p, center, Particle.DUST, 10, 0.5, r, 40));
                 }
@@ -109,6 +110,7 @@ public final class EmperorEarthSpell implements Spell {
         new BukkitRunnable() {
             int r = 1;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (r > 8) { cancel(); return; }
                 if (center.getWorld() == null) return;
                 for (int i = 0; i < 16; i++) {

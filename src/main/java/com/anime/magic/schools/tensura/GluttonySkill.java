@@ -74,6 +74,7 @@ public final class GluttonySkill implements Spell {
         new BukkitRunnable() {
             int t = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (t >= 10 || target.isDead()) { cancel(); return; }
                 if (target.getWorld() == null) { cancel(); return; }
                 // Spawn 5 tendrils
@@ -98,10 +99,17 @@ public final class GluttonySkill implements Spell {
             int ticks = 0;
             @Override public void run() {
                 if (ticks >= 40 || target.isDead() || !p.isOnline()) {
-                    // Move to phase 3
-                    new BukkitRunnable() {
-                        @Override public void run() { absorb(p, target, orb); }
-                    }.runTaskLater(plugin, 1L);
+                    // Move to phase 3 — only if caster is still online.
+                    if (p.isOnline()) {
+                        new BukkitRunnable() {
+                            @Override public void run() {
+                                if (!p.isOnline()) { if (orb != null) orb.remove(); return; }
+                                absorb(p, target, orb);
+                            }
+                        }.runTaskLater(plugin, 1L);
+                    } else if (orb != null) {
+                        orb.remove();
+                    }
                     cancel();
                     return;
                 }

@@ -51,6 +51,7 @@ public final class VoiceOfAllThingsSpell implements Spell {
         new BukkitRunnable() {
             int ticks = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (ticks >= 200) {
                     plugin.getParticleEngine().play(new RingBurst(plugin, p, p.getLocation(),
                             Particle.END_ROD, 20, 8.0, 60));

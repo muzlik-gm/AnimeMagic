@@ -60,7 +60,9 @@ public final class GUIManager {
 
     public void openSpellbook(Player player) {
         SpellSelectionGUI gui = new SpellSelectionGUI(plugin, this, player);
-        gui.openPage(0, Spell.SchoolId.NARUTO, null);
+        // Default to "All Schools" (null filter) so players see the full
+        // school-grouped layout on first open, not just Naruto.
+        gui.openPage(0, null, null);
         openStates.put(player.getUniqueId(), new GUIState(GUI_ID_SPELLBOOK, gui));
     }
 

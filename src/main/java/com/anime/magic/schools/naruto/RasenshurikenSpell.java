@@ -64,6 +64,7 @@ public final class RasenshurikenSpell implements Spell {
         new BukkitRunnable() {
             int t = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (t >= 30) { cancel(); return; }
                 Location hand = p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.0));
                 if (hand.getWorld() == null) return;
@@ -84,6 +85,7 @@ public final class RasenshurikenSpell implements Spell {
             int ticks = 0;
             boolean thrown = false;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (thrown) { cancel(); return; }
                 if (ticks++ > 60 || p.isSneaking()) {
                     thrown = true;
@@ -115,6 +117,7 @@ public final class RasenshurikenSpell implements Spell {
         // Detonate
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (shuriken != null) shuriken.remove();
                 if (end.getWorld() == null) return;
                 // 5-layer explosion

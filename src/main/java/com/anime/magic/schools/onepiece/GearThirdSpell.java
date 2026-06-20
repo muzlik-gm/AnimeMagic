@@ -55,6 +55,7 @@ public final class GearThirdSpell implements Spell {
             int hitsLeft = 3;
             boolean onCd = false;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (ticks >= 400 || hitsLeft <= 0) { cancel(); return; }
                 if (onCd) { onCd = false; return; }
                 if (p.isSneaking()) {

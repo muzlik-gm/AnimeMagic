@@ -68,6 +68,7 @@ public final class AtomicFlareSpell implements Spell {
         new BukkitRunnable() {
             int t = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (t >= 20) { cancel(); detonate(p, center); return; }
                 if (center.getWorld() == null) { cancel(); return; }
                 double r = 0.3 + t * 0.06;

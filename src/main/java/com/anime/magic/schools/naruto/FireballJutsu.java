@@ -69,6 +69,7 @@ public final class FireballJutsu implements Spell {
         new BukkitRunnable() {
             int t = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (t >= 20) { cancel(); return; }
                 Location mouth = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.6));
                 if (mouth.getWorld() == null) return;
@@ -86,6 +87,7 @@ public final class FireballJutsu implements Spell {
         // Phase 2 + 3: Launch at 20 ticks
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (orb != null) orb.remove();
                 Location start = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.6));
                 LivingEntity target = caster.targetEntity(45);
@@ -105,6 +107,7 @@ public final class FireballJutsu implements Spell {
                 // Phase 4: Impact at end of travel (25 ticks)
                 new BukkitRunnable() {
                     @Override public void run() {
+                        if (!p.isOnline()) { cancel(); return; }
                         if (end.getWorld() == null) return;
 
                         // Impact frame

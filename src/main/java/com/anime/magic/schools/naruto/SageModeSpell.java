@@ -70,6 +70,7 @@ public final class SageModeSpell implements Spell {
         new BukkitRunnable() {
             int ticks = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (ticks >= 600) {
                     if (aura != null) aura.remove();
                     LocationUtil.sound(p.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 1.0f, 0.7f);

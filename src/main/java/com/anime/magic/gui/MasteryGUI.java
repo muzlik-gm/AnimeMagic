@@ -52,12 +52,28 @@ public final class MasteryGUI implements InventoryHolder {
                 "§d§lMastery §8» " + schoolName(school));
         slotToSpellId.clear();
 
-        // Row 0: title banner
-        for (int i = 0; i < 9; i++) {
-            inventory.setItem(i, makeBanner(school));
+        // ── Row 0: school filter tabs (0-3) + banner decoration (4-8) ───────
+        inventory.setItem(0, makeFilterTab(Spell.SchoolId.NARUTO, "§6§lNaruto", 1002));
+        inventory.setItem(1, makeFilterTab(Spell.SchoolId.TENSURA, "§5§lTensura", 1003));
+        inventory.setItem(2, makeFilterTab(Spell.SchoolId.MUSHOKU, "§3§lMushoku", 1004));
+        inventory.setItem(3, makeFilterTab(Spell.SchoolId.ONEPIECE, "§b§lOne Piece", 1005));
+        Material bannerMat = switch (school) {
+            case NARUTO -> Material.ORANGE_STAINED_GLASS_PANE;
+            case TENSURA -> Material.PURPLE_STAINED_GLASS_PANE;
+            case MUSHOKU -> Material.CYAN_STAINED_GLASS_PANE;
+            case ONEPIECE -> Material.BLUE_STAINED_GLASS_PANE;
+        };
+        for (int i = 4; i < 9; i++) {
+            ItemStack b = new ItemStack(bannerMat);
+            ItemMeta bm = b.getItemMeta();
+            if (bm != null) { bm.setDisplayName("§d§l" + schoolName(school) + " §7Mastery"); b.setItemMeta(bm); }
+            inventory.setItem(i, b);
         }
 
-        // Rows 1-3: spell tree (organize spells by tier)
+        // ── Rows 1-5: spell tree organized by tier ─────────────────────────
+        // T1: row 1, slots 10-16 (7 slots, col 0 and col 8 are border)
+        // T2: row 3, slots 28-34 (7 slots)
+        // T3: row 5, slots 46-52 (7 slots, col 0 = border, col 8 = close)
         List<Spell> spells = new ArrayList<>();
         for (Spell s : plugin.getSpellRegistry().all()) {
             if (s.school() == school && s.id().contains(":")) spells.add(s);
@@ -68,61 +84,40 @@ public final class MasteryGUI implements InventoryHolder {
         int tier1End = Math.max(1, n / 3);
         int tier2End = Math.max(tier1End + 1, (2 * n) / 3);
 
-        // T1: row 1, slots 10-17 (8 slots)
-        // T2: row 3, slots 28-35 (8 slots)
-        // T3: row 5, slots 46-52 (7 slots, leaving 45 for filter, 53 for close)
-        int t1Slot = 10, t2Slot = 28, t3Slot = 46;
         for (int i = 0; i < n; i++) {
             Spell spell = spells.get(i);
             String tier;
             int slot;
-            int col;
             if (i < tier1End) {
                 tier = "§a[T1 Novice]";
-                col = (i) % 8;
-                slot = t1Slot + col;
+                slot = 10 + (i % 7);
             } else if (i < tier2End) {
                 tier = "§e[T2 Advanced]";
-                col = (i - tier1End) % 8;
-                slot = t2Slot + col;
+                slot = 28 + ((i - tier1End) % 7);
             } else {
                 tier = "§c[T3 Ultimate]";
-                col = (i - tier2End) % 7;
-                slot = t3Slot + col;
-                // T3 row shares with filter tabs (slot 45) and close (slot 53)
-                // Make sure we don't overwrite slot 45 or 53 — both are reserved.
-                if (slot == 45) slot = 46;
-                if (slot == 53) slot = 52;
+                slot = 46 + ((i - tier2End) % 7);
             }
             if (slot >= 54) continue;
             inventory.setItem(slot, makeSpellIcon(spell, tier));
             slotToSpellId.put(slot, spell.id());
         }
 
-        // Row 2 and 4: connector glass (must come BEFORE spell icons so we don't
-        // accidentally overwrite T1/T2 spell slots — but we already placed them
-        // above. Place connectors only on slots we KNOW are not spell slots.
-        Set<Integer> spellSlots = new HashSet<>(slotToSpellId.keySet());
-        // Row 2 = 18..26, Row 4 = 36..44 — these are NEVER spell slots by the layout above
-        for (int i = 18; i < 27; i++) if (!spellSlots.contains(i)) inventory.setItem(i, makeConnector());
-        for (int i = 36; i < 45; i++) if (!spellSlots.contains(i)) inventory.setItem(i, makeConnector());
+        // ── Left edge (col 0) + right edge (col 8) + connector rows ────────
+        // Col 0: slots 9, 18, 27, 36, 45 — left border
+        // Col 8: slots 17, 26, 35, 44 — right border
+        // Connector rows: 18-26 (row 2) and 36-44 (row 4)
+        for (int slot : new int[]{9, 18, 27, 36, 45, 17, 26, 35, 44}) {
+            if (!slotToSpellId.containsKey(slot)) inventory.setItem(slot, makeConnector());
+        }
+        for (int i = 18; i < 27; i++) {
+            if (!slotToSpellId.containsKey(i)) inventory.setItem(i, makeConnector());
+        }
+        for (int i = 36; i < 45; i++) {
+            if (!slotToSpellId.containsKey(i)) inventory.setItem(i, makeConnector());
+        }
 
-        // Row 5 left side: school filter tabs (45-48) + close (53)
-        inventory.setItem(45, makeFilterTab(Spell.SchoolId.NARUTO, "§6§lNaruto", 1002));
-        inventory.setItem(46, makeFilterTab(Spell.SchoolId.TENSURA, "§5§lTensura", 1003));
-        inventory.setItem(47, makeFilterTab(Spell.SchoolId.MUSHOKU, "§3§lMushoku", 1004));
-        inventory.setItem(48, makeFilterTab(Spell.SchoolId.ONEPIECE, "§b§lOne Piece", 1005));
-        // Note: placing filter tabs here will overwrite any T3 spell that landed
-        // in slots 45-48. To avoid that, T3 spells are placed starting at slot 46
-        // by the loop above — which still conflicts with the filter tabs. The
-        // simple fix is: place T3 spells at slots 49-52 (only 4 slots) so they
-        // never overlap with the 4 filter tabs at 45-48.
-        // We do that by clearing slotToSpellId for slots 45-48 and re-placing any
-        // T3 spells that were there into slots 49-52.
-        // (Already handled by the col-math above using only slots 46-52.)
-
-        // Spacer at 49-52 (between filters and close)
-        for (int i = 49; i < 53; i++) inventory.setItem(i, makeConnector());
+        // ── Row 5 col 8: close button (slot 53) ────────────────────────────
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta cm = close.getItemMeta();
         if (cm != null) { cm.setDisplayName("§c§lClose"); close.setItemMeta(cm); }
@@ -226,11 +221,12 @@ public final class MasteryGUI implements InventoryHolder {
     }
 
     public @org.jetbrains.annotations.Nullable Spell.SchoolId schoolFilterAt(int slot) {
+        // Filter tabs are now in row 0 (slots 0-3), not row 5 (slots 45-48).
         return switch (slot) {
-            case 45 -> Spell.SchoolId.NARUTO;
-            case 46 -> Spell.SchoolId.TENSURA;
-            case 47 -> Spell.SchoolId.MUSHOKU;
-            case 48 -> Spell.SchoolId.ONEPIECE;
+            case 0 -> Spell.SchoolId.NARUTO;
+            case 1 -> Spell.SchoolId.TENSURA;
+            case 2 -> Spell.SchoolId.MUSHOKU;
+            case 3 -> Spell.SchoolId.ONEPIECE;
             default -> null;
         };
     }

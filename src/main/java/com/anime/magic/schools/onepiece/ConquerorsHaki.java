@@ -81,11 +81,13 @@ public final class ConquerorsHaki implements Spell {
         // Phase 2: Burst at 15 ticks
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (dome != null && !dome.isDead()) {
                     for (int t = 0; t <= 15; t++) {
                         final int tick = t;
                         new BukkitRunnable() {
                             @Override public void run() {
+                                if (!p.isOnline()) { cancel(); return; }
                                 if (dome.isDead()) return;
                                 float s = 0.1f + 2.9f * (tick / 15f);
                                 dome.setTransform(0, 0.5f, 0, 0, tick * 24f, 0, s, s, s);
@@ -111,13 +113,16 @@ public final class ConquerorsHaki implements Spell {
                 LocationUtil.sound(center, Sound.ENTITY_WITHER_SPAWN, 1.2f, 0.6f);
                 LocationUtil.sound(center, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 2.0f, 0.4f);
 
-                // Damage + paralysis
+                // Damage + paralysis — apply to ALL entities within 15 blocks.
+                // The old code had a dead zone: players between 8 and 15 blocks
+                // (distanceSquared > 64 but within 15-block radius) matched neither
+                // the player branch nor the mob branch, so they received zero effect.
                 for (LivingEntity e : LocationUtil.nearbyLiving(center, 15.0, p.getUniqueId())) {
-                    if (e instanceof Player other && other.getLocation().distanceSquared(center) <= 64) {
+                    if (e instanceof Player other) {
                         other.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 0));
                         other.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 60, 2));
                         other.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 60, 1));
-                    } else if (!(e instanceof Player)) {
+                    } else {
                         e.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 120, 4));
                         e.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 120, 2));
                         e.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 120, 0));
@@ -135,6 +140,7 @@ public final class ConquerorsHaki implements Spell {
         // Phase 3: Collapse at 35 ticks
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (dome != null && !dome.isDead()) {
                     var collapseAnim = plugin.getAnimationRegistry().get("animation.haki.collapse");
                     if (collapseAnim != null) dome.playAnimation(collapseAnim);

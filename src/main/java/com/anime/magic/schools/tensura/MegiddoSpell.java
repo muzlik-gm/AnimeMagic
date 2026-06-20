@@ -57,6 +57,7 @@ public final class MegiddoSpell implements Spell {
         new BukkitRunnable() {
             int t = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (t >= 20) { cancel(); return; }
                 if (strike.getWorld() == null) { cancel(); return; }
                 for (int i = 0; i < 6; i++) {
@@ -77,6 +78,7 @@ public final class MegiddoSpell implements Spell {
         // Phase 2 + 3: Strike + damage at 20 ticks
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (strike.getWorld() == null) return;
                 // Vertical pillar from sky
                 for (int y = 0; y < 30; y++) {

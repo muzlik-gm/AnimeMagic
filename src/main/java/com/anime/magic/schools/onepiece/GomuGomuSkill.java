@@ -79,6 +79,7 @@ public final class GomuGomuSkill implements Spell {
         new BukkitRunnable() {
             int t = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (t >= 10) {
                     // Phase 2: stretch launch
                     stretch(p, target, start, end);
@@ -119,6 +120,7 @@ public final class GomuGomuSkill implements Spell {
         // Phase 3: Impact at end of bezier (15 ticks)
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (end.getWorld() == null) return;
                 // Sphere of red dust at impact
                 plugin.getParticleEngine().play(

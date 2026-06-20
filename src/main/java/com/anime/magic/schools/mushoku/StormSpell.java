@@ -58,6 +58,7 @@ public final class StormSpell implements Spell {
         new BukkitRunnable() {
             int ticks = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (ticks >= 160) { cancel(); return; }
                 if (ticks % 20 == 0) {  // every second
                     double dmg = 3.0 * plugin.getConfig().getDouble("schools.mushoku.damage-multiplier", 1.0);

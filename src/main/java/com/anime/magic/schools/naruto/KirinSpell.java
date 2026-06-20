@@ -75,6 +75,7 @@ public final class KirinSpell implements Spell {
         // Phase 2: Descent at 40 ticks — kirin bolt model descends
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 Location spawnAt = strike.clone().add(0, 10, 0);
                 SpellEffects.spawnAnimated(plugin, p, "kirin_bolt", "animation.kirin.descend", spawnAt, 20, null);
                 LocationUtil.sound(strike, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 3.0f, 0.3f);
@@ -85,6 +86,7 @@ public final class KirinSpell implements Spell {
         // Phase 3: Impact at 60 ticks
         new BukkitRunnable() {
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (strike.getWorld() == null) return;
 
                 // Impact frame — violent (intensity 3.0)
@@ -124,6 +126,7 @@ public final class KirinSpell implements Spell {
                 new BukkitRunnable() {
                     int ticks = 0;
                     @Override public void run() {
+                        if (!p.isOnline()) { cancel(); return; }
                         if (ticks >= 40 || strike.getWorld() == null) { cancel(); return; }
                         strike.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, strike, 3, 3, 3, 3, 0.1);
                         ticks++;

@@ -78,6 +78,7 @@ public final class ChidoriSpell implements Spell {
             int ticks = 0;
             boolean triggered = false;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (triggered) { cancel(); return; }
                 if (ticks++ > 100) {
                     if (blade != null) blade.remove();
@@ -141,9 +142,11 @@ public final class ChidoriSpell implements Spell {
 
         // Aftermath — residual electric crackle
         effects.aftermath(to, 20, "embers");
+        final Player casterFinal = caster;
         new BukkitRunnable() {
             int ticks = 0;
             @Override public void run() {
+                if (!casterFinal.isOnline()) { cancel(); return; }
                 if (ticks >= 20 || to.getWorld() == null) { cancel(); return; }
                 to.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, to, 3, 0.5, 0.5, 0.5, 0.1);
                 ticks++;

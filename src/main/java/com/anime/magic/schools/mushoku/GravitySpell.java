@@ -57,6 +57,7 @@ public final class GravitySpell implements Spell {
         new BukkitRunnable() {
             int ticks = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (ticks >= 60) { explode(p, center); cancel(); return; }
                 if (center.getWorld() == null) { cancel(); return; }
                 // Inward spiraling particles

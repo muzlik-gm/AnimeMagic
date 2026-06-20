@@ -50,7 +50,10 @@ public final class PhoenixFlowerSpell implements Spell {
         for (int i = 0; i < 6; i++) {
             final int orbNum = i;
             new BukkitRunnable() {
-                @Override public void run() { fireOrb(caster, p, orbNum); }
+                @Override public void run() {
+                    if (!p.isOnline()) return;
+                    fireOrb(caster, p, orbNum);
+                }
             }.runTaskLater(plugin, i * 10L);
         }
         return true;
@@ -74,6 +77,7 @@ public final class PhoenixFlowerSpell implements Spell {
         new BukkitRunnable() {
             int t = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (t >= 20 || orb == null || orb.isDead()) {
                     // Detonate
                     if (orb != null) orb.remove();

@@ -53,6 +53,7 @@ public final class GearFourthSpell implements Spell {
             int ticks = 0;
             boolean onCd = false;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (ticks >= 500) {
                     LocationUtil.sound(p.getLocation(), Sound.ENTITY_WITHER_DEATH, 1.5f, 0.5f);
                     cancel();

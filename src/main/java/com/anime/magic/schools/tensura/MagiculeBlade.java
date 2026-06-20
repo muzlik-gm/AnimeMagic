@@ -77,6 +77,7 @@ public final class MagiculeBlade implements Spell {
         new BukkitRunnable() {
             int t = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (t >= 10) { cancel(); return; }
                 Location hand = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.8));
                 if (hand.getWorld() == null) return;
@@ -107,6 +108,7 @@ public final class MagiculeBlade implements Spell {
             int ticks = 0;
             boolean slashCooldown = false;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (ticks++ > 200) {
                     if (blade != null) blade.remove();
                     cancel();

@@ -58,11 +58,18 @@ textures:
 
 layout:
   rows: 6
+  # Filter tabs in row 0 (slots 0-4): All / Naruto / Tensura / Mushoku / OnePiece
   filter-slots: [0, 1, 2, 3, 4]
+  # Navigation buttons in row 5
   nav-next: 53
   nav-prev: 45
   nav-close: 49
-  border-slots: [6, 7, 8, 15, 16, 17, 24, 26, 33, 35, 42, 43, 44, 46, 47, 48, 50, 51, 52]
-  spell-slots-start: 19
-  spell-slots-end: 44
-  spell-slots-skip: [24, 26, 33, 35]
+  # Border/decoration slots (no overlap with spell slots)
+  border-slots: [5, 6, 7, 8, 17, 26, 35, 44, 46, 47, 48, 50, 51, 52]
+  # School icon slots — column 0 of each spell row (the school's icon + click-to-filter)
+  school-icon-slots: [9, 18, 27, 36]
+  # Spell slots: columns 1-7 of each spell row (7 spells per school per page)
+  spell-slots-start: 10
+  spell-slots-end: 43
+  spell-slots-skip: [17, 26, 35]
+  spells-per-school-per-page: 7

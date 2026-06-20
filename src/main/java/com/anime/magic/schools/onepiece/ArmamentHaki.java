@@ -56,6 +56,7 @@ public final class ArmamentHaki implements Spell {
             int ticks = 0;
             boolean onCooldown = false;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (ticks++ > 400) { cancel(); return; }
                 if (onCooldown) { onCooldown = false; return; }
                 if (p.isSneaking()) {

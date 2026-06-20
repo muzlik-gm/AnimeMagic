@@ -49,6 +49,7 @@ public final class BeelzebuthSpell implements Spell {
         new BukkitRunnable() {
             int ticks = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (ticks >= 100) { cancel(); return; }
                 if (ticks % 20 == 0) {  // Once per second
                     double multiplier = plugin.getConfig().getDouble("schools.tensura.damage-multiplier", 1.0);
@@ -76,9 +77,10 @@ public final class BeelzebuthSpell implements Spell {
                     }
                     LocationUtil.sound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.8f, 0.6f);
                 }
-                // Continuous aura around caster
+                // Continuous aura around caster — spawn ABOVE the head (was at
+                // chest level, blinding the caster's first-person view).
                 if (ticks % 4 == 0 && p.getWorld() != null) {
-                    p.getWorld().spawnParticle(Particle.DRAGON_BREATH, p.getLocation().add(0, 1, 0), 3, 1.5, 1.5, 1.5, 0.02);
+                    p.getWorld().spawnParticle(Particle.DRAGON_BREATH, p.getLocation().add(0, 2.5, 0), 3, 1.5, 1.5, 1.5, 0.02);
                 }
                 ticks++;
             }
