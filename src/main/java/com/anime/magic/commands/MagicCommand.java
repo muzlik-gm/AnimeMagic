@@ -32,7 +32,7 @@ public final class MagicCommand implements CommandExecutor, TabCompleter {
             case "info" -> {
                 sender.sendMessage("§d=== §eAnimeMagic §d===");
                 sender.sendMessage("§7Version: §e" + plugin.getDescription().getVersion());
-                sender.sendMessage("§7Server: §e" + plugin.getVersionManager());
+                sender.sendMessage("§7Server: §e" + plugin.getVersionManager().getServerVersion());
                 sender.sendMessage("§7Spells loaded: §e" + plugin.getSpellRegistry().size());
                 sender.sendMessage("§7Models loaded: §e" + plugin.getModelRegistry().size());
                 sender.sendMessage("§7Animations loaded: §e" + plugin.getAnimationRegistry().size());
@@ -66,12 +66,16 @@ public final class MagicCommand implements CommandExecutor, TabCompleter {
                     .collect(Collectors.toList());
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("give")) {
+            // Admin-only subcommand — don't leak online player names to non-admins.
+            if (!sender.hasPermission("animemagic.admin")) return new ArrayList<>();
             return plugin.getServer().getOnlinePlayers().stream()
                     .map(p -> p.getName())
                     .filter(n -> n.toLowerCase(Locale.ROOT).startsWith(args[1].toLowerCase(Locale.ROOT)))
                     .collect(Collectors.toList());
         }
         if (args.length == 3 && args[0].equalsIgnoreCase("give")) {
+            // Same gate — don't leak the spell ID list.
+            if (!sender.hasPermission("animemagic.admin")) return new ArrayList<>();
             return plugin.getSpellRegistry().all().stream()
                     .map(s -> s.id())
                     .filter(id -> id.toLowerCase(Locale.ROOT).startsWith(args[2].toLowerCase(Locale.ROOT)))

@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -62,6 +63,9 @@ public final class PhoenixFlowerSpell implements Spell {
         Location dir = p.getEyeLocation();
         dir.setYaw(dir.getYaw() + (float) Math.toDegrees(spread));
         Location end = start.clone().add(dir.getDirection().multiply(20));
+        // Capture the launch direction so the orb travels in a straight line
+        // rather than swerving to follow the player's crosshair each tick.
+        final Vector launchDir = dir.getDirection();
 
         // Spawn small phoenix_flower model
         ModelDisplay orb = SpellEffects.spawnAnimated(plugin, p, "phoenix_flower", "animation.phoenix.bloom",
@@ -85,9 +89,12 @@ public final class PhoenixFlowerSpell implements Spell {
                     cancel();
                     return;
                 }
-                // Step the orb forward
+                // Step the orb forward using the direction captured at launch
+                // (was using p.getLocation().getDirection() each tick, which
+                // made all 6 orbs swerve mid-flight to follow the player's
+                // current crosshair — visually jarring and unintended).
                 if (orb != null && !orb.isDead()) {
-                    Location next = orb.entity().getLocation().add(p.getLocation().getDirection().multiply(0.8));
+                    Location next = orb.entity().getLocation().add(launchDir.clone().multiply(0.8));
                     orb.teleport(next);
                     if (next.getWorld() != null) {
                         next.getWorld().spawnParticle(Particle.FLAME, next, 2, 0.1, 0.1, 0.1, 0.02);

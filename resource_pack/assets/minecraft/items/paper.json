@@ -10,7 +10,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/filter_all"
+          "model": "anime_magic:item/paper_1001"
         }
       },
       {
@@ -19,7 +19,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/filter_naruto"
+          "model": "anime_magic:item/paper_1002"
         }
       },
       {
@@ -28,7 +28,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/filter_tensura"
+          "model": "anime_magic:item/paper_1003"
         }
       },
       {
@@ -37,7 +37,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/filter_mushoku"
+          "model": "anime_magic:item/paper_1004"
         }
       },
       {
@@ -46,7 +46,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/filter_onepiece"
+          "model": "anime_magic:item/paper_1005"
         }
       },
       {
@@ -55,7 +55,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/nav_next"
+          "model": "anime_magic:item/paper_1010"
         }
       },
       {
@@ -64,7 +64,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/nav_prev"
+          "model": "anime_magic:item/paper_1011"
         }
       },
       {
@@ -73,7 +73,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/nav_close"
+          "model": "anime_magic:item/paper_1012"
         }
       },
       {

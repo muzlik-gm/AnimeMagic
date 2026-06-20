@@ -1,7 +1,7 @@
 name: AnimeMagic
 version: '${project.version}'
 main: com.anime.magic.AnimeMagicPlugin
-api-version: '1.17'
+api-version: '1.21'
 author: AnimeMagic Team
 description: Anime-inspired magic plugin with Naruto, Tensura, Mushoku Tensei, One Piece schools, 3D models, animations, custom GUIs, and magical duel minigame.
 folia-supported: false
@@ -114,3 +114,12 @@ permissions:
   animemagic.arena.manage:
     description: Create/delete/start/stop arenas
     default: op
+  animemagic.mana.250:
+    description: +250 max mana bonus tier
+    default: false
+  animemagic.mana.500:
+    description: +500 max mana bonus tier
+    default: false
+  animemagic.mana.1000:
+    description: +1000 max mana bonus tier
+    default: false

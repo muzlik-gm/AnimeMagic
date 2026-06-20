@@ -2823,11 +2823,17 @@ def main():
     for vanilla_item, ovrd in OVERRIDES.items():
         cases = []
         for cmd, model_ref in ovrd:
+            # In the new items/ format, the "model" field is a path to
+            # a model JSON file, NOT a texture path.  The model file
+            # for this override is named {vanilla_item}_{cmd}.json
+            # (e.g. paper_1005.json), regardless of what texture the
+            # model file itself references internally.
+            model_file_name = f"{vanilla_item}_{cmd}"
             cases.append({
                 "when": [float(cmd)],
                 "model": {
                     "type": "minecraft:model",
-                    "model": model_ref
+                    "model": f"anime_magic:item/{model_file_name}"
                 }
             })
         new_format = {

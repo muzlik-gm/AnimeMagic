@@ -80,35 +80,11 @@ public final class HotbarControl implements ControlScheme {
 
     @Override
     public void onSlotChange(@NotNull Player player, @NotNull PlayerItemHeldEvent e) {
+        // The persistent ActionBarTask now shows the selected ability HUD
+        // continuously, so we don't need to send a one-shot action-bar message
+        // on slot change. We just track the slot for other controls that
+        // might want it (e.g. combo tracking).
         int newSlot = e.getNewSlot();
-        String spellId = plugin.getControlManager().boundSpell(player.getUniqueId(), newSlot);
-        if (spellId == null) return;
-        Spell spell = plugin.getSpellRegistry().get(spellId);
-        if (spell == null) return;
-
-        String sneakId = plugin.getDefaultBindings() != null
-                ? plugin.getDefaultBindings().sneakSpellFor(player.getUniqueId(), newSlot) : null;
-        Spell sneak = sneakId != null ? plugin.getSpellRegistry().get(sneakId) : null;
-
-        StringBuilder msg = new StringBuilder();
-        msg.append("\u00a76[\u00a7e").append(newSlot + 1).append("\u00a76] ");
-        msg.append("\u00a7e").append(spell.displayName());
-        msg.append(" \u00a77(\u00a7b").append(spell.manaCost()).append(" mana\u00a77)");
-        if (sneak != null) {
-            msg.append(" \u00a7d| Shift+Click: ").append(sneak.displayName());
-        }
-
-        // Show cooldown if active
-        Long lastCast = plugin.getManaManager().lastSpellCast(player.getUniqueId(), spell.id());
-        if (lastCast != null) {
-            long now = System.currentTimeMillis();
-            long cdMs = spell.cooldownMs();
-            long remaining = cdMs - (now - lastCast);
-            if (remaining > 0) {
-                msg.append(" \u00a7c[CD: ").append(remaining / 1000 + 1).append("s]");
-            }
-        }
-
-        player.sendActionBar(msg.toString());
+        plugin.getControlManager().selectedSlot(player.getUniqueId(), newSlot);
     }
 }

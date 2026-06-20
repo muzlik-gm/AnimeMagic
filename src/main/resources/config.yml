@@ -51,6 +51,16 @@ gui:
   force-resource-pack: false
   spellbook-rows: 6
   show-lore: true
+  # Persistent action-bar HUD — shows the ability bound to the currently
+  # selected hotbar slot, with mana cost, cooldown, and keybind hints.
+  # Updates every `update-ticks` ticks (10 = 2 Hz). Set enabled: false to
+  # disable entirely (e.g. if another plugin owns the action bar).
+  actionbar:
+    enabled: true
+    update-ticks: 10
+    # If false, slots with no binding show NO action bar (frees it for chat
+    # or other plugins). If true, an "empty slot" prompt is shown.
+    show-when-empty: false
 
 arena:
   min-players: 2
@@ -147,4 +157,4 @@ cinematic:
     # Leave scorch marks (fire + blackened blocks) after fire spells
     scorch-marks: true
 
-config-version: 3
+config-version: 4

@@ -10,7 +10,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/icon_naruto"
+          "model": "anime_magic:item/nether_star_2001"
         }
       },
       {
@@ -19,7 +19,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/icon_tensura"
+          "model": "anime_magic:item/nether_star_2002"
         }
       },
       {
@@ -28,7 +28,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/icon_mushoku"
+          "model": "anime_magic:item/nether_star_2003"
         }
       },
       {
@@ -37,7 +37,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/icon_onepiece"
+          "model": "anime_magic:item/nether_star_2004"
         }
       },
       {

@@ -51,9 +51,11 @@ public final class ImpactFrameSystem {
         if (!enabled) return;
         if (impactPoint.getWorld() == null) return;
 
-        // 1. Freeze the target
+        // 1. Freeze the target. Amplifier 127 (max meaningful slowness) — 255
+        // exceeds the signed-byte range the client expects and some clients wrap
+        // 255 → -1 (a speed boost) instead of slowness 255.
         if (target != null && !target.isDead()) {
-            target.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, freezeTicks, 255, false, false, false));
+            target.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, freezeTicks, 127, false, false, false));
             target.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, freezeTicks, 5, false, false, false));
         }
 

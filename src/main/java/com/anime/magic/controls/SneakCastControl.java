@@ -40,7 +40,9 @@ public final class SneakCastControl implements ControlScheme {
         double range = plugin.getConfig().getDouble("controls.sneak.target-range", 25.0);
         var caster = new com.anime.magic.api.Caster(plugin, player, spell);
         if (caster.targetEntity(range) == null) return;
-        e.setCancelled(true);
+        // Cast the spell but DO NOT cancel the sneak event — cancelling would
+        // revert the player to standing, blocking normal sneak-walking whenever
+        // a target is in range. The cast fires concurrently with the sneak.
         var cs = new com.anime.magic.api.CastingService(plugin);
         var result = cs.cast(player, spell);
         if (result == com.anime.magic.api.CastingService.Result.SUCCESS) {

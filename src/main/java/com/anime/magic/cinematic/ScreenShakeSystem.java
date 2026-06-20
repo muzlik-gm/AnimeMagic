@@ -1,6 +1,7 @@
 package com.anime.magic.cinematic;
 
 import com.anime.magic.AnimeMagicPlugin;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -14,8 +15,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * random offsets for a few ticks. This is the closest vanilla-Paper can get
  * to camera shake without NMS packets.
  *
- * <p>The offsets are very small (0.05-0.12 blocks) and only last ~10 ticks
- * (0.5 seconds), so it feels like a shake rather than actual movement.</p>
+ * <p><b>Drift fix:</b> the original implementation added offsets to the
+ * player's <em>current</em> yaw/pitch each tick, so small errors accumulated
+ * and the player's aim was permanently shifted after a shake. We now snapshot
+ * the original yaw/pitch at shake start and write ABSOLUTE yaw/pitch each tick
+ * (original + offset * decay), so the view returns to its starting orientation
+ * when the shake ends.</p>
  *
  * <p>Players who are sensitive to motion can disable this in config:
  * {@code cinematic.screen-shake.enabled: false}</p>
@@ -43,13 +48,27 @@ public final class ScreenShakeSystem {
      */
     public void shake(@NotNull Player player, double intensity) {
         if (!enabled) return;
+        // Skip dead / spectator / creative players — they shouldn't be shaken.
+        if (player.isDead() || player.getGameMode() == GameMode.SPECTATOR
+                || player.getGameMode() == GameMode.CREATIVE) return;
         if (activeShakes.contains(player.getUniqueId())) return; // don't stack
         activeShakes.add(player.getUniqueId());
+
+        // Snapshot original view so we can write ABSOLUTE offsets (no drift).
+        final float originalYaw = player.getLocation().getYaw();
+        final float originalPitch = player.getLocation().getPitch();
 
         new BukkitRunnable() {
             int tick = 0;
             @Override public void run() {
                 if (tick >= durationTicks || !player.isOnline()) {
+                    // Restore exact original view to undo any rounding drift.
+                    if (player.isOnline()) {
+                        Location restore = player.getLocation();
+                        restore.setYaw(originalYaw);
+                        restore.setPitch(originalPitch);
+                        player.teleport(restore);
+                    }
                     activeShakes.remove(player.getUniqueId());
                     cancel();
                     return;
@@ -58,13 +77,12 @@ public final class ScreenShakeSystem {
                 double progress = (double) tick / durationTicks;
                 double decay = 1.0 - progress; // 1.0 → 0.0
                 double offset = maxOffset * intensity * decay;
-                // Random direction
                 double yawOffset = (Math.random() - 0.5) * 2 * offset * 20; // degrees
                 double pitchOffset = (Math.random() - 0.5) * 2 * offset * 20;
+                // ABSOLUTE write (no accumulation) — original + offset.
                 Location loc = player.getLocation();
-                loc.setYaw(loc.getYaw() + (float) yawOffset);
-                loc.setPitch(Math.max(-90, Math.min(90, loc.getPitch() + (float) pitchOffset)));
-                // Teleport without changing position (only view direction)
+                loc.setYaw(originalYaw + (float) yawOffset);
+                loc.setPitch(Math.max(-90, Math.min(90, originalPitch + (float) pitchOffset)));
                 player.teleport(loc);
                 tick++;
             }
@@ -73,18 +91,14 @@ public final class ScreenShakeSystem {
 
     /**
      * Shake the screen of all players within a radius of the epicenter.
-     *
-     * @param epicenter The center of the impact
-     * @param radius The radius in blocks
-     * @param intensity Base intensity (1.0 = normal)
      */
     public void shakeNearby(@NotNull Location epicenter, double radius, double intensity) {
         if (!enabled || epicenter.getWorld() == null) return;
         for (Player p : epicenter.getWorld().getPlayers()) {
+            if (p.isDead() || p.getGameMode() == GameMode.SPECTATOR) continue;
             double dist = p.getLocation().distance(epicenter);
             if (dist <= radius) {
-                // Intensity falls off with distance
-                double falloff = 1.0 - (dist / radius) * 0.5; // 1.0 at center, 0.5 at edge
+                double falloff = 1.0 - (dist / radius) * 0.5;
                 shake(p, intensity * falloff);
             }
         }

@@ -74,6 +74,12 @@ public final class ArenaManager implements Listener {
     public boolean delete(@NotNull String name) {
         MagicArena removed = arenas.remove(name.toLowerCase());
         if (removed == null) return false;
+        // Stop the arena (teleports players back, strips potion effects, cancels tickers)
+        // before removing it. Otherwise players are stranded at the arena spawn with
+        // no way to /arena leave (arenaOf returns null after removal).
+        removed.stop();
+        // Drop any stragglers from the playerToArena index.
+        playerToArena.entrySet().removeIf(e -> e.getValue().equals(name.toLowerCase()));
         yaml.set(name.toLowerCase(), null);
         save();
         return true;
@@ -104,6 +110,11 @@ public final class ArenaManager implements Listener {
     public void onDeath(PlayerDeathEvent e) {
         MagicArena a = arenaOf(e.getEntity().getUniqueId());
         if (a == null || a.state() != GameState.RUNNING) return;
+        // Verify the victim is also in this arena — avoids counting cross-world damage.
+        if (!a.players().contains(e.getEntity().getUniqueId())) return;
+        // Mark the victim as eliminated so the alive-count check excludes them
+        // even after they respawn (default isDead() returns false post-respawn).
+        a.eliminate(e.getEntity().getUniqueId());
         Player killer = e.getEntity().getKiller();
         if (killer != null && a.players().contains(killer.getUniqueId())) {
             a.recordKill(killer.getUniqueId());
@@ -117,6 +128,25 @@ public final class ArenaManager implements Listener {
             a.leave(e.getPlayer());
             playerToArena.remove(e.getPlayer().getUniqueId());
         }
+    }
+
+    /**
+     * Called from PlayerListener.onJoin to teleport a player back to their saved
+     * pre-arena location if they disconnected mid-match. Without this, they would
+     * relog at the arena spawn (stranded).
+     */
+    public boolean tryRestore(@NotNull Player p) {
+        for (MagicArena a : arenas.values()) {
+            Location prev = a.previousLocation(p.getUniqueId());
+            if (prev != null) {
+                a.consumePreviousLocation(p.getUniqueId());
+                if (plugin.getConfig().getBoolean("arena.teleport-back", true)) {
+                    p.teleport(prev);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     private static String serializeLoc(Location l) {

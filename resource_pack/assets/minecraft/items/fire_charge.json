@@ -10,7 +10,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/spell_fireball"
+          "model": "anime_magic:item/fire_charge_3001"
         }
       },
       {

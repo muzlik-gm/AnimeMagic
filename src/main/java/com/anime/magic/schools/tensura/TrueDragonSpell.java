@@ -58,9 +58,17 @@ public final class TrueDragonSpell implements Spell {
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
 
+        // Cache pre-cast flight state so we don't corrupt creative/spectator
+        // flight permission when the spell ends.
+        final boolean wasCreative = p.getGameMode() == org.bukkit.GameMode.CREATIVE
+                || p.getGameMode() == org.bukkit.GameMode.SPECTATOR;
+        final boolean hadAllowFlight = p.getAllowFlight();
+
         // Phase 1: Transform
-        p.setAllowFlight(true);
-        p.setFlying(true);
+        if (!wasCreative) {
+            p.setAllowFlight(true);
+            p.setFlying(true);
+        }
         ModelDisplay aura = SpellEffects.spawnAnimated(plugin, p, "sage_aura", "animation.dragon.transform", p.getLocation(), 660, null);
         if (aura != null) aura.followPlayer(p.getUniqueId(), new org.bukkit.util.Vector(0, 0, 0));
 
@@ -73,10 +81,13 @@ public final class TrueDragonSpell implements Spell {
         new BukkitRunnable() {
             int ticks = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (ticks >= 600) {
-                    // End
-                    p.setFlying(false);
-                    p.setAllowFlight(false);
+                    // End — restore original flight state (don't revoke creative flight).
+                    if (!wasCreative) {
+                        p.setFlying(false);
+                        p.setAllowFlight(hadAllowFlight);
+                    }
                     if (aura != null) aura.remove();
                     plugin.getParticleEngine().play(new RingBurst(plugin, p, p.getLocation(), Particle.DRAGON_BREATH, 30, 10.0, 100));
                     LocationUtil.sound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 2.0f, 0.5f);

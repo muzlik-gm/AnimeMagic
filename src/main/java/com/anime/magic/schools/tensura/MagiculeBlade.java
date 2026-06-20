@@ -141,13 +141,20 @@ public final class MagiculeBlade implements Spell {
         // Violet slash arc
         Location from = caster.getEyeLocation();
         Location to = target.getLocation().add(0, 1, 0);
-        Vector dir = to.toVector().subtract(from.toVector()).normalize();
-        Vector perp = dir.clone().crossProduct(new Vector(0, 1, 0)).normalize();
+        Vector dir = to.toVector().subtract(from.toVector());
+        if (dir.lengthSquared() < 1e-9) dir = new Vector(0, 0, 1);
+        dir.normalize();
+        Vector perp = dir.clone().crossProduct(new Vector(0, 1, 0));
         if (perp.lengthSquared() < 1e-6) perp = new Vector(1, 0, 0);
+        perp.normalize();
 
-        // Bezier slash trail
+        // Bezier slash trail — clone perp for each control point so the second
+        // multiply(-1.0) does NOT retroactively mutate the first argument.
+        // (Vector.multiply mutates in place and returns `this`.)
+        Vector cp1 = perp.clone();
+        Vector cp2 = perp.clone().multiply(-1.0);
         plugin.getParticleEngine().play(
-                new BezierCurve(plugin, caster, from, to, perp.multiply(1.0), perp.multiply(-1.0),
+                new BezierCurve(plugin, caster, from, to, cp1, cp2,
                         Particle.DRAGON_BREATH, 8, 6, 0.05));
 
         // Slash arc particles

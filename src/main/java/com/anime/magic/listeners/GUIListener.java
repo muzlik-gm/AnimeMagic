@@ -133,13 +133,14 @@ public final class GUIListener implements Listener {
         }
     }
 
-    // Also cancel dragging in all custom GUIs
+    // Also cancel dragging in all custom GUIs (including SpellWheelGUI).
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDrag(InventoryDragEvent e) {
         Object holder = e.getInventory().getHolder();
         if (holder instanceof SpellSelectionGUI
                 || holder instanceof SchoolSelectorGUI
-                || holder instanceof MasteryGUI) {
+                || holder instanceof MasteryGUI
+                || holder instanceof com.anime.magic.controls.SpellWheelGUI) {
             e.setCancelled(true);
         }
     }
@@ -147,6 +148,14 @@ public final class GUIListener implements Listener {
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         if (!(e.getPlayer() instanceof Player p)) return;
-        plugin.getGuiManager().close(p.getUniqueId());
+        // Only clear GUIManager state if the closed inventory was one of our
+        // custom GUIs. Closing a vanilla chest/workbench shouldn't wipe state.
+        Object holder = e.getInventory().getHolder();
+        if (holder instanceof SpellSelectionGUI
+                || holder instanceof SchoolSelectorGUI
+                || holder instanceof MasteryGUI
+                || holder instanceof com.anime.magic.controls.SpellWheelGUI) {
+            plugin.getGuiManager().close(p.getUniqueId());
+        }
     }
 }

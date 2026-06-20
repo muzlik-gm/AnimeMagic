@@ -6,6 +6,11 @@ unknown-command: "&cUnknown subcommand. Try &e/%cmd% help&c."
 reloaded: "&aAnimeMagic reloaded in &e%ms% ms&a."
 config-version-mismatch: "&eConfig version mismatch — backing up old config and writing a fresh one."
 
+# Casting feedback for outcomes that previously had no message.
+spell.disabled-world: "&cSpells are disabled in this world."
+spell.failed: "&cThe spell fizzled."
+spell.aborted: "&cThe spell was interrupted."
+
 mana.show.self: "&bYour mana: &e%current%&b/&e%max%"
 mana.show.other: "&b%player%'s mana: &e%current%&b/&e%max%"
 mana.set: "&aSet &e%player%&a's mana to &e%value%&a."
@@ -94,6 +99,25 @@ controls.hotbar.equipped: "&7Equipped: &e%spell%"
 controls.hotbar.casting: "&7» Casting %mode% &e%spell%"
 school.default-applied: "&aDefault loadout applied: &e%school%&a. Use &e/school &ato switch."
 school.switched: "&aSwitched to &e%school% &aschool loadout."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Action-bar HUD — persistent display of the currently selected ability.
+# Placeholders:
+#   %slot%      — hotbar slot number (1-9)
+#   %cost%      — spell mana cost
+#   %current%   — player's current mana
+#   %max%       — player's max mana
+#   %cost_color%— §b (blue) if affordable, §c (red) if not
+#   %secs%      — cooldown seconds remaining
+#   %sneak%     — display name of the sneak-variant spell
+# ─────────────────────────────────────────────────────────────────────────────
+actionbar.slot-marker: "&7❯ &8[&e%slot%&8] &r"
+actionbar.mana: "&8◆ %cost_color%%cost%&7/&b%max%"
+actionbar.cd-ready: "&8⏲ &aReady"
+actionbar.cd-active: "&8⏲ &c%secs%s"
+actionbar.keybind-simple: "&8[&eL-Click&8]"
+actionbar.keybind-with-sneak: "&8[&eL-Click&8|&dShift: %sneak%&8]"
+actionbar.empty: "&7Slot &e%slot% &7has no ability bound. Use &e/bind hotbar %slot% <spell>&7."
 controls.wheel.title: "&dSpell Wheel &7- &fClick to cast"
 controls.wheel.click-to-cast: "&aClick to cast"
 controls.wheel.empty: "&7No recent spells — cast one first."

@@ -23,6 +23,7 @@ import com.anime.magic.schools.onepiece.OnePieceSchool;
 import com.anime.magic.schools.tensura.TensuraSchool;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import java.util.logging.Level;
@@ -52,6 +53,7 @@ public final class AnimeMagicPlugin extends JavaPlugin {
     private ControlManager controlManager;
     private DefaultBindings defaultBindings;
     private BukkitTask controlTickerTask;
+    private BukkitTask actionBarTask;
     private DoubleJumpCastControl doubleJumpControl;
     // v5 cinematic systems
     private com.anime.magic.cinematic.DestructionSystem destructionSystem;
@@ -103,6 +105,12 @@ public final class AnimeMagicPlugin extends JavaPlugin {
         registerControls();
         this.controlTickerTask = Bukkit.getScheduler().runTaskTimer(this, () -> controlManager.tickAll(), 1L, 1L);
 
+        // Persistent action-bar HUD — shows the currently selected ability +
+        // mana cost + cooldown + keybind. Updates every gui.actionbar.update-ticks.
+        int actionBarInterval = Math.max(2, getConfig().getInt("gui.actionbar.update-ticks", 10));
+        this.actionBarTask = new com.anime.magic.hud.ActionBarTask(this)
+                .runTaskTimer(this, 20L, actionBarInterval);
+
         // v5 cinematic systems
         this.destructionSystem = new com.anime.magic.cinematic.DestructionSystem(this);
         this.screenShakeSystem = new com.anime.magic.cinematic.ScreenShakeSystem(this);
@@ -132,6 +140,12 @@ public final class AnimeMagicPlugin extends JavaPlugin {
         getCommand("bind").setTabCompleter(new BindCommand(this));
         getCommand("school").setExecutor(new SchoolCommand(this));
         getCommand("school").setTabCompleter(new SchoolCommand(this));
+        // Verify every command resolved — log missing names instead of NPE-ing.
+        for (String name : new String[]{"magic","spell","mana","arena","spellbook","bind","school"}) {
+            if (getCommand(name) == null) {
+                getLogger().severe("Command /" + name + " is declared in plugin.yml but Bukkit could not resolve it — check plugin.yml.");
+            }
+        }
 
         if (getConfig().getBoolean("metrics.enabled", true)) {
             int id = getConfig().getInt("metrics.plugin-id", 0);
@@ -156,7 +170,7 @@ public final class AnimeMagicPlugin extends JavaPlugin {
             }
         }
 
-        int saveInterval = getConfig().getInt("storage.auto-save-seconds", 300);
+        int saveInterval = Math.max(30, getConfig().getInt("storage.auto-save-seconds", 300));
         this.autoSaveTask = Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
             try {
                 manaManager.saveAll();
@@ -191,25 +205,41 @@ public final class AnimeMagicPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        // Modules shut down FIRST so their resources (tasks, listeners) are released
+        // before the managers they depend on.
+        if (moduleManager != null) moduleManager.shutdownAll();
         if (autoSaveTask != null) autoSaveTask.cancel();
         if (controlTickerTask != null) controlTickerTask.cancel();
+        if (actionBarTask != null) actionBarTask.cancel();
         if (manaRegenTask != null) manaRegenTask.cancel();
         if (particleEngine != null) particleEngine.shutdown();
         if (guiManager != null) guiManager.closeAll();
         if (arenaManager != null) { arenaManager.stopAll(); arenaManager.save(); }
-        if (manaManager != null) manaManager.saveAll();
+        if (manaManager != null) { manaManager.saveAll(); manaManager.hideAllBossBars(); }
         if (controlManager != null) controlManager.save();
         getLogger().info("AnimeMagic disabled.");
+        instance = null;
     }
 
     public void reload(CommandSender sender) {
         long start = System.currentTimeMillis();
         reloadConfig();
         messages.reload();
+        // Re-load gui_textures.yml so /bind / /school icon changes take effect.
+        if (guiManager != null) guiManager.load();
         spellRegistry.clear();
         registerSchools();
         if (modelRegistry != null) modelRegistry.reload();
         if (animationRegistry != null) animationRegistry.reload();
+        // Re-evaluate every online player's max mana (config or permission
+        // may have changed) and clamp their current mana to the new max so
+        // lowered base-max values actually take effect without a relog.
+        if (manaManager != null) {
+            for (Player online : Bukkit.getOnlinePlayers()) {
+                manaManager.recalculateMax(online.getUniqueId());
+            }
+            manaManager.clampAll();
+        }
         long took = System.currentTimeMillis() - start;
         messages.send(sender, "reloaded", "%ms%", String.valueOf(took));
     }

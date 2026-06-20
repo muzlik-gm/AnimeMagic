@@ -42,12 +42,21 @@ public final class BezierCurve extends Animation3D {
     }
 
     @Override protected void onTick(int tick) {
-        double progress = (double) tick / maxTicks();
-        double upto = Math.min(1.0, progress + (1.0 / maxTicks()));
-        int segments = Math.max(2, densityPerTick * (tick + 1));
-        for (int i = 0; i < segments; i++) {
-            double t = (double) i / segments;
-            if (t > upto) break;
+        // Only draw the NEW segment(s) for this tick — the previous implementation
+        // restarted at t=0 every tick, redrawing the entire trail and producing
+        // O(n²) particle counts (a 25-tick curve with density 4 drew ~5000
+        // particles total, exhausting the per-tick particle budget silently).
+        if (maxTicks() <= 0) return;
+        double progressPrev = (double) (tick - 1) / maxTicks();
+        double progressNow = (double) tick / maxTicks();
+        double upto = Math.min(1.0, progressNow + (1.0 / maxTicks()));
+        double from = Math.max(0.0, progressPrev);
+        if (upto <= from) return;
+        // Draw a fixed number of particles spanning [from, upto] — proportional
+        // density per tick without cumulative redraw.
+        int segments = Math.max(2, densityPerTick);
+        for (int i = 0; i <= segments; i++) {
+            double t = from + (upto - from) * ((double) i / segments);
             Vector v = bezier(t);
             Location loc = new Location(owner.getWorld(), v.getX(), v.getY(), v.getZ());
             spawn(loc, particle, 1, 0.02, 0.02, 0.02, particleSpeed);

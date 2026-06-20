@@ -10,7 +10,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/spell_saint_fire"
+          "model": "anime_magic:item/blaze_powder_5002"
         }
       }
     ],

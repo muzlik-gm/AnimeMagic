@@ -6,6 +6,7 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,10 @@ import java.util.function.Consumer;
  * Cast Bar Control — a boss-bar progress bar that fills over a configurable duration.
  * Used to visualize long channeled spells. If the player takes damage, moves, or casts
  * another spell while active, the channel can be cancelled via cancel(UUID).
+ *
+ * <p>Each Channel records its own BukkitTask so cancel() can stop the runnable and
+ * prevent the stale-runnable race where the old runnable evicts the new Channel
+ * on its next tick. Identity (==) check guards against this.</p>
  */
 public final class CastBarControl implements ControlScheme {
     private final AnimeMagicPlugin plugin;
@@ -38,10 +43,14 @@ public final class CastBarControl implements ControlScheme {
         Channel c = new Channel(player.getUniqueId(), bar, ticks, 0, onComplete);
         active.put(player.getUniqueId(), c);
 
-        new BukkitRunnable() {
+        BukkitTask[] taskHolder = new BukkitTask[1];
+        BukkitRunnable runnable = new BukkitRunnable() {
             int t = 0;
             @Override public void run() {
-                if (!active.containsKey(player.getUniqueId())) { cancel(); return; }
+                // Identity check: if the active Channel is no longer `c`, a newer
+                // start() has replaced us — silently self-terminate without
+                // evicting the new channel or double-firing onComplete.
+                if (active.get(player.getUniqueId()) != c) { cancel(); return; }
                 if (player == null || !player.isOnline()) {
                     bar.removeAll();
                     active.remove(player.getUniqueId());
@@ -59,17 +68,25 @@ public final class CastBarControl implements ControlScheme {
                     cancel();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 2L);
+        };
+        taskHolder[0] = runnable.runTaskTimer(plugin, 0L, 2L);
+        c.task = taskHolder[0];
         return true;
     }
 
     public boolean cancel(@NotNull UUID playerId) { return cancel(playerId, false); }
 
+    /**
+     * Cancel the active channel. If {@code silent} is true, the {@code onComplete}
+     * callback is NOT invoked — used for player-quit cleanup where the callback
+     * might touch a stale player object.
+     */
     public boolean cancel(@NotNull UUID playerId, boolean silent) {
         Channel c = active.remove(playerId);
         if (c == null) return false;
+        if (c.task != null) c.task.cancel();
         c.bar.removeAll();
-        c.onComplete.accept(false);
+        if (!silent) c.onComplete.accept(false);
         return true;
     }
 
@@ -88,6 +105,7 @@ public final class CastBarControl implements ControlScheme {
         final int totalTicks;
         int tick;
         final Consumer<Boolean> onComplete;
+        BukkitTask task;
         Channel(UUID playerId, BossBar bar, int totalTicks, int tick, Consumer<Boolean> onComplete) {
             this.playerId = playerId; this.bar = bar; this.totalTicks = totalTicks;
             this.tick = tick; this.onComplete = onComplete;

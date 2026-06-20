@@ -36,6 +36,22 @@ public final class MessageService {
             if (reader != null) {
                 YamlConfiguration defaults = YamlConfiguration.loadConfiguration(reader);
                 yaml.setDefaults(defaults);
+                // Merge any new keys from the jar's defaults into the user's
+                // messages.yml so they can see + customize them. Existing keys
+                // are preserved (we only add missing ones).
+                boolean changed = false;
+                for (String key : defaults.getKeys(true)) {
+                    if (yaml.get(key) == null) {
+                        yaml.set(key, defaults.get(key));
+                        changed = true;
+                    }
+                }
+                if (changed) {
+                    try { yaml.save(file); }
+                    catch (IOException e) {
+                        plugin.getLogger().warning("Could not save merged messages.yml: " + e.getMessage());
+                    }
+                }
             }
         } catch (IOException e) {
             plugin.getLogger().warning("Could not read default messages.yml: " + e.getMessage());
@@ -43,7 +59,21 @@ public final class MessageService {
         this.prefix = translate(yaml.getString("prefix", ""));
     }
 
-    public String raw(String key) { return translate(yaml.getString(key, key)); }
+    public String raw(String key) {
+        // Check the user's messages.yml first (lets admins override anything).
+        String value = yaml.getString(key);
+        if (value == null) {
+            // Fall back to the jar's bundled defaults — needed so that NEW keys
+            // added in a plugin update (e.g. actionbar.* in v1.0.0-alpha+)
+            // appear for users who already have a customized messages.yml on
+            // disk. Without this fallback, raw() returned the key itself
+            // (e.g. literally "actionbar.slot-marker") which is what the user
+            // saw in the action bar.
+            org.bukkit.configuration.Configuration defaults = yaml.getDefaults();
+            if (defaults != null) value = defaults.getString(key);
+        }
+        return translate(value != null ? value : key);
+    }
 
     public String format(String key, Object... kvPairs) {
         return applyPlaceholders(raw(key), kvPairs);

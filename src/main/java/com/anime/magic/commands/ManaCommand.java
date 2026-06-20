@@ -26,13 +26,18 @@ public final class ManaCommand implements CommandExecutor, TabCompleter {
             case "show" -> {
                 Player target;
                 if (args.length >= 2) {
+                    // Viewing OTHER players' mana requires admin — otherwise info-disclosure.
+                    if (!sender.hasPermission("animemagic.admin")) {
+                        plugin.getMessages().send(sender, "no-permission");
+                        return true;
+                    }
                     target = Bukkit.getPlayer(args[1]);
                     if (target == null) { sender.sendMessage("§cPlayer not found: " + args[1]); return true; }
                 } else {
                     if (!(sender instanceof Player p)) { plugin.getMessages().send(sender, "player-only"); return true; }
                     target = p;
                 }
-                if (target.getUniqueId().equals(sender instanceof Player p ? p.getUniqueId() : null)) {
+                if (target == sender) {
                     plugin.getMessages().send(sender, "mana.show.self",
                             "%current%", String.valueOf(plugin.getManaManager().current(target.getUniqueId())),
                             "%max%", String.valueOf(plugin.getManaManager().max(target.getUniqueId())));
@@ -69,9 +74,22 @@ public final class ManaCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
                                        @NotNull String label, @NotNull String[] args) {
         if (args.length == 1) return SUBS.stream().filter(s -> s.startsWith(args[0].toLowerCase(Locale.ROOT))).collect(Collectors.toList());
-        if (args.length == 2) return Bukkit.getOnlinePlayers().stream().map(Player::getName)
-                .filter(n -> n.toLowerCase(Locale.ROOT).startsWith(args[1].toLowerCase(Locale.ROOT))).collect(Collectors.toList());
-        if (args.length == 3) return List.of("10", "50", "100");
+        // Player-name tab-completion only for subcommands that take a target.
+        // set/add/remove are admin-only — gate tab completion by permission too.
+        if (args.length == 2) {
+            String sub = args[0].toLowerCase(Locale.ROOT);
+            if (sub.equals("show") && !sender.hasPermission("animemagic.admin")) return new ArrayList<>();
+            if ((sub.equals("set") || sub.equals("add") || sub.equals("remove"))
+                    && !sender.hasPermission("animemagic.admin")) return new ArrayList<>();
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName)
+                    .filter(n -> n.toLowerCase(Locale.ROOT).startsWith(args[1].toLowerCase(Locale.ROOT))).collect(Collectors.toList());
+        }
+        if (args.length == 3) {
+            String sub = args[0].toLowerCase(Locale.ROOT);
+            if ((sub.equals("set") || sub.equals("add") || sub.equals("remove"))
+                    && !sender.hasPermission("animemagic.admin")) return new ArrayList<>();
+            return List.of("10", "50", "100");
+        }
         return new ArrayList<>();
     }
 }

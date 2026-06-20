@@ -56,9 +56,21 @@ public final class ConquerorsHaki implements Spell {
         Location center = p.getLocation();
         var effects = plugin.getCinematicEffects();
 
-        // Phase 1: Charge — root player + energy converge
+        // Phase 1: Charge — root player. Slowness 255 zeroes walk speed; we
+        // also clamp the player's velocity every tick via a small poller because
+        // JUMP_BOOST does NOT prevent jumping (it boosts jump height — the
+        // original code made the player able to leap ~250 blocks during "root").
         p.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 15, 255));
-        p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 15, 250));
+        new BukkitRunnable() {
+            int ticks = 0;
+            @Override public void run() {
+                if (ticks >= 15 || !p.isOnline()) { cancel(); return; }
+                // Zero out any upward velocity to prevent jump-leap escape.
+                org.bukkit.util.Vector v = p.getVelocity();
+                if (v.getY() > 0) p.setVelocity(new org.bukkit.util.Vector(v.getX(), 0, v.getZ()));
+                ticks++;
+            }
+        }.runTaskTimer(plugin, 0L, 1L);
         effects.energyCharge(center.clone().add(0, 1, 0), 15, Particle.DRAGON_BREATH, null);
 
         Location domeSpawn = center.clone().add(0, 0.5, 0);

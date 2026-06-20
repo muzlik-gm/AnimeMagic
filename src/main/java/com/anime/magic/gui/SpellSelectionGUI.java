@@ -37,7 +37,10 @@ public final class SpellSelectionGUI implements InventoryHolder {
     }
 
     public void openPage(int page, @Nullable Spell.SchoolId filter, @Nullable Spell.SchoolId previousFilter) {
-        if (filter != null) currentFilter = filter;
+        // Always overwrite currentFilter — passing null means "show all schools"
+        // (clears any active school filter). The previous two-arg overload silently
+        // ignored the "All" filter button when a school filter was already active.
+        currentFilter = filter;
         cachedSpells = collectSpells();
         int pages = Math.max(1, (cachedSpells.size() + PAGE_SIZE - 1) / PAGE_SIZE);
         if (page < 0) page = 0;

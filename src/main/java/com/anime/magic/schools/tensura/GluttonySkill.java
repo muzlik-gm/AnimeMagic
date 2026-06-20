@@ -122,7 +122,10 @@ public final class GluttonySkill implements Spell {
                     p.getWorld().spawnParticle(Particle.WITCH, loc, 1, 0.05, 0.05, 0.05, 0.0);
                 }
 
-                // Damage target + heal caster
+                // Damage target + heal caster. Reset noDamageTicks so every tick's
+                // 1.0 damage actually lands (Bukkit default 10-tick invulnerability
+                // would otherwise absorb 9 of every 10 hits → only ~4 damage total).
+                target.setNoDamageTicks(0);
                 target.damage(1.0, p);
                 if (p.getHealth() < p.getMaxHealth()) {
                     p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + 0.5));

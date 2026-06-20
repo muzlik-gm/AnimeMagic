@@ -20,15 +20,15 @@ textures:
     model: 1005
     display: "&bOne Piece"
   next-page:
-    material: ARROW
+    material: PAPER
     model: 1010
     display: "&aNext"
   prev-page:
-    material: ARROW
+    material: PAPER
     model: 1011
     display: "&aPrev"
   close:
-    material: BARRIER
+    material: PAPER
     model: 1012
     display: "&cClose"
   icon-naruto:

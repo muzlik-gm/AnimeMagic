@@ -94,7 +94,10 @@ public final class MegiddoSpell implements Spell {
                 double dmg = 60.0 * plugin.getConfig().getDouble("schools.tensura.damage-multiplier", 1.0);
                 if (!target.isDead()) {
                     if (target.getHealth() < target.getMaxHealth() * 0.5) {
-                        target.setHealth(0); // Execute
+                        // Execute: use damage() instead of setHealth(0) so the death
+                        // fires a proper EntityDamageEvent attributed to the caster.
+                        // WorldGuard / anti-cheat / damage-tracking plugins can react.
+                        target.damage(target.getHealth(), p);
                     } else {
                         target.damage(dmg, p);
                     }

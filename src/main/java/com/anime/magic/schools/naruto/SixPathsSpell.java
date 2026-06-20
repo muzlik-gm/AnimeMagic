@@ -59,9 +59,17 @@ public final class SixPathsSpell implements Spell {
         Player p = caster.player();
         Location startLoc = p.getLocation();
 
+        // Cache pre-cast flight state so we don't corrupt creative/spectator
+        // flight permission when the spell ends.
+        final boolean wasCreative = p.getGameMode() == org.bukkit.GameMode.CREATIVE
+                || p.getGameMode() == org.bukkit.GameMode.SPECTATOR;
+        final boolean hadAllowFlight = p.getAllowFlight();
+
         // Phase 1: Ascend
-        p.setAllowFlight(true);
-        p.setFlying(true);
+        if (!wasCreative) {
+            p.setAllowFlight(true);
+            p.setFlying(true);
+        }
         ModelDisplay aura = SpellEffects.spawnAnimated(plugin, p, "sage_aura", "animation.sixpaths.ascend", p.getLocation(), 460, null);
         if (aura != null) aura.followPlayer(p.getUniqueId(), new org.bukkit.util.Vector(0, 0, 0));
 
@@ -76,10 +84,14 @@ public final class SixPathsSpell implements Spell {
         new BukkitRunnable() {
             int ticks = 0;
             @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
                 if (ticks >= 400) {
-                    // End: descend
-                    p.setFlying(false);
-                    p.setAllowFlight(false);
+                    // End: descend. Only revoke flight for non-creative players
+                    // and restore the original allowFlight state.
+                    if (!wasCreative) {
+                        p.setFlying(false);
+                        p.setAllowFlight(hadAllowFlight);
+                    }
                     if (aura != null) aura.remove();
                     plugin.getParticleEngine().play(new RingBurst(plugin, p, p.getLocation(), Particle.END_ROD, 25, 8.0, 80));
                     LocationUtil.sound(p.getLocation(), Sound.ENTITY_WITHER_DEATH, 1.5f, 0.6f);

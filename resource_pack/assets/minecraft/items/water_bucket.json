@@ -10,7 +10,7 @@
         ],
         "model": {
           "type": "minecraft:model",
-          "model": "anime_magic:item/spell_saint_water"
+          "model": "anime_magic:item/water_bucket_5001"
         }
       }
     ],

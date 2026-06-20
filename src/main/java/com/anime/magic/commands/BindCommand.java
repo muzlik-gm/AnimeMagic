@@ -93,6 +93,7 @@ public final class BindCommand implements CommandExecutor, TabCompleter {
                     var spell = plugin.getSpellRegistry().get(spellId);
                     sender.sendMessage("§aBound look-cast to §e" + spell.displayName());
                 }
+                plugin.getControlManager().save();
             }
             case "doublejump" -> {
                 var djc = (DoubleJumpCastControl) plugin.getControlManager().get("doublejump");
@@ -107,6 +108,7 @@ public final class BindCommand implements CommandExecutor, TabCompleter {
                     var spell = plugin.getSpellRegistry().get(spellId);
                     sender.sendMessage("§aBound double-jump to §e" + spell.displayName());
                 }
+                plugin.getControlManager().save();
             }
             default -> sendHelp(sender);
         }

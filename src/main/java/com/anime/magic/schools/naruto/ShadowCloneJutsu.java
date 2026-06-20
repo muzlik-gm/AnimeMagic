@@ -24,8 +24,11 @@ import java.util.List;
 /**
  * <b>Kage Bunshin no Jutsu</b> — Shadow Clone Technique.
  *
- * <p>Summons 3 hostile-looking zombies that follow the caster's target,
- * attack it, and after 15 seconds poof into smoke clouds.</p>
+ * <p>Summons 3 "shadow clone" zombies that target the caster's current target
+ * (NOT the caster — fixed in audit pass: vanilla zombie AI defaults to the
+ * nearest player, which is the caster). Clones are non-persistent (despawn on
+ * chunk unload), wear a player-head helmet for thematic effect, and poof into
+ * smoke clouds after 15 seconds.</p>
  */
 public final class ShadowCloneJutsu implements Spell {
 
@@ -49,6 +52,8 @@ public final class ShadowCloneJutsu implements Spell {
     @Override
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
+        // Resolve the caster's target ONCE so all clones attack the same enemy.
+        LivingEntity target = caster.targetEntity(30);
         Location base = p.getLocation().add(p.getLocation().getDirection().multiply(2));
         List<Zombie> clones = new ArrayList<>();
 
@@ -57,8 +62,16 @@ public final class ShadowCloneJutsu implements Spell {
                     (Math.random() - 0.5) * 2, 0, (Math.random() - 0.5) * 2);
             if (spawn.getWorld() == null) continue;
             Zombie z = (Zombie) spawn.getWorld().spawnEntity(spawn, EntityType.ZOMBIE);
+            // Critical: zombies default to attacking the nearest player (the caster).
+            // Set the target explicitly so clones fight for the caster.
+            if (target != null) {
+                try { z.setTarget(target); } catch (Throwable ignored) {}
+            }
             z.setBaby(false);
+            // Non-persistent: don't save to chunk data on server crash.
+            try { z.setPersistent(false); } catch (Throwable ignored) {}
             z.getEquipment().setHelmet(new ItemStack(Material.PLAYER_HEAD));
+            z.getEquipment().setHelmetDropChance(0f);
             z.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 300, 2));
             z.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 300, 1));
             z.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 300, 0));
@@ -67,6 +80,22 @@ public final class ShadowCloneJutsu implements Spell {
             clones.add(z);
         }
 
+        // Re-target poller: keep clones locked on the caster's CURRENT target
+        // for the lifetime of the spell. Self-terminates if the caster logs out.
+        new BukkitRunnable() {
+            @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
+                LivingEntity current = new Caster(plugin, p, ShadowCloneJutsu.this).targetEntity(30);
+                if (current == null) return;
+                for (Zombie z : clones) {
+                    if (z.isValid() && !z.isDead()) {
+                        try { z.setTarget(current); } catch (Throwable ignored) {}
+                    }
+                }
+            }
+        }.runTaskTimer(plugin, 20L, 20L);
+
+        // Lifetime expiry: poof all clones into smoke after 15s.
         new BukkitRunnable() {
             @Override public void run() {
                 for (Zombie z : clones) {

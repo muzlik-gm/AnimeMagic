@@ -2,6 +2,7 @@ package com.anime.magic.mana;
 
 import com.anime.magic.AnimeMagicPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /** Ticks mana regeneration once per second. */
@@ -15,6 +16,10 @@ public final class ManaRegenTask extends BukkitRunnable {
         double rate = plugin.getConfig().getDouble("mana.regen-per-second", 2.0);
         if (rate <= 0) return;
         Bukkit.getOnlinePlayers().forEach(p -> {
+            // Skip dead + spectator players — they're not in active combat and
+            // regenerating their mana is wasteful (and may mask bugs in the
+            // respawn flow).
+            if (p.isDead() || p.getGameMode() == GameMode.SPECTATOR) return;
             var mm = plugin.getManaManager();
             int cur = mm.current(p.getUniqueId());
             int max = mm.max(p.getUniqueId());

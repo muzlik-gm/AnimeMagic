@@ -21,6 +21,9 @@ public final class MathUtil {
     }
 
     public static double map(double v, double inMin, double inMax, double outMin, double outMax) {
+        // Guard against degenerate input range — was producing NaN/Infinity when
+        // inMin == inMax (e.g., from a config typo or a single-point calibration).
+        if (inMax == inMin) return outMin;
         double t = (v - inMin) / (inMax - inMin);
         return lerp(outMin, outMax, t);
     }

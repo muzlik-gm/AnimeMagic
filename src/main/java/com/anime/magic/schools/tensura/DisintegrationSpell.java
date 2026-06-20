@@ -49,6 +49,7 @@ public final class DisintegrationSpell implements Spell {
             int ticks = 0;
             @Override public void run() {
                 if (ticks >= 40) { cancel(); return; }
+                if (!p.isOnline()) { cancel(); return; }
                 // Beam from player eye, sweeping slightly
                 Location eye = p.getEyeLocation();
                 double sweep = Math.sin(ticks * 0.15) * 15; // ±15 degrees sweep
@@ -63,10 +64,20 @@ public final class DisintegrationSpell implements Spell {
                     loc.getWorld().spawnParticle(Particle.DRAGON_BREATH, loc, 1, 0.1, 0.1, 0.1, 0.0);
                     loc.getWorld().spawnParticle(Particle.SMOKE, loc, 1, 0.05, 0.05, 0.05, 0.0);
                 }
-                // Damage any entity near the beam line
-                for (double d = 0; d <= 1.0; d += 0.1) {
-                    Location loc = eye.clone().add(end.toVector().subtract(eye.toVector()).multiply(d));
-                    for (LivingEntity e : LocationUtil.nearbyLiving(loc, 1.0, p.getUniqueId())) {
+                // Single entity scan per tick (was 11 scans/tick = 440/cast — catastrophic
+                // perf on populated worlds). Find entities near the beam midpoint with a
+                // radius covering the whole beam, then filter by line-segment distance.
+                double beamLen = eye.distance(end);
+                double beamRadius = 1.5;
+                Location midpoint = eye.clone().add(end.toVector().subtract(eye.toVector()).multiply(0.5));
+                for (LivingEntity e : LocationUtil.nearbyLiving(midpoint, beamLen / 2 + beamRadius, p.getUniqueId())) {
+                    // Distance from entity to the beam line segment (eye → end).
+                    double dist = pointToSegmentDistance(
+                            e.getLocation().toVector(), eye.toVector(), end.toVector());
+                    if (dist <= beamRadius) {
+                        // Reset invulnerability so every tick's damage lands (was
+                        // only ~4 of 40 hits landing due to 10-tick noDamageTicks).
+                        e.setNoDamageTicks(0);
                         e.damage(5.0, p);
                     }
                 }
@@ -78,5 +89,18 @@ public final class DisintegrationSpell implements Spell {
         }.runTaskTimer(plugin, 0L, 1L);
 
         return true;
+    }
+
+    /** Distance from point P to the line segment AB. */
+    private static double pointToSegmentDistance(org.bukkit.util.Vector p,
+                                                 org.bukkit.util.Vector a,
+                                                 org.bukkit.util.Vector b) {
+        org.bukkit.util.Vector ab = b.clone().subtract(a);
+        org.bukkit.util.Vector ap = p.clone().subtract(a);
+        double abLenSq = ab.lengthSquared();
+        if (abLenSq < 1e-9) return ap.length();
+        double t = Math.max(0, Math.min(1, ap.dot(ab) / abLenSq));
+        org.bukkit.util.Vector projection = a.clone().add(ab.multiply(t));
+        return p.distance(projection);
     }
 }

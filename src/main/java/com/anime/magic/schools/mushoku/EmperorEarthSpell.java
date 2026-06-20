@@ -84,11 +84,19 @@ public final class EmperorEarthSpell implements Spell {
                 double angle = i * Math.PI * 2 / 12;
                 double r = 1.5 + Math.random() * 3.0;
                 Location at = center.clone().add(Math.cos(angle) * r, 0.5, Math.sin(angle) * r);
-                @SuppressWarnings("deprecation")
-                FallingBlock fb = center.getWorld().spawnFallingBlock(at, Material.STONE, (byte) 0);
+                // Use the modern BlockData overload (the deprecated Material+byte
+                // variant mismaps block subtypes). setCancelDrop(true) prevents the
+                // falling block from converting to a permanent STONE block on landing
+                // (was a griefing vector — 12 permanent blocks per cast).
+                FallingBlock fb = center.getWorld().spawnFallingBlock(at, Material.STONE.createBlockData());
                 fb.setVelocity(new Vector(Math.cos(angle) * 0.6, 1.0 + Math.random() * 0.5, Math.sin(angle) * 0.6));
                 fb.setDropItem(false);
                 fb.setHurtEntities(true);
+                try { fb.setCancelDrop(true); } catch (NoSuchMethodError ignored) {}
+                // Defensive cleanup in case setCancelDrop isn't supported.
+                new org.bukkit.scheduler.BukkitRunnable() {
+                    @Override public void run() { if (fb.isValid()) fb.remove(); }
+                }.runTaskLater(plugin, 80L);
             }
         }
 

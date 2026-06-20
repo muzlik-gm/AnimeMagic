@@ -19,6 +19,11 @@ import java.util.*;
 /**
  * A single magical-duel arena instance. Tracks state, players, and the active match
  * timer. State transitions are driven by ArenaManager via start()/stop().
+ *
+ * <p>Thread-safety: main-thread only. Both the countdown and match tickers are
+ * tracked and cancelled on stop()/leave()/re-startCountdown() to prevent the
+ * stale-runnable race where an old ticker fires {@code start()} after the arena
+ * was supposed to stop.</p>
  */
 public final class MagicArena {
     private final AnimeMagicPlugin plugin;
@@ -28,12 +33,15 @@ public final class MagicArena {
     private Location lobby;
     private GameState state = GameState.IDLE;
     private final Set<UUID> players = new LinkedHashSet<>();
+    /** Players who died during the current RUNNING match — excluded from alive count. */
+    private final Set<UUID> eliminated = new HashSet<>();
     private final Map<UUID, Location> previousLocations = new HashMap<>();
     private final Map<UUID, Integer> kills = new HashMap<>();
     private int matchSecondsLeft;
     private int suddenDeathSecondsLeft;
     private boolean suddenDeath;
     private BukkitRunnable ticker;
+    private BukkitRunnable countdownTask;
 
     public MagicArena(AnimeMagicPlugin plugin, ArenaManager manager, String name, Location spawn, Location lobby) {
         this.plugin = plugin; this.manager = manager; this.name = name;
@@ -67,33 +75,43 @@ public final class MagicArena {
 
     public void leave(@NotNull Player p) {
         if (!players.remove(p.getUniqueId())) return;
+        eliminated.remove(p.getUniqueId());
+        // Strip any potion effects granted by the arena (sudden-death Strength)
+        // so leavers don't carry a permanent combat buff into the main world.
+        stripArenaBuffs(p);
         Location prev = previousLocations.remove(p.getUniqueId());
         if (plugin.getConfig().getBoolean("arena.teleport-back", true) && prev != null) p.teleport(prev);
         kills.remove(p.getUniqueId());
         broadcast("arena.left");
         if (players.size() < minPlayers() && state == GameState.COUNTDOWN) {
             state = GameState.IDLE;
-            if (ticker != null) ticker.cancel();
+            if (countdownTask != null) { countdownTask.cancel(); countdownTask = null; }
+            if (ticker != null) { ticker.cancel(); ticker = null; }
             broadcast("arena.not-enough");
         }
     }
 
     public void startCountdown() {
+        // Defensively cancel any previous countdown task to prevent two countdowns
+        // racing each other to call start().
+        if (countdownTask != null) { countdownTask.cancel(); countdownTask = null; }
         state = GameState.COUNTDOWN;
         int countdown = 10;
-        new BukkitRunnable() {
+        countdownTask = new BukkitRunnable() {
             int left = countdown;
             @Override public void run() {
-                if (players.size() < minPlayers()) { state = GameState.IDLE; cancel(); return; }
-                if (left <= 0) { start(); cancel(); return; }
+                if (players.size() < minPlayers()) { state = GameState.IDLE; cancel(); countdownTask = null; return; }
+                if (left <= 0) { start(); cancel(); countdownTask = null; return; }
                 broadcast("arena.starting", "%name%", name, "%sec%", String.valueOf(left));
                 left--;
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        };
+        countdownTask.runTaskTimer(plugin, 0L, 20L);
     }
 
     public void start() {
         state = GameState.RUNNING;
+        eliminated.clear();
         matchSecondsLeft = plugin.getConfig().getInt("arena.match-duration-seconds", 300);
         suddenDeathSecondsLeft = plugin.getConfig().getInt("arena.sudden-death-seconds", 60);
         suddenDeath = false;
@@ -110,15 +128,17 @@ public final class MagicArena {
     }
 
     public void stop() {
-        if (ticker != null) ticker.cancel();
+        if (countdownTask != null) { countdownTask.cancel(); countdownTask = null; }
+        if (ticker != null) { ticker.cancel(); ticker = null; }
         state = GameState.ENDED;
         end(null);
     }
 
     private void runTicker() {
+        if (ticker != null) ticker.cancel();
         ticker = new BukkitRunnable() {
             @Override public void run() {
-                if (state != GameState.RUNNING) { cancel(); return; }
+                if (state != GameState.RUNNING) { cancel(); ticker = null; return; }
                 matchSecondsLeft--;
                 if (matchSecondsLeft <= 0) {
                     if (!suddenDeath) {
@@ -133,34 +153,44 @@ public final class MagicArena {
                     } else {
                         end(null);
                         cancel();
+                        ticker = null;
                         return;
                     }
                 }
-                long alive = players.stream().filter(id -> {
-                    Player p = Bukkit.getPlayer(id);
-                    return p != null && !p.isDead() && p.getHealth() > 0;
-                }).count();
+                long alive = players.stream().filter(id -> !eliminated.contains(id) && isAlive(id)).count();
                 if (alive <= 1) {
                     UUID winner = players.stream()
-                            .filter(id -> { Player p = Bukkit.getPlayer(id); return p != null && p.getHealth() > 0; })
+                            .filter(id -> !eliminated.contains(id) && isAlive(id))
                             .findFirst().orElse(null);
                     end(winner);
                     cancel();
+                    ticker = null;
                 }
             }
         };
         ticker.runTaskTimer(plugin, 20L, 20L);
     }
 
+    private boolean isAlive(UUID id) {
+        Player p = Bukkit.getPlayer(id);
+        return p != null && !p.isDead() && p.getHealth() > 0;
+    }
+
+    /** Mark a player as eliminated (called on PlayerDeathEvent by ArenaManager). */
+    public void eliminate(@NotNull UUID id) {
+        if (players.contains(id)) eliminated.add(id);
+    }
+
     private void end(@Nullable UUID winner) {
         state = GameState.ENDED;
-        if (ticker != null) ticker.cancel();
+        if (ticker != null) { ticker.cancel(); ticker = null; }
+        if (countdownTask != null) { countdownTask.cancel(); countdownTask = null; }
         if (spawn != null) {
             plugin.getParticleEngine().play(new SphereAnimation(plugin,
                     winner == null ? null : Bukkit.getPlayer(winner),
                     spawn, Particle.END_ROD, 30, 1.0, 8.0, 100));
+            LocationUtil.sound(spawn, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.5f, 1.0f);
         }
-        LocationUtil.sound(spawn, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.5f, 1.0f);
 
         if (winner != null) {
             Player w = Bukkit.getPlayer(winner);
@@ -176,20 +206,34 @@ public final class MagicArena {
 
         for (UUID id : players) {
             Player p = Bukkit.getPlayer(id);
-            if (p == null) continue;
-            p.removePotionEffect(PotionEffectType.STRENGTH);
+            if (p == null) continue; // offline players keep their previousLocations (see below)
+            stripArenaBuffs(p);
             Location prev = previousLocations.get(id);
             if (plugin.getConfig().getBoolean("arena.teleport-back", true) && prev != null) p.teleport(prev);
         }
-        previousLocations.clear();
+        // Remove previousLocations only for online players we successfully teleported.
+        // Offline players' entries are retained so ArenaManager can restore them on
+        // next join via PlayerListener.onJoin → arenaManager.tryRestore(uuid).
+        previousLocations.keySet().removeIf(id -> Bukkit.getPlayer(id) != null);
         players.clear();
+        eliminated.clear();
         kills.clear();
         state = GameState.IDLE;
-        manager.save();
+    }
+
+    /** Strip all potion effects the arena might have granted. */
+    private void stripArenaBuffs(Player p) {
+        p.removePotionEffect(PotionEffectType.STRENGTH);
     }
 
     public void recordKill(UUID killer) { kills.merge(killer, 1, Integer::sum); }
     public int kills(UUID id) { return kills.getOrDefault(id, 0); }
+
+    /** @return the saved pre-join location for a player who quit mid-match (for restore on rejoin). */
+    public @Nullable Location previousLocation(@NotNull UUID id) { return previousLocations.get(id); }
+
+    /** Consume the saved pre-join location (called by ArenaManager after restoring the player). */
+    public void consumePreviousLocation(@NotNull UUID id) { previousLocations.remove(id); }
 
     void broadcast(String key, Object... kv) {
         for (UUID id : players) {

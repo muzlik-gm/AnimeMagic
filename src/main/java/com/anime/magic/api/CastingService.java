@@ -5,11 +5,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * Single entry point for casting spells. Enforces permission, world blacklist,
  * global/spell cooldowns, mana, and fires SpellCastEvent. All other code (commands,
  * listeners, arena logic, item right-clicks) MUST go through this service.
+ *
+ * <p>Thread-safety: must be invoked from the main server thread only. An off-thread
+ * call is logged and refused to prevent async world mutation.</p>
  */
 public final class CastingService {
     private final AnimeMagicPlugin plugin;
@@ -17,11 +21,25 @@ public final class CastingService {
     public CastingService(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     public Result cast(@NotNull Player player, @NotNull Spell spell) {
+        // Main-thread guard — calling Bukkit world API from async corrupts chunks.
+        if (!Bukkit.isPrimaryThread()) {
+            plugin.getLogger().warning("CastingService.cast() invoked off-thread by "
+                    + player.getName() + " for spell " + spell.id() + " — refusing.");
+            return Result.CANCELLED;
+        }
+
+        if (player.isDead()) return Result.CANCELLED;
+
         if (!player.hasPermission(spell.permission())) {
             plugin.getMessages().send(player, "no-permission");
             return Result.NO_PERMISSION;
         }
-        if (plugin.getConfig().getStringList("general.disabled-worlds").contains(player.getWorld().getName())) {
+        // Case-insensitive disabled-world check
+        String worldName = player.getWorld().getName();
+        boolean disabled = plugin.getConfig().getStringList("general.disabled-worlds")
+                .stream().anyMatch(w -> w != null && w.equalsIgnoreCase(worldName));
+        if (disabled) {
+            plugin.getMessages().send(player, "spell.disabled-world");
             return Result.DISABLED_WORLD;
         }
         UUID id = player.getUniqueId();
@@ -35,9 +53,10 @@ public final class CastingService {
         long spellCd = (long) (spell.cooldownMs() * plugin.getConfig().getDouble(
                 "schools." + spell.school().configKey() + ".cooldown-multiplier", 1.0));
         if (lastSpell != null && now - lastSpell < spellCd) {
-            long left = (spellCd - (now - lastSpell)) / 1000;
+            long leftMs = spellCd - (now - lastSpell);
+            long left = (leftMs + 999) / 1000; // ceil division so 1ms remaining shows as "1s"
             plugin.getMessages().send(player, "spell.cooldown",
-                    "%spell%", spell.displayName(), "%left%", String.valueOf(left + 1));
+                    "%spell%", spell.displayName(), "%left%", String.valueOf(left));
             return Result.SPELL_COOLDOWN;
         }
 
@@ -54,13 +73,29 @@ public final class CastingService {
 
         if (spell.manaCost() > 0) plugin.getManaManager().consume(id, spell.manaCost());
 
-        boolean ok = spell.cast(new Caster(plugin, player, spell));
-        if (!ok && spell.manaCost() > 0) {
-            plugin.getManaManager().add(id, spell.manaCost());
+        // Always record the cooldown BEFORE cast() so an exception or a `return false`
+        // cannot be used to spam-cast a spell. Mana is refunded on failure, but the
+        // cooldown is preserved (matches MMO convention: failed casts go on cooldown).
+        plugin.getManaManager().recordCast(id, spell.id(), now);
+
+        boolean ok;
+        try {
+            ok = spell.cast(new Caster(plugin, player, spell));
+        } catch (Throwable t) {
+            // Never let a buggy Spell implementation crash the caller (listener, command).
+            plugin.getLogger().log(Level.WARNING,
+                    "Spell " + spell.id() + " threw during cast for " + player.getName(), t);
+            // Refund mana — cooldown stays.
+            if (spell.manaCost() > 0) plugin.getManaManager().add(id, spell.manaCost());
+            return Result.FAILED;
+        }
+
+        if (!ok) {
+            // Spell reported failure — refund mana, keep cooldown.
+            if (spell.manaCost() > 0) plugin.getManaManager().add(id, spell.manaCost());
             return Result.ABORTED;
         }
 
-        plugin.getManaManager().recordCast(id, spell.id(), now);
         // Bump MRU for the spell wheel
         var wheel = plugin.getControlManager() != null ? plugin.getControlManager().get("wheel") : null;
         if (wheel instanceof com.anime.magic.controls.SpellWheelControl swc) {
@@ -71,6 +106,6 @@ public final class CastingService {
 
     public enum Result {
         SUCCESS, NO_PERMISSION, DISABLED_WORLD, GLOBAL_COOLDOWN, SPELL_COOLDOWN,
-        NO_MANA, CANCELLED, ABORTED
+        NO_MANA, CANCELLED, ABORTED, FAILED
     }
 }
