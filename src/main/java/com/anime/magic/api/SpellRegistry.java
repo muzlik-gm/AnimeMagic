@@ -23,13 +23,19 @@ public final class SpellRegistry {
     }
 
     public void clear() { spells.clear(); }
-    public int size() { return spells.size(); }
+    /** Returns the count of UNIQUE spells (not map entries, which include bare-id aliases). */
+    public int size() { return (int) spells.values().stream().distinct().count(); }
 
     public @org.jetbrains.annotations.Nullable Spell get(@NotNull String id) {
         return id == null ? null : spells.get(id.toLowerCase());
     }
 
-    public Collection<Spell> all() { return spells.values(); }
+    /**
+     * Returns all registered spells. Uses {@code distinct()} because each spell
+     * is stored under both its qualified id ("naruto:fireball") and its bare id
+     * ("fireball") — without dedup, callers would see every spell twice.
+     */
+    public Collection<Spell> all() { return spells.values().stream().distinct().toList(); }
 
     public Stream<Spell> bySchool(Spell.SchoolId school) {
         return spells.values().stream().filter(s -> s.school() == school).distinct();
