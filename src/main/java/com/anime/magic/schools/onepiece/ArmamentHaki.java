@@ -42,6 +42,10 @@ public final class ArmamentHaki implements Spell {
     @Override
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
+        // Spawn the 3D armament_gauntlet model at the caster's eye location.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "armament_gauntlet", "animation.armament.harden",
+                p.getEyeLocation().clone(), 60, null);
         plugin.getParticleEngine().play(
                 new SpiralAnimation(plugin, p, Particle.SQUID_INK, 400, 0.4, 0.9, 0.2, 6, 0.3));
 

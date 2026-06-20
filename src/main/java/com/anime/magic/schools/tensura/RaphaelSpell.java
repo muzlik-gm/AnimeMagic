@@ -54,6 +54,10 @@ public final class RaphaelSpell implements Spell {
     @Override
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
+        // Spawn the 3D raphael_halo model above the caster's head.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "raphael_halo", "animation.raphael.float",
+                p.getLocation().add(0, 2.5, 0).clone(), 300, null);
         // Initial aura
         plugin.getParticleEngine().play(new HelixEffect(plugin, p, Particle.END_ROD, 40, 1.5, 0.5, 12, 0.5));
         plugin.getParticleEngine().play(new SpiralAnimation(plugin, p, Particle.END_ROD,

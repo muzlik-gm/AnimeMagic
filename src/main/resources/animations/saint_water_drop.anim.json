@@ -1,0 +1,42 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.saint_water.splash": {
+      "loop": false,
+      "length": 1.0,
+      "bones": {
+        "root": {
+          "scale": {
+            "0.5": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "1.0": [
+              1.3,
+              0.3,
+              1.3
+            ]
+          },
+          "position": {
+            "0.0": [
+              0,
+              5,
+              0
+            ],
+            "0.5": [
+              0,
+              0,
+              0
+            ],
+            "1.0": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      }
+    }
+  }
+}

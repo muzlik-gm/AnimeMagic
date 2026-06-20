@@ -49,6 +49,10 @@ public final class QuakeSpell implements Spell {
     @Override
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
+        // Spawn the 3D quake_cracks model 5 blocks ahead of the caster.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "quake_cracks", "animation.quake.erupt",
+                p.getLocation().add(p.getLocation().getDirection().multiply(5)).clone(), 60, null);
         Location center = p.getLocation();
 
         // 5 expanding crack rings over 2 seconds

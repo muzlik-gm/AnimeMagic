@@ -43,6 +43,11 @@ public final class RazorEdgeSkill implements Spell {
         LivingEntity target = caster.targetEntity(25.0);
         if (target == null) return false;
 
+        // Spawn the 3D razor_edge_blade model at the caster's eye location.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "razor_edge_blade", "animation.razor_edge.gleam",
+                p.getEyeLocation().clone(), 60, null);
+
         Location start = p.getEyeLocation();
         Location end = target.getEyeLocation();
         Vector ctrl1 = new Vector(0, 1.0, 0);

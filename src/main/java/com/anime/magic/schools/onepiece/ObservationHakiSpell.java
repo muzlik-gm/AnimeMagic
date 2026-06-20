@@ -41,6 +41,10 @@ public final class ObservationHakiSpell implements Spell {
     @Override
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
+        // Spawn the 3D observation_eye model above the caster's head.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "observation_eye", "animation.observation.open",
+                p.getLocation().add(0, 2.5, 0).clone(), 300, null);
         plugin.getParticleEngine().play(new SpiralAnimation(plugin, p, Particle.END_ROD,
                 600, 0.6, 1.5, 0.3, 5, 0.5));
         LocationUtil.sound(p.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 1.8f);

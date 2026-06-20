@@ -42,6 +42,10 @@ public final class GearFourthSpell implements Spell {
     @Override
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
+        // Spawn the 3D gear_fourth_boundman model at the caster's location.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "gear_fourth_boundman", "animation.gear_fourth.bounce",
+                p.getLocation().clone(), 300, null);
         // Transform burst
         plugin.getParticleEngine().play(new SphereAnimation(plugin, p, p.getLocation(),
                 Particle.SQUID_INK, 20, 0.5, 5.0, 80));

@@ -41,6 +41,10 @@ public final class VoiceOfAllThingsSpell implements Spell {
     @Override
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
+        // Spawn the 3D voice_waves model above the caster's head.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "voice_waves", "animation.voice.pulse",
+                p.getLocation().add(0, 2, 0).clone(), 300, null);
         // Initial burst
         plugin.getParticleEngine().play(new SphereAnimation(plugin, p, p.getLocation(),
                 Particle.END_ROD, 25, 1.0, 15.0, 100));

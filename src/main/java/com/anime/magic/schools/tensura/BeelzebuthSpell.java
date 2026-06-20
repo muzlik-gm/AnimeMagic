@@ -45,6 +45,10 @@ public final class BeelzebuthSpell implements Spell {
     @Override
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
+        // Spawn the 3D beelzebuth_maw model above the caster's head.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "beelzebuth_maw", "animation.beelzebuth.devour",
+                p.getLocation().add(0, 2, 0).clone(), 300, null);
 
         new BukkitRunnable() {
             int ticks = 0;

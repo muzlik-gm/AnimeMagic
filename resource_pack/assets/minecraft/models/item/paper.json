@@ -87,6 +87,102 @@
         "custom_model_data": 7016
       },
       "model": "anime_magic:item/paper_7016"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7017
+      },
+      "model": "anime_magic:item/paper_7017"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7018
+      },
+      "model": "anime_magic:item/paper_7018"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7019
+      },
+      "model": "anime_magic:item/paper_7019"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7020
+      },
+      "model": "anime_magic:item/paper_7020"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7021
+      },
+      "model": "anime_magic:item/paper_7021"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7022
+      },
+      "model": "anime_magic:item/paper_7022"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7023
+      },
+      "model": "anime_magic:item/paper_7023"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7024
+      },
+      "model": "anime_magic:item/paper_7024"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7025
+      },
+      "model": "anime_magic:item/paper_7025"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7026
+      },
+      "model": "anime_magic:item/paper_7026"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7027
+      },
+      "model": "anime_magic:item/paper_7027"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7028
+      },
+      "model": "anime_magic:item/paper_7028"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7029
+      },
+      "model": "anime_magic:item/paper_7029"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7030
+      },
+      "model": "anime_magic:item/paper_7030"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7031
+      },
+      "model": "anime_magic:item/paper_7031"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7032
+      },
+      "model": "anime_magic:item/paper_7032"
     }
   ]
 }

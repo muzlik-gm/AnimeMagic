@@ -62,6 +62,10 @@ public final class EmperorEarthSpell implements Spell {
     }
 
     private void fire(Player p) {
+        // Spawn the 3D emperor_earth_spike model 3 blocks ahead of the caster.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "emperor_earth_spike", "animation.emperor_earth.rise",
+                p.getLocation().add(p.getLocation().getDirection().multiply(3)).clone(), 60, null);
         Location center = p.getLocation();
         plugin.getParticleEngine().play(
                 new RingBurst(plugin, p, center, Particle.DUST, 30, 10.0, 96));

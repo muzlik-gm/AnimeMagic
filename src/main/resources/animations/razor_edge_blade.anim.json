@@ -1,0 +1,30 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.razor_edge.gleam": {
+      "loop": true,
+      "length": 0.8,
+      "bones": {
+        "root": {
+          "scale": {
+            "0.0": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "0.4": [
+              1.1,
+              1.1,
+              1.1
+            ],
+            "0.8": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        }
+      }
+    }
+  }
+}

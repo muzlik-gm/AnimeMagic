@@ -1,0 +1,24 @@
+{
+  "id": "saint_fire_cross",
+  "item": "PAPER",
+  "customModelData": 7023,
+  "display": "FIXED",
+  "billboard": "CENTER",
+  "defaultScale": {
+    "x": 0.6,
+    "y": 0.6,
+    "z": 0.6
+  },
+  "defaultTranslation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  "defaultRotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  "glow": true,
+  "shadowRadius": 0.0
+}

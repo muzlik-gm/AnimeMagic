@@ -129,6 +129,150 @@
           "type": "minecraft:model",
           "model": "anime_magic:item/paper_7016"
         }
+      },
+      {
+        "when": [
+          7017.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7017"
+        }
+      },
+      {
+        "when": [
+          7018.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7018"
+        }
+      },
+      {
+        "when": [
+          7019.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7019"
+        }
+      },
+      {
+        "when": [
+          7020.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7020"
+        }
+      },
+      {
+        "when": [
+          7021.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7021"
+        }
+      },
+      {
+        "when": [
+          7022.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7022"
+        }
+      },
+      {
+        "when": [
+          7023.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7023"
+        }
+      },
+      {
+        "when": [
+          7024.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7024"
+        }
+      },
+      {
+        "when": [
+          7025.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7025"
+        }
+      },
+      {
+        "when": [
+          7026.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7026"
+        }
+      },
+      {
+        "when": [
+          7027.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7027"
+        }
+      },
+      {
+        "when": [
+          7028.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7028"
+        }
+      },
+      {
+        "when": [
+          7029.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7029"
+        }
+      },
+      {
+        "when": [
+          7030.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7030"
+        }
+      },
+      {
+        "when": [
+          7031.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7031"
+        }
+      },
+      {
+        "when": [
+          7032.0
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "anime_magic:item/paper_7032"
+        }
       }
     ],
     "fallback": {

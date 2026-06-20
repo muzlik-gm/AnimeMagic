@@ -64,6 +64,11 @@ public final class GomuGomuSkill implements Spell {
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
 
+        // Spawn the 3D gomu_pistol_fist model 3 blocks ahead of the caster's eye.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "gomu_pistol_fist", "animation.gomu_pistol.stretch",
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(3)).clone(), 60, null);
+
         // Pre-check: must have a target or fire forward
         LivingEntity target = caster.targetEntity(15.0);
         Location start = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.5));

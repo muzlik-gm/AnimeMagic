@@ -60,6 +60,13 @@ public final class SaintFireSpell implements Spell {
         Location end = target != null ? target.getLocation()
                 : start.clone().add(p.getLocation().getDirection().multiply(30));
 
+        // Spawn the 3D saint_fire_cross model at the target's location (or forward if no target).
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "saint_fire_cross", "animation.saint_fire.burn",
+                (target != null ? target.getLocation()
+                        : p.getEyeLocation().add(p.getLocation().getDirection().multiply(5))).clone(),
+                60, null);
+
         plugin.getParticleEngine().play(
                 new BezierCurve(plugin, p, start, end, Particle.FLAME, 20, 1.0));
         LocationUtil.sound(start, Sound.ENTITY_BLAZE_SHOOT, 1.0f, 1.0f);

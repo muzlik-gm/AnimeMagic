@@ -52,6 +52,10 @@ public final class ShadowCloneJutsu implements Spell {
     @Override
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
+        // Spawn the 3D clone_haze model at the caster's location.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "clone_haze", "animation.clone_haze.poof",
+                p.getLocation().clone(), 60, null);
         // Resolve the caster's target ONCE so all clones attack the same enemy.
         LivingEntity target = caster.targetEntity(30);
         Location base = p.getLocation().add(p.getLocation().getDirection().multiply(2));

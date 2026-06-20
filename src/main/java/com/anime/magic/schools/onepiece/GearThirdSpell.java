@@ -41,6 +41,10 @@ public final class GearThirdSpell implements Spell {
     @Override
     public boolean cast(@NotNull Caster caster) {
         Player p = caster.player();
+        // Spawn the 3D gear_third_fist model 2 blocks ahead of the caster's eye.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "gear_third_fist", "animation.gear_third.inflate",
+                p.getEyeLocation().add(p.getLocation().getDirection().multiply(2)).clone(), 60, null);
         plugin.getParticleEngine().play(new SpiralAnimation(plugin, p, Particle.CLOUD,
                 400, 0.5, 1.5, 0.4, 8, 0.4));
         LocationUtil.sound(p.getLocation(), Sound.ENTITY_SLIME_SQUISH, 2.0f, 0.5f);

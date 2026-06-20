@@ -55,6 +55,14 @@ public final class SaintWaterSpell implements Spell {
     }
 
     private void fire(Player p) {
+        // Spawn the 3D saint_water_drop model at the target's location (or forward if no target).
+        LivingEntity target = new Caster(plugin, p, this).targetEntity(40);
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "saint_water_drop", "animation.saint_water.splash",
+                (target != null ? target.getLocation()
+                        : p.getEyeLocation().add(p.getLocation().getDirection().multiply(5))).clone(),
+                60, null);
+
         Location center = p.getLocation();
         plugin.getParticleEngine().play(
                 new SphereAnimation(plugin, p, center, Particle.SPLASH, 25, 0.5, 5.0, 100));

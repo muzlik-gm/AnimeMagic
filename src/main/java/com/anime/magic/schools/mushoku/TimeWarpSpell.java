@@ -56,6 +56,11 @@ public final class TimeWarpSpell implements Spell {
         if (target == null) return false;
         Location targetLoc = target.getLocation();
 
+        // Spawn the 3D time_warp_clock model 2 blocks above the target.
+        com.anime.magic.util.SpellEffects.spawnAnimated(plugin, p,
+                "time_warp_clock", "animation.time_warp.tick",
+                target.getLocation().add(0, 2, 0).clone(), 60, null);
+
         // Phase 1: Bind in stillness (4 seconds)
         plugin.getParticleEngine().play(new HelixEffect(plugin, p, Particle.END_ROD, 80, 1.2, 0.4, 8, 0.4));
         LocationUtil.sound(targetLoc, Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 0.5f);
