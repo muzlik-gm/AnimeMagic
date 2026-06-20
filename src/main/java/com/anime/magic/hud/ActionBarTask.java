@@ -11,30 +11,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 /**
- * Persistent action-bar HUD with icon symbols.
+ * Persistent action-bar HUD — plain text only (no emoji/symbols).
  *
- * <p>Minecraft's vanilla action-bar API only accepts plain text — you cannot
- * embed real item sprites. We use Unicode symbols that render like icons
- * (most Minecraft fonts include them) to give the action bar an icon-led look
- * matching the user's reference image.</p>
+ * <p>Minecraft's vanilla action-bar API only accepts plain text. Item
+ * textures/sprites CANNOT be embedded in the action bar via the Bukkit
+ * API — that requires NMS packets or a client-side mod. This class uses
+ * clean text formatting with color codes only.</p>
  *
- * <p>Layout (left to right):
- * <ul>
- *   <li><b>School icon:</b> §6⚔ (Naruto) / §5✦ (Tensura) / §3❖ (Mushoku) / §b◈ (OnePiece)</li>
- *   <li><b>Spell name:</b> the spell's displayName() (school-colored)</li>
- *   <li><b>Mana icon:</b> §b◆ cost/max (suppressed when mana.enabled=false)</li>
- *   <li><b>Cooldown icon:</b> §a✓ Ready / §c⏲ 3s</li>
- *   <li><b>Keybind icon:</b> §e⟶ L-Click / §d⇧ Shift: Phoenix Flower</li>
- * </ul>
- * </p>
- *
- * <p>Example output:
- * <pre>
- *   §6⚔ §6Fireball Jutsu  §b◆ 25/100  §a✓ Ready  §e⟶ L-Click
- *   §6⚔ §6Fireball Jutsu  §b◆ 25/100  §c⏲ 3s  §e⟶ L-Click
- *   §5✦ §fMegiddo  §b◆ 150/1000  §c⏲ 45s  §e⟶ L-Click|§d⇧ Shift: True Dragon
- * </pre>
- * </p>
+ * <p>Layout: [School] Spell Name  |  Mana: cost/max  |  CD: Xs/Ready  |  Key: L-Click/Shift</p>
  */
 public final class ActionBarTask extends BukkitRunnable {
     private final AnimeMagicPlugin plugin;
@@ -76,42 +60,40 @@ public final class ActionBarTask extends BukkitRunnable {
 
         StringBuilder sb = new StringBuilder();
 
-        // School icon (Unicode symbol) + spell name
+        // School name in brackets + spell name
         Spell primary = spell != null ? spell : sneak;
-        sb.append(schoolIcon(primary.school()));
+        sb.append(schoolTag(primary.school()));
         sb.append(" ").append(primary.displayName());
 
-        // Mana icon + cost/pool
+        // Mana cost
         if (manaEnabled && primary.manaCost() > 0) {
             int cur = plugin.getManaManager().current(id);
             int max = plugin.getManaManager().max(id);
             String costColor = cur >= primary.manaCost() ? "§b" : "§c";
-            sb.append("  ").append(costColor).append("◆")
-              .append(" ").append(primary.manaCost())
-              .append("§7/").append("§b").append(max);
+            sb.append("  §7| ").append(costColor).append(primary.manaCost())
+              .append("§7/").append("§b").append(max).append(" §7mana");
         }
 
-        // Cooldown icon
+        // Cooldown
         String cd = cooldownText(id, primary);
-        sb.append("  ").append(cd);
+        sb.append("  §7| ").append(cd);
 
-        // Keybind icon
+        // Keybind
         if (sneak != null && spell != null) {
-            sb.append("  §e⟶ L-Click§8|§d⇧ Shift: ").append(sneak.displayName());
+            sb.append("  §7| §eL-Click §7/ §dShift: ").append(sneak.displayName());
         } else {
-            sb.append("  §e⟶ L-Click");
+            sb.append("  §7| §eL-Click");
         }
 
         p.sendActionBar(sb.toString());
     }
 
-    /** Unicode icon + color for each school. */
-    private String schoolIcon(Spell.SchoolId school) {
+    private String schoolTag(Spell.SchoolId school) {
         return switch (school) {
-            case NARUTO  -> "§6⚔";   // orange sword
-            case TENSURA -> "§5✦";   // purple star
-            case MUSHOKU -> "§3❖";   // cyan diamond
-            case ONEPIECE -> "§b◈";  // aqua lozenge
+            case NARUTO  -> "§6[Naruto]";
+            case TENSURA -> "§5[Tensura]";
+            case MUSHOKU -> "§3[Mushoku]";
+            case ONEPIECE -> "§b[OnePiece]";
         };
     }
 
@@ -124,9 +106,9 @@ public final class ActionBarTask extends BukkitRunnable {
             long remaining = cdMs - (now - lastCast);
             if (remaining > 0) {
                 long secs = (remaining + 999) / 1000;
-                return "§c⏲ " + secs + "s";
+                return "§cCD: " + secs + "s";
             }
         }
-        return "§a✓ Ready";
+        return "§aReady";
     }
 }

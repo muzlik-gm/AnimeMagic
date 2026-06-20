@@ -50,28 +50,58 @@ public final class SpellEffects {
                                                        @NotNull Location spawn,
                                                        int lifetimeTicks,
                                                        @Nullable Vector followOffset) {
+        // ItemDisplay entities require Paper 1.19.4+. On older versions
+        // (1.8.x - 1.19.3), silently skip — the 3D model cannot render.
+        if (!supportsItemDisplay(plugin)) {
+            return null;
+        }
         CustomModel model = plugin.getModelRegistry().get(modelId);
         if (model == null) {
             plugin.getLogger().warning("SpellEffects: unknown model id '" + modelId + "'");
             return null;
         }
-        ModelDisplay display = new ModelDisplay(plugin, model, spawn,
-                owner != null ? owner.getUniqueId() : null, lifetimeTicks);
+        try {
+            ModelDisplay display = new ModelDisplay(plugin, model, spawn,
+                    owner != null ? owner.getUniqueId() : null, lifetimeTicks);
 
-        if (animationId != null) {
-            KeyframeAnimation anim = plugin.getAnimationRegistry().get(animationId);
-            if (anim == null) {
-                plugin.getLogger().warning("SpellEffects: unknown animation id '" + animationId + "'");
-            } else {
-                display.playAnimation(anim);
+            if (animationId != null) {
+                KeyframeAnimation anim = plugin.getAnimationRegistry().get(animationId);
+                if (anim == null) {
+                    plugin.getLogger().warning("SpellEffects: unknown animation id '" + animationId + "'");
+                } else {
+                    display.playAnimation(anim);
+                }
             }
-        }
 
-        if (followOffset != null && owner != null) {
-            display.followPlayer(owner.getUniqueId(), followOffset);
-        }
+            if (followOffset != null && owner != null) {
+                display.followPlayer(owner.getUniqueId(), followOffset);
+            }
 
-        return display;
+            return display;
+        } catch (Throwable t) {
+            // NoClassDefFoundError / NoSuchMethodError on old servers
+            plugin.getLogger().fine("ItemDisplay not supported on this server version: " + t.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Check if the server supports ItemDisplay entities (Paper 1.19.4+).
+     * Cached after first check.
+     */
+    private static Boolean itemDisplaySupported = null;
+    private static boolean supportsItemDisplay(AnimeMagicPlugin plugin) {
+        if (itemDisplaySupported != null) return itemDisplaySupported;
+        try {
+            Class.forName("org.bukkit.entity.ItemDisplay");
+            itemDisplaySupported = true;
+        } catch (ClassNotFoundException e) {
+            plugin.getLogger().warning("ItemDisplay not available on this server version "
+                    + "(requires Paper 1.19.4+). 3D spell models will not render. "
+                    + "Use Paper 1.21+ for full 3D model support.");
+            itemDisplaySupported = false;
+        }
+        return itemDisplaySupported;
     }
 
     /**
