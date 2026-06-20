@@ -83,18 +83,31 @@ public final class ParticleEngine {
         }
         if (!anyNear) return;
 
-        // Auto-provide required data for particles that need it (prevents NPE on 1.21+)
+        // Auto-provide required data for particles that need it (prevents crash on 1.21+)
         Object data = args.data;
         if (data == null) {
             if (args.particle == Particle.DUST) {
                 data = new org.bukkit.Particle.DustOptions(org.bukkit.Color.RED, 1.0f);
             } else if (args.particle == Particle.DUST_COLOR_TRANSITION) {
                 data = new org.bukkit.Particle.DustTransition(org.bukkit.Color.RED, org.bukkit.Color.ORANGE, 1.0f);
+            } else if (args.particle == Particle.SONIC_BOOM || args.particle == Particle.GUST
+                    || args.particle == Particle.SHRIEK) {
+                data = 0.0f;
+            } else if (args.particle == Particle.BLOCK || args.particle == Particle.FALLING_DUST) {
+                data = org.bukkit.Material.STONE.createBlockData();
+            } else if (args.particle == Particle.ITEM) {
+                data = new org.bukkit.inventory.ItemStack(org.bukkit.Material.STONE);
+            } else if (args.particle == Particle.ENTITY_EFFECT) {
+                data = org.bukkit.Color.WHITE;
             }
         }
 
-        args.world.spawnParticle(args.particle, args.location, args.count,
-                args.offsetX, args.offsetY, args.offsetZ, args.speed, data);
+        try {
+            args.world.spawnParticle(args.particle, args.location, args.count,
+                    args.offsetX, args.offsetY, args.offsetZ, args.speed, data);
+        } catch (Exception ignored) {
+            // Silently skip particles that still fail after data provision
+        }
     }
 
     private void tickAll() {

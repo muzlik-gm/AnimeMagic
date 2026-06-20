@@ -56,7 +56,7 @@ public final class RaphaelSpell implements Spell {
         Player p = caster.player();
         // Initial aura
         plugin.getParticleEngine().play(new HelixEffect(plugin, p, Particle.END_ROD, 40, 1.5, 0.5, 12, 0.5));
-        plugin.getParticleEngine().play(new SpiralAnimation(plugin, p, Particle.SONIC_BOOM,
+        plugin.getParticleEngine().play(new SpiralAnimation(plugin, p, Particle.END_ROD,
                 400, 0.8, 1.5, 0.3, 6, 0.5));
         LocationUtil.sound(p.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 2.0f, 1.5f);
         LocationUtil.sound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE, 1.0f, 1.8f);
@@ -87,7 +87,7 @@ public final class RaphaelSpell implements Spell {
                     double angle = ticks * 0.1;
                     Location orb = p.getLocation().add(0, 2.5, 0).add(Math.cos(angle) * 0.8, 0, Math.sin(angle) * 0.8);
                     p.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0, 0, 0, 0);
-                    p.getWorld().spawnParticle(Particle.SONIC_BOOM, orb, 1, 0.05, 0.05, 0.05, 0);
+                    p.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0.05, 0.05, 0.05, 0);
                 }
                 ticks++;
             }
