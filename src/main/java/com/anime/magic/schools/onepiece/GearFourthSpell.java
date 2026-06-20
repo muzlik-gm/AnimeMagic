@@ -70,10 +70,6 @@ public final class GearFourthSpell implements Spell {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 80, 2));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 80, 0));
                 }
-                // Haki aura
-                if (ticks % 5 == 0 && p.getWorld() != null) {
-                    try { p.getWorld().spawnParticle(Particle.SQUID_INK, p.getLocation().add(0, 2.0, 0), 1, 0.6, 0.8, 0.6, 0.02); } catch (Throwable ignored) {}
-                }
                 // AoE hit
                 if (onCd) { onCd = false; return; }
                 if (p.isSneaking()) {
@@ -93,7 +89,6 @@ public final class GearFourthSpell implements Spell {
         Location at = target.getLocation();
         if (at.getWorld() == null) return;
         try { at.getWorld().spawnParticle(Particle.SQUID_INK, at, 1, 1.5, 1.5, 1.5, 0.1); } catch (Throwable ignored) {}
-        try { at.getWorld().spawnParticle(Particle.SWEEP_ATTACK, at, 1, 1.0, 1.0, 1.0, 0); } catch (Throwable ignored) {}
         LocationUtil.sound(at, Sound.ENTITY_PLAYER_ATTACK_STRONG, 2.0f, 0.5f);
         LocationUtil.sound(at, Sound.ENTITY_GENERIC_EXPLODE, 1.5f, 0.7f);
 

@@ -76,19 +76,10 @@ public final class AtomicFlareSpell implements Spell {
                 if (!p.isOnline()) { cancel(); return; }
                 if (t >= 20) { cancel(); detonate(p, center); return; }
                 if (center.getWorld() == null) { cancel(); return; }
-                double r = 0.3 + t * 0.06;
-                for (int i = 0; i < 3; i++) {
-                    double phi = Math.acos(1 - 2 * (i + 0.5) / 3);
-                    double theta = Math.PI * (1 + Math.sqrt(5)) * i + t * 0.3;
-                    double x = r * Math.cos(theta) * Math.sin(phi);
-                    double y = r * Math.sin(theta) * Math.sin(phi);
-                    double z = r * Math.cos(phi);
-                    try { center.getWorld().spawnParticle(Particle.FLAME, center.clone().add(x, y, z), 1, 0, 0, 0, 0.02); } catch (Throwable ignored) {}
-                }
                 if (t % 4 == 0) LocationUtil.sound(center, Sound.BLOCK_FIRE_AMBIENT, 0.5f + t * 0.05f, 0.6f + t * 0.04f);
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 10L);
+        }.runTaskTimer(plugin, 0L, 20L);
     }
 
     private void detonate(Player p, Location center) {

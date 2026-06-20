@@ -77,15 +77,6 @@ public final class GluttonySkill implements Spell {
                 if (!p.isOnline()) { cancel(); return; }
                 if (t >= 10 || target.isDead()) { cancel(); return; }
                 if (target.getWorld() == null) { cancel(); return; }
-                // Spawn 5 tendrils
-                for (int i = 0; i < 3; i++) {
-                    double angle = (t * 0.5) + (i * Math.PI * 2 / 3);
-                    double r = 0.8;
-                    Location from = target.getEyeLocation().add(Math.cos(angle) * r, -0.5, Math.sin(angle) * r);
-                    Location to = orbLoc.clone();
-                    Vector dir = to.toVector().subtract(from.toVector()).multiply(0.1);
-                    try { target.getWorld().spawnParticle(Particle.SQUID_INK, from, 1, dir.getX(), dir.getY(), dir.getZ(), 0.05); } catch (Throwable ignored) {}
-                }
                 if (t % 3 == 0) {
                     LocationUtil.sound(target.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.4f, 0.6f);
                 }
@@ -114,24 +105,6 @@ public final class GluttonySkill implements Spell {
                 }
                 if (target.getWorld() == null || p.getWorld() == null) { cancel(); return; }
 
-                // Beam from target chest -> orb (gated to every 4 ticks to keep
-                // total particle count under 100/cast; damage still fires every tick).
-                if (ticks % 4 == 0) {
-                    Location fromTarget = target.getEyeLocation().add(0, -0.3, 0);
-                    Location orbAt = orb != null && !orb.isDead() ? orb.entity().getLocation() : orbLoc;
-                    for (double d = 0; d <= 1.0; d += 0.5) {
-                        Location loc = fromTarget.clone().add(orbAt.toVector().subtract(fromTarget.toVector()).multiply(d));
-                        try { target.getWorld().spawnParticle(Particle.SQUID_INK, loc, 1, 0.05, 0.05, 0.05, 0.0); } catch (Throwable ignored) {}
-                        try { target.getWorld().spawnParticle(Particle.DRAGON_BREATH, loc, 1, 0.05, 0.05, 0.05, 0.0); } catch (Throwable ignored) {}
-                    }
-                    // Beam from orb -> caster chest
-                    Location casterChest = p.getEyeLocation().add(0, -0.3, 0);
-                    for (double d = 0; d <= 1.0; d += 0.5) {
-                        Location loc = orbAt.clone().add(casterChest.toVector().subtract(orbAt.toVector()).multiply(d));
-                        try { p.getWorld().spawnParticle(Particle.WITCH, loc, 1, 0.05, 0.05, 0.05, 0.0); } catch (Throwable ignored) {}
-                    }
-                }
-
                 // Damage target + heal caster. Reset noDamageTicks so every tick's
                 // 1.0 damage actually lands (Bukkit default 10-tick invulnerability
                 // would otherwise absorb 9 of every 10 hits → only ~4 damage total).
@@ -157,12 +130,8 @@ public final class GluttonySkill implements Spell {
         if (orb != null && !orb.isDead()) {
             // Beam one last time
             Location orbAt = orb.entity().getLocation();
-            Location chest = caster.getEyeLocation().add(0, -0.3, 0);
             if (caster.getWorld() != null) {
-                for (double d = 0; d <= 1.0; d += 0.5) {
-                    Location loc = orbAt.clone().add(chest.toVector().subtract(orbAt.toVector()).multiply(d));
-                    try { caster.getWorld().spawnParticle(Particle.SQUID_INK, loc, 1, 0.1, 0.1, 0.1, 0.05); } catch (Throwable ignored) {}
-                }
+                try { caster.getWorld().spawnParticle(Particle.SQUID_INK, orbAt, 1, 0.1, 0.1, 0.1, 0.05); } catch (Throwable ignored) {}
             }
             orb.remove();
         }

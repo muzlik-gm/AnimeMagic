@@ -118,18 +118,6 @@ public final class SixPathsSpell implements Spell {
                         LocationUtil.knockback(e, p.getLocation(), 1.0);
                     }
                 }
-                // Truth-seeking orbs orbiting (every 4 ticks spawn orbiting particles)
-                if (ticks % 4 == 0) {
-                    Location center = p.getLocation().add(0, 2.0, 0);
-                    for (int i = 0; i < 3; i++) {
-                        double angle = (ticks * 0.1) + (i * Math.PI * 2 / 3);
-                        double r = 1.8;
-                        Location orb = center.clone().add(Math.cos(angle) * r, Math.sin(ticks * 0.05) * 0.3, Math.sin(angle) * r);
-                        if (orb.getWorld() != null) {
-                            try { orb.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0, 0, 0, 0); } catch (Throwable ignored) {}
-                        }
-                    }
-                }
                 ticks++;
             }
         }.runTaskTimer(plugin, 60L, 1L);

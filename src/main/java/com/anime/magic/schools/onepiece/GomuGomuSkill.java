@@ -93,14 +93,6 @@ public final class GomuGomuSkill implements Spell {
                 }
                 // Particles converge toward shoulder
                 Location shoulder = start.clone().add(0, -0.3, 0);
-                for (int i = 0; i < 3; i++) {
-                    double angle = Math.random() * Math.PI * 2;
-                    double r = 1.5 - t * 0.13;
-                    Location from = shoulder.clone().add(Math.cos(angle) * r, Math.random() * 1.0, Math.sin(angle) * r);
-                    if (from.getWorld() != null) {
-                        try { from.getWorld().spawnParticle(Particle.DUST, from, 1, -Math.cos(angle) * 0.15, -0.1, -Math.sin(angle) * 0.15, 0.0, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(225, 65, 65), 1.0f)); } catch (Throwable ignored) {}
-                    }
-                }
                 if (t % 3 == 0) {
                     LocationUtil.sound(shoulder, Sound.ENTITY_SLIME_SQUISH, 0.5f, 0.5f + t * 0.08f);
                 }

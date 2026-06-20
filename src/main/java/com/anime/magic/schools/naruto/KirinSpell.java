@@ -131,7 +131,7 @@ public final class KirinSpell implements Spell {
                         try { strike.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, strike, 1, 3, 3, 3, 0.1); } catch (Throwable ignored) {}
                         ticks++;
                     }
-                }.runTaskTimer(plugin, 5L, 10L);
+                }.runTaskTimer(plugin, 5L, 20L);
             }
         }.runTaskLater(plugin, 60L);
 

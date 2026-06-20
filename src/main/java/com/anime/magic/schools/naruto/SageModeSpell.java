@@ -3,8 +3,6 @@ package com.anime.magic.schools.naruto;
 import com.anime.magic.AnimeMagicPlugin;
 import com.anime.magic.api.Caster;
 import com.anime.magic.api.Spell;
-import com.anime.magic.effects.HelixEffect;
-import com.anime.magic.effects.SpiralAnimation;
 import com.anime.magic.models.ModelDisplay;
 import com.anime.magic.util.LocationUtil;
 import com.anime.magic.util.SpellEffects;
@@ -56,15 +54,27 @@ public final class SageModeSpell implements Spell {
             aura.followPlayer(p.getUniqueId(), new org.bukkit.util.Vector(0, 0, 0));
         }
 
-        plugin.getParticleEngine().play(new HelixEffect(plugin, p, Particle.CRIT, 40, 1.2, 0.5, 8, 0.5));
         LocationUtil.sound(p.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.5f, 0.7f);
         LocationUtil.sound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_AMBIENT, 1.0f, 0.5f);
 
-        // Phase 2: Active — continuous spiral aura + buffs
-        plugin.getParticleEngine().play(new SpiralAnimation(plugin, p, Particle.CRIT,
-                600, 0.6, 1.4, 0.4, 6, 0.4));
-        plugin.getParticleEngine().play(new SpiralAnimation(plugin, p, Particle.END_ROD,
-                600, 0.4, 1.0, 0.3, 4, 0.6));
+        // Subtle natural-energy gathering effect: 2 END_ROD particles per second
+        // at a random point 3 blocks from the player, drifting inward. Off the
+        // view axis (3 blocks horizontally) so the player's first-person view
+        // stays clear — no screen-blinding aura.
+        new BukkitRunnable() {
+            @Override public void run() {
+                if (!p.isOnline()) { cancel(); return; }
+                Location base = p.getLocation();
+                if (base.getWorld() == null) return;
+                for (int i = 0; i < 2; i++) {
+                    double angle = Math.random() * Math.PI * 2;
+                    Location from = base.clone().add(Math.cos(angle) * 3.0, 1.0, Math.sin(angle) * 3.0);
+                    org.bukkit.util.Vector inward = base.toVector().subtract(from.toVector()).normalize().multiply(0.5);
+                    Location spawn = from.clone().add(inward);
+                    try { base.getWorld().spawnParticle(Particle.END_ROD, spawn, 1, 0, 0, 0, 0); } catch (Throwable ignored) {}
+                }
+            }
+        }.runTaskTimer(plugin, 40L, 20L);
 
         // Apply buffs immediately + re-apply every 100 ticks (5s) for 30s
         new BukkitRunnable() {

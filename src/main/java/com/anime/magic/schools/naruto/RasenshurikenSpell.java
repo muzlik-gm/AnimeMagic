@@ -68,12 +68,6 @@ public final class RasenshurikenSpell implements Spell {
                 if (t >= 30) { cancel(); return; }
                 Location hand = p.getEyeLocation().add(p.getLocation().getDirection().multiply(1.0));
                 if (hand.getWorld() == null) return;
-                for (int i = 0; i < 3; i++) {
-                    double angle = (t * 0.3) + (i * Math.PI / 3);
-                    double r = 2.0 - t * 0.06;
-                    Location from = hand.clone().add(Math.cos(angle) * r, 0, Math.sin(angle) * r);
-                    try { hand.getWorld().spawnParticle(Particle.CLOUD, from, 1, -Math.cos(angle) * 0.2, -0.05, -Math.sin(angle) * 0.2, 0.05); } catch (Throwable ignored) {}
-                }
                 if (t % 10 == 0) LocationUtil.sound(hand, Sound.ENTITY_ENDERMAN_AMBIENT, 0.6f, 1.8f);
                 t++;
             }

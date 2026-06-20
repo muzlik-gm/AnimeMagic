@@ -113,12 +113,6 @@ public final class TrueDragonSpell implements Spell {
                         LocationUtil.knockback(e, p.getLocation(), 1.0);
                     }
                 }
-                // Dragon breath trail
-                if (ticks % 3 == 0 && p.getWorld() != null) {
-                    Location feet = p.getLocation().add(0, 0.5, 0);
-                    try { p.getWorld().spawnParticle(Particle.DRAGON_BREATH, feet, 1, 0.5, 0.1, 0.5, 0.02); } catch (Throwable ignored) {}
-                    try { p.getWorld().spawnParticle(Particle.FLAME, feet, 1, 0.3, 0.1, 0.3, 0.02); } catch (Throwable ignored) {}
-                }
                 ticks++;
             }
         }.runTaskTimer(plugin, 50L, 1L);

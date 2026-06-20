@@ -117,7 +117,7 @@ public final class EmperorEarthSpell implements Spell {
                 if (!p.isOnline()) { cancel(); return; }
                 if (r > 8) { cancel(); return; }
                 if (center.getWorld() == null) return;
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 1; i++) {
                     double angle = i * Math.PI * 2 / 3;
                     Location at = center.clone().add(Math.cos(angle) * r, -0.5, Math.sin(angle) * r);
                     Block b = at.getBlock();
@@ -127,6 +127,6 @@ public final class EmperorEarthSpell implements Spell {
                 }
                 r++;
             }
-        }.runTaskTimer(plugin, 5L, 10L);
+        }.runTaskTimer(plugin, 5L, 20L);
     }
 }

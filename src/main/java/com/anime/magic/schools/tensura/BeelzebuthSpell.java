@@ -61,30 +61,11 @@ public final class BeelzebuthSpell implements Spell {
                     for (LivingEntity e : LocationUtil.nearbyLiving(p.getLocation(), 10.0, p.getUniqueId())) {
                         e.damage(8.0 * multiplier, p);
                         totalHeal += 8.0 * multiplier;
-                        // Tendrils from enemy to caster
-                        Location from = e.getEyeLocation();
-                        Location to = p.getEyeLocation();
-                        if (from.getWorld() != null) {
-                            for (double d = 0; d <= 1.0; d += 0.5) {
-                                Location loc = from.clone().add(to.toVector().subtract(from.toVector()).multiply(d));
-                                try { from.getWorld().spawnParticle(Particle.SQUID_INK, loc, 1, 0.1, 0.1, 0.1, 0); } catch (Throwable ignored) {}
-                                try { from.getWorld().spawnParticle(Particle.WITCH, loc, 1, 0.1, 0.1, 0.1, 0); } catch (Throwable ignored) {}
-                            }
-                        }
                     }
                     if (totalHeal > 0) {
                         p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + totalHeal * 0.5));
-                        // Heal particles around caster
-                        if (p.getWorld() != null) {
-                            try { p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2.0, 0), 1, 0.5, 0.5, 0.5, 0); } catch (Throwable ignored) {}
-                        }
                     }
                     LocationUtil.sound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.8f, 0.6f);
-                }
-                // Continuous aura around caster — spawn ABOVE the head (was at
-                // chest level, blinding the caster's first-person view).
-                if (ticks % 8 == 0 && p.getWorld() != null) {
-                    try { p.getWorld().spawnParticle(Particle.DRAGON_BREATH, p.getLocation().add(0, 2.5, 0), 1, 1.5, 1.5, 1.5, 0.02); } catch (Throwable ignored) {}
                 }
                 ticks++;
             }

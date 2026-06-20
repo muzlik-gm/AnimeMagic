@@ -73,7 +73,7 @@ public final class FireballJutsu implements Spell {
                 if (t >= 20) { cancel(); return; }
                 Location mouth = p.getEyeLocation().add(p.getLocation().getDirection().multiply(0.6));
                 if (mouth.getWorld() == null) return;
-                int count = Math.min(3, 2 + t / 5);
+                int count = 1;
                 for (int i = 0; i < count; i++) {
                     double angle = (t * 0.5) + (i * Math.PI * 2 / count);
                     double r = 0.3 + t * 0.03;
@@ -82,7 +82,7 @@ public final class FireballJutsu implements Spell {
                 }
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 10L);
+        }.runTaskTimer(plugin, 0L, 20L);
 
         // Phase 2 + 3: Launch at 20 ticks
         new BukkitRunnable() {

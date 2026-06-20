@@ -86,17 +86,6 @@ public final class TimeWarpSpell implements Spell {
                 target.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 5, 100));
                 target.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 5, 5));
                 target.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 5, 5));
-                // Clock particles around target — spawn ABOVE the head (was at eye
-                // level, blinding the targeted player with white particles in their
-                // face). Now at +2.0 Y so the victim can still see.
-                if (ticks % 4 == 0 && target.getWorld() != null) {
-                    double angle = ticks * 0.15;
-                    for (int ring = 0; ring < 3; ring++) {
-                        double r = 1.0 + ring * 0.3;
-                        Location orb = target.getEyeLocation().add(Math.cos(angle + ring) * r, 2.0, Math.sin(angle + ring) * r);
-                        try { target.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0, 0, 0, 0); } catch (Throwable ignored) {}
-                    }
-                }
                 if (ticks % 20 == 0) LocationUtil.sound(target.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 0.4f, 0.5f);
                 ticks++;
             }

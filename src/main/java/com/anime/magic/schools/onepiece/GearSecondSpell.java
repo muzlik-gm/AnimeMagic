@@ -65,13 +65,6 @@ public final class GearSecondSpell implements Spell {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 80, 2));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 80, 1));
                 }
-                // Steam aura — spawn ABOVE the head (was at feet, filling the
-                // player's first-person view with steam particles).
-                if (ticks % 3 == 0 && p.getWorld() != null) {
-                    Location above = p.getLocation().add(0, 2.0, 0);
-                    try { p.getWorld().spawnParticle(Particle.CLOUD, above, 1, 0.3, 0.1, 0.3, 0.1); } catch (Throwable ignored) {}
-                    try { p.getWorld().spawnParticle(Particle.DUST, above, 1, 0.3, 0.8, 0.3, 0, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(255, 110, 110), 1.0f)); } catch (Throwable ignored) {}
-                }
                 ticks++;
             }
         }.runTaskTimer(plugin, 0L, 1L);

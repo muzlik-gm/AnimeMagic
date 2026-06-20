@@ -80,7 +80,6 @@ public final class ArmamentHaki implements Spell {
         Location at = target.getEyeLocation();
         if (at.getWorld() == null) return;
         try { at.getWorld().spawnParticle(Particle.SQUID_INK, at, 1, 0.4, 0.4, 0.4, 0.05); } catch (Throwable ignored) {}
-        try { at.getWorld().spawnParticle(Particle.CRIT, at, 1, 0.3, 0.3, 0.3, 0.3); } catch (Throwable ignored) {}
 
         double dmg = 20.0 * plugin.getConfig().getDouble("schools.onepiece.damage-multiplier", 1.0);
         double current = target.getHealth();

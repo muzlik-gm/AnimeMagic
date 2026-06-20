@@ -78,10 +78,6 @@ public final class VoiceOfAllThingsSpell implements Spell {
                     if (p.getHealth() < p.getMaxHealth()) {
                         p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + 5));
                     }
-                    // Pulse particles
-                    if (p.getWorld() != null) {
-                        try { p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2, 0), 1, 0.5, 0.3, 0.5, 0); } catch (Throwable ignored) {}
-                    }
                     LocationUtil.sound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 0.5f, 1.5f);
                 }
                 ticks++;

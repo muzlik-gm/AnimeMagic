@@ -66,18 +66,6 @@ public final class GravitySpell implements Spell {
                 if (!p.isOnline()) { cancel(); return; }
                 if (ticks >= 60) { explode(p, center); cancel(); return; }
                 if (center.getWorld() == null) { cancel(); return; }
-                // Inward spiraling particles — gated to every 4 ticks and halved
-                // to keep total particle count under 100/cast (was 8 angles × 2 × 60
-                // ticks = 960/cast, screen-blinding and performance-heavy).
-                if (ticks % 4 == 0) {
-                    for (int i = 0; i < 2; i++) {
-                        double angle = (ticks * 0.3) + (i * Math.PI / 4);
-                        double r = 5.0 - (ticks / 60.0) * 4.5;
-                        Location from = center.clone().add(Math.cos(angle) * r, Math.sin(ticks * 0.2) * 1.0, Math.sin(angle) * r);
-                        try { center.getWorld().spawnParticle(Particle.DRAGON_BREATH, from, 1, -Math.cos(angle) * 0.3, -0.1, -Math.sin(angle) * 0.3, 0.0); } catch (Throwable ignored) {}
-                        try { center.getWorld().spawnParticle(Particle.SQUID_INK, from, 1, -Math.cos(angle) * 0.2, 0, -Math.sin(angle) * 0.2, 0.0); } catch (Throwable ignored) {}
-                    }
-                }
                 // Pull entities inward
                 for (LivingEntity e : LocationUtil.nearbyLiving(center, 10.0, p.getUniqueId())) {
                     Vector pull = center.toVector().subtract(e.getLocation().toVector()).normalize().multiply(0.4);

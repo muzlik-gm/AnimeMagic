@@ -87,13 +87,6 @@ public final class RaphaelSpell implements Spell {
                     int max = plugin.getManaManager().max(p.getUniqueId());
                     plugin.getManaManager().set(p.getUniqueId(), Math.min(max, cur + 30));
                 }
-                // Continuous orbiting wisdom orb
-                if (ticks % 4 == 0 && p.getWorld() != null) {
-                    double angle = ticks * 0.1;
-                    Location orb = p.getLocation().add(0, 2.5, 0).add(Math.cos(angle) * 0.8, 0, Math.sin(angle) * 0.8);
-                    try { p.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0, 0, 0, 0); } catch (Throwable ignored) {}
-                    try { p.getWorld().spawnParticle(Particle.END_ROD, orb, 1, 0.05, 0.05, 0.05, 0); } catch (Throwable ignored) {}
-                }
                 ticks++;
             }
         }.runTaskTimer(plugin, 0L, 1L);
