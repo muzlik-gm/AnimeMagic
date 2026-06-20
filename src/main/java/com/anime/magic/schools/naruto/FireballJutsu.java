@@ -82,7 +82,7 @@ public final class FireballJutsu implements Spell {
                 }
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(plugin, 0L, 4L);
 
         // Phase 2 + 3: Launch at 20 ticks
         new BukkitRunnable() {

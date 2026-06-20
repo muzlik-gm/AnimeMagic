@@ -59,13 +59,13 @@ public final class BeelzebuthSpell implements Spell {
                     double multiplier = plugin.getConfig().getDouble("schools.tensura.damage-multiplier", 1.0);
                     double totalHeal = 0;
                     for (LivingEntity e : LocationUtil.nearbyLiving(p.getLocation(), 10.0, p.getUniqueId())) {
-                        e.damage(4.0 * multiplier, p);
-                        totalHeal += 4.0 * multiplier;
+                        e.damage(8.0 * multiplier, p);
+                        totalHeal += 8.0 * multiplier;
                         // Tendrils from enemy to caster
                         Location from = e.getEyeLocation();
                         Location to = p.getEyeLocation();
                         if (from.getWorld() != null) {
-                            for (double d = 0; d <= 1.0; d += 0.1) {
+                            for (double d = 0; d <= 1.0; d += 0.5) {
                                 Location loc = from.clone().add(to.toVector().subtract(from.toVector()).multiply(d));
                                 from.getWorld().spawnParticle(Particle.SQUID_INK, loc, 1, 0.1, 0.1, 0.1, 0);
                                 from.getWorld().spawnParticle(Particle.WITCH, loc, 1, 0.1, 0.1, 0.1, 0);
@@ -76,14 +76,14 @@ public final class BeelzebuthSpell implements Spell {
                         p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + totalHeal * 0.5));
                         // Heal particles around caster
                         if (p.getWorld() != null) {
-                            p.getWorld().spawnParticle(Particle.HEART, p.getEyeLocation().add(0, 1, 0), 5, 0.5, 0.5, 0.5, 0);
+                            p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 2.0, 0), 5, 0.5, 0.5, 0.5, 0);
                         }
                     }
                     LocationUtil.sound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_CURSE, 0.8f, 0.6f);
                 }
                 // Continuous aura around caster — spawn ABOVE the head (was at
                 // chest level, blinding the caster's first-person view).
-                if (ticks % 4 == 0 && p.getWorld() != null) {
+                if (ticks % 8 == 0 && p.getWorld() != null) {
                     p.getWorld().spawnParticle(Particle.DRAGON_BREATH, p.getLocation().add(0, 2.5, 0), 3, 1.5, 1.5, 1.5, 0.02);
                 }
                 ticks++;

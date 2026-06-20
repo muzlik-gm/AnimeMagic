@@ -120,7 +120,7 @@ public final class SixPathsSpell implements Spell {
                 }
                 // Truth-seeking orbs orbiting (every 4 ticks spawn orbiting particles)
                 if (ticks % 4 == 0) {
-                    Location center = p.getLocation().add(0, 1, 0);
+                    Location center = p.getLocation().add(0, 2.0, 0);
                     for (int i = 0; i < 5; i++) {
                         double angle = (ticks * 0.1) + (i * Math.PI * 2 / 5);
                         double r = 1.8;

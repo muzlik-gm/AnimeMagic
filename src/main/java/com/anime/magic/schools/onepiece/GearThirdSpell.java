@@ -80,13 +80,13 @@ public final class GearThirdSpell implements Spell {
     private void giantHit(Player caster, LivingEntity target) {
         Location at = target.getEyeLocation();
         if (at.getWorld() == null) return;
-        at.getWorld().spawnParticle(Particle.CLOUD, at, 30, 0.8, 0.8, 0.8, 0.1);
-        at.getWorld().spawnParticle(Particle.DUST, at, 25, 0.5, 0.5, 0.5, 0.2, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(225, 65, 65), 1.5f));
+        at.getWorld().spawnParticle(Particle.CLOUD, at, 5, 0.8, 0.8, 0.8, 0.1);
+        at.getWorld().spawnParticle(Particle.DUST, at, 5, 0.5, 0.5, 0.5, 0.2, new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(225, 65, 65), 1.5f));
         at.getWorld().spawnParticle(Particle.SWEEP_ATTACK, at, 3, 0.5, 0.5, 0.5, 0);
         LocationUtil.sound(at, Sound.ENTITY_PLAYER_ATTACK_STRONG, 2.0f, 0.5f);
         LocationUtil.sound(at, Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 0.8f);
 
-        double dmg = 25.0 * plugin.getConfig().getDouble("schools.onepiece.damage-multiplier", 1.0);
+        double dmg = 30.0 * plugin.getConfig().getDouble("schools.onepiece.damage-multiplier", 1.0);
         target.damage(dmg, caster);
         Vector knock = target.getLocation().toVector()
                 .subtract(caster.getLocation().toVector()).normalize().multiply(3.5).setY(1.0);

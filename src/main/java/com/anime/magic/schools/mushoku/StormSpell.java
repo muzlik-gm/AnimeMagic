@@ -65,7 +65,7 @@ public final class StormSpell implements Spell {
                 if (!p.isOnline()) { cancel(); return; }
                 if (ticks >= 160) { cancel(); return; }
                 if (ticks % 20 == 0) {  // every second
-                    double dmg = 3.0 * plugin.getConfig().getDouble("schools.mushoku.damage-multiplier", 1.0);
+                    double dmg = 5.0 * plugin.getConfig().getDouble("schools.mushoku.damage-multiplier", 1.0);
                     for (LivingEntity e : LocationUtil.nearbyLiving(p.getLocation(), 12.0, p.getUniqueId())) {
                         e.damage(dmg, p);
                         e.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 40, 1));

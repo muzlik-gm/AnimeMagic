@@ -68,7 +68,7 @@ public final class DisintegrationSpell implements Spell {
                 // × 40 ticks = ~4080/cast). Now: 11 positions × 1 particle × every 2nd
                 // tick = ~220/cast. Still visually continuous but not screen-blinding.
                 if (ticks % 2 == 0) {
-                    for (double d = 0; d <= 1.0; d += 0.1) {
+                    for (double d = 0; d <= 1.0; d += 0.2) {
                         Location loc = eye.clone().add(end.toVector().subtract(eye.toVector()).multiply(d));
                         if (loc.getWorld() == null) continue;
                         loc.getWorld().spawnParticle(Particle.DRAGON_BREATH, loc, 1, 0.1, 0.1, 0.1, 0.0);
@@ -88,7 +88,7 @@ public final class DisintegrationSpell implements Spell {
                         // Reset invulnerability so every tick's damage lands (was
                         // only ~4 of 40 hits landing due to 10-tick noDamageTicks).
                         e.setNoDamageTicks(0);
-                        e.damage(5.0, p);
+                        e.damage(8.0, p);
                     }
                 }
                 if (ticks % 5 == 0) {

@@ -78,7 +78,7 @@ public final class RasenshurikenSpell implements Spell {
                 if (t % 10 == 0) LocationUtil.sound(hand, Sound.ENTITY_ENDERMAN_AMBIENT, 0.6f, 1.8f);
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(plugin, 0L, 4L);
 
         // Wait for player to sneak to throw (or auto-throw after 2s)
         new BukkitRunnable() {

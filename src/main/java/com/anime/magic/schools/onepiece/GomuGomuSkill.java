@@ -108,7 +108,7 @@ public final class GomuGomuSkill implements Spell {
                 }
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(plugin, 0L, 4L);
 
         return true;
     }
@@ -143,7 +143,7 @@ public final class GomuGomuSkill implements Spell {
 
                 // Damage + knockback if target hit
                 if (target != null && !target.isDead()) {
-                    double dmg = 16.0 * plugin.getConfig().getDouble("schools.onepiece.damage-multiplier", 1.0);
+                    double dmg = 22.0 * plugin.getConfig().getDouble("schools.onepiece.damage-multiplier", 1.0);
                     target.damage(dmg, p);
                     Vector knock = target.getLocation().toVector()
                             .subtract(p.getLocation().toVector()).normalize().multiply(2.5).setY(0.7);
@@ -152,7 +152,7 @@ public final class GomuGomuSkill implements Spell {
                 // Also damage any entity near impact
                 for (LivingEntity e : com.anime.magic.util.LocationUtil.nearbyLiving(end, 1.5, p.getUniqueId())) {
                     if (e.equals(target)) continue;
-                    e.damage(8.0, p);
+                    e.damage(12.0, p);
                     LocationUtil.knockback(e, end, 1.5);
                 }
 

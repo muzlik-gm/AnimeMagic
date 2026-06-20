@@ -81,7 +81,7 @@ public final class SaintWaterSpell implements Spell {
             }
         }
 
-        double dmg = 6.0 * plugin.getConfig().getDouble("schools.mushoku.damage-multiplier", 1.0);
+        double dmg = 10.0 * plugin.getConfig().getDouble("schools.mushoku.damage-multiplier", 1.0);
         for (LivingEntity e : LocationUtil.nearbyLiving(center, 5.0, p.getUniqueId())) {
             e.damage(dmg, p);
             e.setFireTicks(0);

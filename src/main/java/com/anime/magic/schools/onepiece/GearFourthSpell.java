@@ -72,7 +72,7 @@ public final class GearFourthSpell implements Spell {
                 }
                 // Haki aura
                 if (ticks % 5 == 0 && p.getWorld() != null) {
-                    p.getWorld().spawnParticle(Particle.SQUID_INK, p.getLocation().add(0, 1, 0), 3, 0.6, 0.8, 0.6, 0.02);
+                    p.getWorld().spawnParticle(Particle.SQUID_INK, p.getLocation().add(0, 2.0, 0), 3, 0.6, 0.8, 0.6, 0.02);
                 }
                 // AoE hit
                 if (onCd) { onCd = false; return; }
@@ -92,12 +92,12 @@ public final class GearFourthSpell implements Spell {
     private void aoeHit(Player caster, LivingEntity target) {
         Location at = target.getLocation();
         if (at.getWorld() == null) return;
-        at.getWorld().spawnParticle(Particle.SQUID_INK, at, 40, 1.5, 1.5, 1.5, 0.1);
+        at.getWorld().spawnParticle(Particle.SQUID_INK, at, 10, 1.5, 1.5, 1.5, 0.1);
         at.getWorld().spawnParticle(Particle.SWEEP_ATTACK, at, 5, 1.0, 1.0, 1.0, 0);
         LocationUtil.sound(at, Sound.ENTITY_PLAYER_ATTACK_STRONG, 2.0f, 0.5f);
         LocationUtil.sound(at, Sound.ENTITY_GENERIC_EXPLODE, 1.5f, 0.7f);
 
-        double dmg = 30.0 * plugin.getConfig().getDouble("schools.onepiece.damage-multiplier", 1.0);
+        double dmg = 40.0 * plugin.getConfig().getDouble("schools.onepiece.damage-multiplier", 1.0);
         for (LivingEntity e : LocationUtil.nearbyLiving(at, 4.0, caster.getUniqueId())) {
             e.damage(dmg, caster);
             Vector knock = e.getLocation().toVector()

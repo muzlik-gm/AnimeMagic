@@ -92,7 +92,7 @@ public final class GluttonySkill implements Spell {
                 }
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(plugin, 0L, 4L);
 
         // Phase 2: Drain beam — 40 ticks starting at 10
         new BukkitRunnable() {
@@ -115,26 +115,29 @@ public final class GluttonySkill implements Spell {
                 }
                 if (target.getWorld() == null || p.getWorld() == null) { cancel(); return; }
 
-                // Beam from target chest -> orb
-                Location fromTarget = target.getEyeLocation().add(0, -0.3, 0);
-                Location orbAt = orb != null && !orb.isDead() ? orb.entity().getLocation() : orbLoc;
-                for (double d = 0; d <= 1.0; d += 0.1) {
-                    Location loc = fromTarget.clone().add(orbAt.toVector().subtract(fromTarget.toVector()).multiply(d));
-                    target.getWorld().spawnParticle(Particle.SQUID_INK, loc, 1, 0.05, 0.05, 0.05, 0.0);
-                    target.getWorld().spawnParticle(Particle.DRAGON_BREATH, loc, 1, 0.05, 0.05, 0.05, 0.0);
-                }
-                // Beam from orb -> caster chest
-                Location casterChest = p.getEyeLocation().add(0, -0.3, 0);
-                for (double d = 0; d <= 1.0; d += 0.1) {
-                    Location loc = orbAt.clone().add(casterChest.toVector().subtract(orbAt.toVector()).multiply(d));
-                    p.getWorld().spawnParticle(Particle.WITCH, loc, 1, 0.05, 0.05, 0.05, 0.0);
+                // Beam from target chest -> orb (gated to every 4 ticks to keep
+                // total particle count under 100/cast; damage still fires every tick).
+                if (ticks % 4 == 0) {
+                    Location fromTarget = target.getEyeLocation().add(0, -0.3, 0);
+                    Location orbAt = orb != null && !orb.isDead() ? orb.entity().getLocation() : orbLoc;
+                    for (double d = 0; d <= 1.0; d += 0.5) {
+                        Location loc = fromTarget.clone().add(orbAt.toVector().subtract(fromTarget.toVector()).multiply(d));
+                        target.getWorld().spawnParticle(Particle.SQUID_INK, loc, 1, 0.05, 0.05, 0.05, 0.0);
+                        target.getWorld().spawnParticle(Particle.DRAGON_BREATH, loc, 1, 0.05, 0.05, 0.05, 0.0);
+                    }
+                    // Beam from orb -> caster chest
+                    Location casterChest = p.getEyeLocation().add(0, -0.3, 0);
+                    for (double d = 0; d <= 1.0; d += 0.5) {
+                        Location loc = orbAt.clone().add(casterChest.toVector().subtract(orbAt.toVector()).multiply(d));
+                        p.getWorld().spawnParticle(Particle.WITCH, loc, 1, 0.05, 0.05, 0.05, 0.0);
+                    }
                 }
 
                 // Damage target + heal caster. Reset noDamageTicks so every tick's
                 // 1.0 damage actually lands (Bukkit default 10-tick invulnerability
                 // would otherwise absorb 9 of every 10 hits → only ~4 damage total).
                 target.setNoDamageTicks(0);
-                target.damage(1.0, p);
+                target.damage(2.0, p);
                 if (p.getHealth() < p.getMaxHealth()) {
                     p.setHealth(Math.min(p.getMaxHealth(), p.getHealth() + 0.5));
                 }

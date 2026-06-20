@@ -93,7 +93,7 @@ public final class MagiculeBlade implements Spell {
                 }
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(plugin, 0L, 4L);
 
         // Phase 2: Active stance — continuous spiral + buffs
         plugin.getParticleEngine().play(

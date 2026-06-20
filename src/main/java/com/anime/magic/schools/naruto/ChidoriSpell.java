@@ -134,8 +134,8 @@ public final class ChidoriSpell implements Spell {
         if (blade != null && !blade.isDead()) {
             Location bladeLoc = blade.entity().getLocation();
             if (bladeLoc.getWorld() != null) {
-                bladeLoc.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, bladeLoc, 60, 0.6, 0.6, 0.6, 0.3);
-                bladeLoc.getWorld().spawnParticle(Particle.FIREWORK, bladeLoc, 20, 0.4, 0.4, 0.4, 0.2);
+                bladeLoc.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, bladeLoc, 10, 0.6, 0.6, 0.6, 0.3);
+                bladeLoc.getWorld().spawnParticle(Particle.FIREWORK, bladeLoc, 5, 0.4, 0.4, 0.4, 0.2);
             }
             blade.remove();
         }
@@ -151,7 +151,7 @@ public final class ChidoriSpell implements Spell {
                 to.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, to, 3, 0.5, 0.5, 0.5, 0.1);
                 ticks++;
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(plugin, 0L, 4L);
 
         LocationUtil.sound(target.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.0f, 0.8f);
     }

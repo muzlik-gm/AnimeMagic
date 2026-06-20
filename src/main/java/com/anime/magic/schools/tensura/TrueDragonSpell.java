@@ -115,7 +115,7 @@ public final class TrueDragonSpell implements Spell {
                 }
                 // Dragon breath trail
                 if (ticks % 3 == 0 && p.getWorld() != null) {
-                    Location feet = p.getLocation();
+                    Location feet = p.getLocation().add(0, 0.5, 0);
                     p.getWorld().spawnParticle(Particle.DRAGON_BREATH, feet, 2, 0.5, 0.1, 0.5, 0.02);
                     p.getWorld().spawnParticle(Particle.FLAME, feet, 1, 0.3, 0.1, 0.3, 0.02);
                 }

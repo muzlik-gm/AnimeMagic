@@ -88,7 +88,7 @@ public final class AtomicFlareSpell implements Spell {
                 if (t % 4 == 0) LocationUtil.sound(center, Sound.BLOCK_FIRE_AMBIENT, 0.5f + t * 0.05f, 0.6f + t * 0.04f);
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(plugin, 0L, 4L);
     }
 
     private void detonate(Player p, Location center) {

@@ -79,7 +79,7 @@ public final class SaintFireSpell implements Spell {
                 plugin.getParticleEngine().play(
                         new SphereAnimation(plugin, p, end, Particle.LAVA, 10, 0.3, 2.5, 30));
                 LocationUtil.sound(end, Sound.ENTITY_GENERIC_EXPLODE, 1.2f, 1.0f);
-                double dmg = 10.0 * plugin.getConfig().getDouble("schools.mushoku.damage-multiplier", 1.0);
+                double dmg = 15.0 * plugin.getConfig().getDouble("schools.mushoku.damage-multiplier", 1.0);
                 for (LivingEntity e : LocationUtil.nearbyLiving(end, 3.5, p.getUniqueId())) {
                     e.damage(dmg, p);
                     e.setFireTicks(60);

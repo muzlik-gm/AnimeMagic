@@ -79,7 +79,7 @@ public final class ShadowCloneJutsu implements Spell {
             z.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 300, 2));
             z.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 300, 1));
             z.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 300, 0));
-            spawn.getWorld().spawnParticle(Particle.LARGE_SMOKE, spawn, 30, 0.5, 1.0, 0.5, 0.05);
+            spawn.getWorld().spawnParticle(Particle.LARGE_SMOKE, spawn, 5, 0.5, 1.0, 0.5, 0.05);
             LocationUtil.sound(spawn, Sound.ENTITY_ENDERMAN_TELEPORT, 0.8f, 0.7f);
             clones.add(z);
         }
@@ -107,7 +107,7 @@ public final class ShadowCloneJutsu implements Spell {
                     if (z.isValid() && !z.isDead()) {
                         Location loc = z.getLocation();
                         if (loc.getWorld() != null) {
-                            loc.getWorld().spawnParticle(Particle.LARGE_SMOKE, loc, 25, 0.4, 0.8, 0.4, 0.05);
+                            loc.getWorld().spawnParticle(Particle.LARGE_SMOKE, loc, 5, 0.4, 0.8, 0.4, 0.05);
                             LocationUtil.sound(loc, Sound.ENTITY_ENDERMAN_TELEPORT, 0.7f, 0.5f);
                         }
                         z.remove();

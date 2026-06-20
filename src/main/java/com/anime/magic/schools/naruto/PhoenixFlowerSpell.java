@@ -82,8 +82,8 @@ public final class PhoenixFlowerSpell implements Spell {
                     // Detonate
                     if (orb != null) orb.remove();
                     if (end.getWorld() == null) { cancel(); return; }
-                    end.getWorld().spawnParticle(Particle.FLAME, end, 30, 0.5, 0.5, 0.5, 0.1);
-                    end.getWorld().spawnParticle(Particle.LAVA, end, 10, 0.3, 0.3, 0.3, 0.05);
+                    end.getWorld().spawnParticle(Particle.FLAME, end, 5, 0.5, 0.5, 0.5, 0.1);
+                    end.getWorld().spawnParticle(Particle.LAVA, end, 3, 0.3, 0.3, 0.3, 0.05);
                     LocationUtil.sound(end, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 0.8f, 1.2f);
                     double dmg = 8.0 * plugin.getConfig().getDouble("schools.naruto.damage-multiplier", 1.0);
                     for (var e : LocationUtil.nearbyLiving(end, 2.5, p.getUniqueId())) {

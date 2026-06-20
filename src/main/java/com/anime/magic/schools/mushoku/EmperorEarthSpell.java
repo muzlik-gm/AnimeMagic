@@ -105,7 +105,7 @@ public final class EmperorEarthSpell implements Spell {
             }
         }
 
-        double dmg = 14.0 * plugin.getConfig().getDouble("schools.mushoku.damage-multiplier", 1.0);
+        double dmg = 20.0 * plugin.getConfig().getDouble("schools.mushoku.damage-multiplier", 1.0);
         for (LivingEntity e : LocationUtil.nearbyLiving(center, 10.0, p.getUniqueId())) {
             e.damage(dmg, p);
             e.setVelocity(new Vector(0, 1.2, 0));
@@ -127,6 +127,6 @@ public final class EmperorEarthSpell implements Spell {
                 }
                 r++;
             }
-        }.runTaskTimer(plugin, 5L, 3L);
+        }.runTaskTimer(plugin, 5L, 4L);
     }
 }

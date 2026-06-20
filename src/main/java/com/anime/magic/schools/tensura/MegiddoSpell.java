@@ -79,7 +79,7 @@ public final class MegiddoSpell implements Spell {
                 if (t % 4 == 0) LocationUtil.sound(strike, Sound.BLOCK_BEACON_ACTIVATE, 0.5f + t * 0.05f, 1.5f);
                 t++;
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(plugin, 0L, 4L);
 
         // Phase 2 + 3: Strike + damage at 20 ticks
         new BukkitRunnable() {
