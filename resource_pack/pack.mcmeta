@@ -1,11 +1,11 @@
 {
   "pack": {
-    "pack_format": 34,
+    "pack_format": 6,
     "supported_formats": [
-      15,
+      3,
       100
     ],
-    "min_format": 15,
+    "min_format": 3,
     "max_format": 100,
     "description": "AnimeMagic v1.0.0-alpha"
   }

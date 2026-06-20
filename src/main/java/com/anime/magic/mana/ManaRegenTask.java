@@ -13,6 +13,9 @@ public final class ManaRegenTask extends BukkitRunnable {
 
     @Override
     public void run() {
+        // Skip entirely when mana is disabled in config — no point regenerating
+        // a resource that isn't consumed.
+        if (!plugin.getConfig().getBoolean("mana.enabled", true)) return;
         double rate = plugin.getConfig().getDouble("mana.regen-per-second", 2.0);
         if (rate <= 0) return;
         Bukkit.getOnlinePlayers().forEach(p -> {

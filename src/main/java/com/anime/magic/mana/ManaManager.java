@@ -181,6 +181,8 @@ public final class ManaManager {
     }
 
     public void showBossBar(@NotNull Player player) {
+        // Don't show the mana boss bar when mana is disabled in config.
+        if (!plugin.getConfig().getBoolean("mana.enabled", true)) return;
         if (!plugin.getConfig().getBoolean("mana.show-bossbar", true)) return;
         BossBar bar = bossBars.get(player.getUniqueId());
         if (bar == null) {

@@ -101,22 +101,12 @@ school.default-applied: "&aDefault loadout applied: &e%school%&a. Use &e/school 
 school.switched: "&aSwitched to &e%school% &aschool loadout."
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Action-bar HUD — persistent display of the currently selected ability.
-# Placeholders:
-#   %slot%      — hotbar slot number (1-9)
-#   %cost%      — spell mana cost
-#   %current%   — player's current mana
-#   %max%       — player's max mana
-#   %cost_color%— §b (blue) if affordable, §c (red) if not
-#   %secs%      — cooldown seconds remaining
-#   %sneak%     — display name of the sneak-variant spell
+# Action-bar HUD — minimal display of the currently selected ability.
+# Format:  §e❯ §f<Spell Name> §7(<status>)
+# Status is one of: (§c3s§7) on cooldown, (§cNo Mana§7) if unaffordable,
+# or nothing if ready. When mana.enabled is false, the "No Mana" status
+# is suppressed.
 # ─────────────────────────────────────────────────────────────────────────────
-actionbar.slot-marker: "&7❯ &8[&e%slot%&8] &r"
-actionbar.mana: "&8◆ %cost_color%%cost%&7/&b%max%"
-actionbar.cd-ready: "&8⏲ &aReady"
-actionbar.cd-active: "&8⏲ &c%secs%s"
-actionbar.keybind-simple: "&8[&eL-Click&8]"
-actionbar.keybind-with-sneak: "&8[&eL-Click&8|&dShift: %sneak%&8]"
 actionbar.empty: "&7Slot &e%slot% &7has no ability bound. Use &e/bind hotbar %slot% <spell>&7."
 controls.wheel.title: "&dSpell Wheel &7- &fClick to cast"
 controls.wheel.click-to-cast: "&aClick to cast"

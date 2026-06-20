@@ -60,7 +60,12 @@ public final class CastingService {
             return Result.SPELL_COOLDOWN;
         }
 
-        if (spell.manaCost() > 0 && !plugin.getManaManager().hasEnough(id, spell.manaCost())) {
+        // Mana check — skipped entirely when mana.enabled is false. The config
+        // flag was previously ignored, so setting mana.enabled: false still
+        // consumed mana. Now it's respected everywhere.
+        boolean manaEnabled = plugin.getConfig().getBoolean("mana.enabled", true);
+        if (manaEnabled && spell.manaCost() > 0
+                && !plugin.getManaManager().hasEnough(id, spell.manaCost())) {
             plugin.getMessages().send(player, "mana.insufficient",
                     "%need%", String.valueOf(spell.manaCost()),
                     "%have%", String.valueOf(plugin.getManaManager().current(id)));
@@ -71,7 +76,8 @@ public final class CastingService {
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return Result.CANCELLED;
 
-        if (spell.manaCost() > 0) plugin.getManaManager().consume(id, spell.manaCost());
+        // Only consume mana when mana is enabled in config.
+        if (manaEnabled && spell.manaCost() > 0) plugin.getManaManager().consume(id, spell.manaCost());
 
         // Always record the cooldown BEFORE cast() so an exception or a `return false`
         // cannot be used to spam-cast a spell. Mana is refunded on failure, but the
@@ -85,14 +91,14 @@ public final class CastingService {
             // Never let a buggy Spell implementation crash the caller (listener, command).
             plugin.getLogger().log(Level.WARNING,
                     "Spell " + spell.id() + " threw during cast for " + player.getName(), t);
-            // Refund mana — cooldown stays.
-            if (spell.manaCost() > 0) plugin.getManaManager().add(id, spell.manaCost());
+            // Refund mana — cooldown stays. Only when mana is enabled.
+            if (manaEnabled && spell.manaCost() > 0) plugin.getManaManager().add(id, spell.manaCost());
             return Result.FAILED;
         }
 
         if (!ok) {
             // Spell reported failure — refund mana, keep cooldown.
-            if (spell.manaCost() > 0) plugin.getManaManager().add(id, spell.manaCost());
+            if (manaEnabled && spell.manaCost() > 0) plugin.getManaManager().add(id, spell.manaCost());
             return Result.ABORTED;
         }
 
