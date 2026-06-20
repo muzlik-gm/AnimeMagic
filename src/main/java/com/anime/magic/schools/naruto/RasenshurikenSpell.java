@@ -72,7 +72,7 @@ public final class RasenshurikenSpell implements Spell {
                     double angle = (t * 0.3) + (i * Math.PI / 4);
                     double r = 2.0 - t * 0.06;
                     Location from = hand.clone().add(Math.cos(angle) * r, 0, Math.sin(angle) * r);
-                    hand.getWorld().spawnParticle(Particle.CLOUD, from, 0,
+                    hand.getWorld().spawnParticle(Particle.CLOUD, from, 1,
                             -Math.cos(angle) * 0.2, -0.05, -Math.sin(angle) * 0.2, 0.05);
                 }
                 if (t % 10 == 0) LocationUtil.sound(hand, Sound.ENTITY_ENDERMAN_AMBIENT, 0.6f, 1.8f);

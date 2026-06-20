@@ -84,7 +84,7 @@ public final class GluttonySkill implements Spell {
                     Location from = target.getEyeLocation().add(Math.cos(angle) * r, -0.5, Math.sin(angle) * r);
                     Location to = orbLoc.clone();
                     Vector dir = to.toVector().subtract(from.toVector()).multiply(0.1);
-                    target.getWorld().spawnParticle(Particle.SQUID_INK, from, 0,
+                    target.getWorld().spawnParticle(Particle.SQUID_INK, from, 1,
                             dir.getX(), dir.getY(), dir.getZ(), 0.05);
                 }
                 if (t % 3 == 0) {

@@ -30,40 +30,40 @@ public final class DefaultBindings {
     }
 
     private void buildLoadouts() {
-        // NARUTO — slots 0-4, ONLY Naruto spells
+        // NARUTO — 9 unique spells across 5 normal + 4 sneak slots (no duplicates)
         Loadout naruto = new Loadout(Spell.SchoolId.NARUTO);
         naruto.slotNormal[0] = "naruto:fireball";       naruto.slotSneak[0] = "naruto:phoenix_flower";
         naruto.slotNormal[1] = "naruto:chidori";         naruto.slotSneak[1] = "naruto:kirin";
         naruto.slotNormal[2] = "naruto:rasengan";        naruto.slotSneak[2] = "naruto:rasenshuriken";
-        naruto.slotNormal[3] = "naruto:shadow_clone";    naruto.slotSneak[3] = "naruto:sage_mode";
-        naruto.slotNormal[4] = "naruto:sage_mode";       naruto.slotSneak[4] = "naruto:six_paths";
+        naruto.slotNormal[3] = "naruto:shadow_clone";    naruto.slotSneak[3] = "naruto:six_paths";
+        naruto.slotNormal[4] = "naruto:sage_mode";       naruto.slotSneak[4] = null;
         loadouts.put(Spell.SchoolId.NARUTO, naruto);
 
-        // TENSURA — slots 0-4, ONLY Tensura spells
+        // TENSURA — 8 unique spells across 5 normal + 3 sneak slots (no duplicates)
         Loadout tensura = new Loadout(Spell.SchoolId.TENSURA);
-        tensura.slotNormal[0] = "tensura:magicule_blade";  tensura.slotSneak[0] = "tensura:razor_edge";
-        tensura.slotNormal[1] = "tensura:razor_edge";      tensura.slotSneak[1] = "tensura:gluttony";
-        tensura.slotNormal[2] = "tensura:gluttony";        tensura.slotSneak[2] = "tensura:beelzebuth";
-        tensura.slotNormal[3] = "tensura:disintegration";  tensura.slotSneak[3] = "tensura:megiddo";
-        tensura.slotNormal[4] = "tensura:raphael";         tensura.slotSneak[4] = "tensura:true_dragon";
+        tensura.slotNormal[0] = "tensura:magicule_blade";  tensura.slotSneak[0] = "tensura:gluttony";
+        tensura.slotNormal[1] = "tensura:razor_edge";      tensura.slotSneak[1] = "tensura:beelzebuth";
+        tensura.slotNormal[2] = "tensura:disintegration";  tensura.slotSneak[2] = "tensura:megiddo";
+        tensura.slotNormal[3] = "tensura:raphael";         tensura.slotSneak[3] = "tensura:true_dragon";
+        tensura.slotNormal[4] = null;                      tensura.slotSneak[4] = null;
         loadouts.put(Spell.SchoolId.TENSURA, tensura);
 
-        // MUSHOKU — slots 0-4, ONLY Mushoku spells
+        // MUSHOKU — 8 unique spells across 5 normal + 3 sneak slots (no duplicates)
         Loadout mushoku = new Loadout(Spell.SchoolId.MUSHOKU);
         mushoku.slotNormal[0] = "mushoku:saint_water";     mushoku.slotSneak[0] = "mushoku:storm";
-        mushoku.slotNormal[1] = "mushoku:saint_fire";      mushoku.slotSneak[1] = "mushoku:atomic_flare";
-        mushoku.slotNormal[2] = "mushoku:emperor_earth";   mushoku.slotSneak[2] = "mushoku:quake";
-        mushoku.slotNormal[3] = "mushoku:gravity";         mushoku.slotSneak[3] = "mushoku:time_warp";
-        mushoku.slotNormal[4] = "mushoku:atomic_flare";    mushoku.slotSneak[4] = "mushoku:time_warp";
+        mushoku.slotNormal[1] = "mushoku:saint_fire";      mushoku.slotSneak[1] = "mushoku:quake";
+        mushoku.slotNormal[2] = "mushoku:emperor_earth";   mushoku.slotSneak[2] = "mushoku:time_warp";
+        mushoku.slotNormal[3] = "mushoku:gravity";         mushoku.slotSneak[3] = null;
+        mushoku.slotNormal[4] = "mushoku:atomic_flare";    mushoku.slotSneak[4] = null;
         loadouts.put(Spell.SchoolId.MUSHOKU, mushoku);
 
-        // ONE PIECE — slots 0-4, ONLY One Piece spells
+        // ONE PIECE — 8 unique spells across 5 normal + 3 sneak slots (no duplicates)
         Loadout onepiece = new Loadout(Spell.SchoolId.ONEPIECE);
         onepiece.slotNormal[0] = "onepiece:gomu_pistol";        onepiece.slotSneak[0] = "onepiece:gear_second";
         onepiece.slotNormal[1] = "onepiece:armament_haki";      onepiece.slotSneak[1] = "onepiece:gear_third";
         onepiece.slotNormal[2] = "onepiece:conquerors_haki";    onepiece.slotSneak[2] = "onepiece:gear_fourth";
         onepiece.slotNormal[3] = "onepiece:observation_haki";   onepiece.slotSneak[3] = "onepiece:voice_of_all_things";
-        onepiece.slotNormal[4] = "onepiece:gear_second";        onepiece.slotSneak[4] = "onepiece:voice_of_all_things";
+        onepiece.slotNormal[4] = null;                          onepiece.slotSneak[4] = null;
         loadouts.put(Spell.SchoolId.ONEPIECE, onepiece);
     }
 

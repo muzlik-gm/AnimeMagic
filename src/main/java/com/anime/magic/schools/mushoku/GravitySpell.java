@@ -74,9 +74,9 @@ public final class GravitySpell implements Spell {
                         double angle = (ticks * 0.3) + (i * Math.PI / 4);
                         double r = 5.0 - (ticks / 60.0) * 4.5;
                         Location from = center.clone().add(Math.cos(angle) * r, Math.sin(ticks * 0.2) * 1.0, Math.sin(angle) * r);
-                        center.getWorld().spawnParticle(Particle.DRAGON_BREATH, from, 0,
+                        center.getWorld().spawnParticle(Particle.DRAGON_BREATH, from, 1,
                                 -Math.cos(angle) * 0.3, -0.1, -Math.sin(angle) * 0.3, 0.0);
-                        center.getWorld().spawnParticle(Particle.SQUID_INK, from, 0,
+                        center.getWorld().spawnParticle(Particle.SQUID_INK, from, 1,
                                 -Math.cos(angle) * 0.2, 0, -Math.sin(angle) * 0.2, 0.0);
                     }
                 }

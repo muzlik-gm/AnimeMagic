@@ -71,9 +71,9 @@ public final class MegiddoSpell implements Spell {
                     double r = 3.0 - t * 0.14;
                     double y = 4.0 - t * 0.18;
                     Location from = strike.clone().add(Math.cos(angle) * r, y, Math.sin(angle) * r);
-                    strike.getWorld().spawnParticle(Particle.END_ROD, from, 0,
+                    strike.getWorld().spawnParticle(Particle.END_ROD, from, 1,
                             -Math.cos(angle) * 0.3, -0.4, -Math.sin(angle) * 0.3, 0.0);
-                    strike.getWorld().spawnParticle(Particle.SPORE_BLOSSOM_AIR, from, 0,
+                    strike.getWorld().spawnParticle(Particle.SPORE_BLOSSOM_AIR, from, 1,
                             -Math.cos(angle) * 0.2, -0.3, -Math.sin(angle) * 0.2, 0.0);
                 }
                 if (t % 4 == 0) LocationUtil.sound(strike, Sound.BLOCK_BEACON_ACTIVATE, 0.5f + t * 0.05f, 1.5f);

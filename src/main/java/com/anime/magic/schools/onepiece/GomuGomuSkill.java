@@ -98,7 +98,7 @@ public final class GomuGomuSkill implements Spell {
                     double r = 1.5 - t * 0.13;
                     Location from = shoulder.clone().add(Math.cos(angle) * r, Math.random() * 1.0, Math.sin(angle) * r);
                     if (from.getWorld() != null) {
-                        from.getWorld().spawnParticle(Particle.DUST, from, 0,
+                        from.getWorld().spawnParticle(Particle.DUST, from, 1,
                                 -Math.cos(angle) * 0.15, -0.1, -Math.sin(angle) * 0.15, 0.0,
                                 new org.bukkit.Particle.DustOptions(org.bukkit.Color.fromRGB(225, 65, 65), 1.0f));
                     }

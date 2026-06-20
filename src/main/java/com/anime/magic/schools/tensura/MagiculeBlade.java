@@ -85,7 +85,7 @@ public final class MagiculeBlade implements Spell {
                     double angle = Math.random() * Math.PI * 2;
                     double r = 2.0 - t * 0.18;
                     Location from = hand.clone().add(Math.cos(angle) * r, Math.random() * 2 - 1, Math.sin(angle) * r);
-                    hand.getWorld().spawnParticle(Particle.PORTAL, from, 0,
+                    hand.getWorld().spawnParticle(Particle.PORTAL, from, 1,
                             -Math.cos(angle) * 0.15, -0.1, -Math.sin(angle) * 0.15, 0.05);
                 }
                 if (t % 3 == 0) {
