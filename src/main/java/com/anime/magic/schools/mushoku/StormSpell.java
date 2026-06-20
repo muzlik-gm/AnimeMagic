@@ -28,13 +28,13 @@ public final class StormSpell implements Spell {
     public StormSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "mushoku:storm"; }
-    @Override public @NotNull String displayName() { return "§3§lSaint §8» §f§lStorm"; }
+    @Override public @NotNull String displayName() { return "§3§lꜱaint §8» §f§lꜱtorm"; }
     @Override public @NotNull SchoolId school() { return SchoolId.MUSHOKU; }
     @Override public int manaCost() { return 70; }
     @Override public long cooldownMs() { return 20000; }
     @Override public int requiredLevel() { return 25; }
     @Override public @NotNull String description() {
-        return "Summon a swirling storm around you for 8s. 3 dmg/s + Slowness II to all enemies within 12 blocks.";
+        return "ꜱummon a swirling storm around you for 8s. 3 dmg/s + ꜱlowness ɪɪ to all enemies within 12 blocks.";
     }
     @Override public @NotNull SpellIcon icon() { return new SpellIcon("SNOWBALL", 3003, "§fStorm"); }
 

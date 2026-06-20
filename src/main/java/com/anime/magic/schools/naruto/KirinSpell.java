@@ -43,13 +43,13 @@ public final class KirinSpell implements Spell {
     public KirinSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "naruto:kirin"; }
-    @Override public @NotNull String displayName() { return "§b§lRaiton §8» §f§lKirin"; }
+    @Override public @NotNull String displayName() { return "§b§lʀaiton §8» §f§lᴋirin"; }
     @Override public @NotNull SchoolId school() { return SchoolId.NARUTO; }
     @Override public int manaCost() { return 120; }
     @Override public long cooldownMs() { return 45000; }
     @Override public int requiredLevel() { return 50; }
     @Override public @NotNull String description() {
-        return "Call down a literal lightning strike. Massive crater + violent screen shake + scorch marks. 50 dmg primary, 25 AoE.";
+        return "ᴄall down a literal lightning strike. ᴍassive crater + violent screen shake + scorch marks. 50 dmg primary, 25 ᴀoᴇ.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("PRISMARINE_SHARD", 7009, "§bKirin");

@@ -49,7 +49,7 @@ public final class MagiculeBlade implements Spell {
     public MagiculeBlade(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "tensura:magicule_blade"; }
-    @Override public @NotNull String displayName() { return "§5§lMagicule §8» §d§lBlade"; }
+    @Override public @NotNull String displayName() { return "§5§lᴍagicule §8» §d§lʙlade"; }
     @Override public @NotNull Spell.SchoolId school() { return Spell.SchoolId.TENSURA; }
     @Override public int manaCost() { return 40; }
     @Override public long cooldownMs() { return 12000; }

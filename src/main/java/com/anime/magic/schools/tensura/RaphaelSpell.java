@@ -39,13 +39,13 @@ public final class RaphaelSpell implements Spell {
     public RaphaelSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "tensura:raphael"; }
-    @Override public @NotNull String displayName() { return "§b§lUltimate: Raphael"; }
+    @Override public @NotNull String displayName() { return "§b§lᴜltimate: ʀaphael"; }
     @Override public @NotNull Spell.SchoolId school() { return Spell.SchoolId.TENSURA; }
     @Override public int manaCost() { return 130; }
     @Override public long cooldownMs() { return 90000; }
     @Override public int requiredLevel() { return 50; }
     @Override public @NotNull String description() {
-        return "Perfect combat awareness for 20s. Strength IV, Resistance III, Speed III, Haste III, Regen II, Night Vision, +50% mana regen.";
+        return "ᴘerfect combat awareness for 20s. ꜱtrength ɪᴠ, ʀesistance ɪɪɪ, ꜱpeed ɪɪɪ, ʜaste ɪɪɪ, ʀegen ɪɪ, ɴight ᴠision, +50% mana regen.";
     }
     @Override public @NotNull Spell.SpellIcon icon() {
         return new SpellIcon("NETHER_STAR", 2003, "§bRaphael");

@@ -42,13 +42,13 @@ public final class FireballJutsu implements Spell {
     public FireballJutsu(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "naruto:fireball"; }
-    @Override public @NotNull String displayName() { return "§6§lKaton §8» §c§lGōkakyū no Jutsu"; }
+    @Override public @NotNull String displayName() { return "§6§lᴋaton §8» §c§lɢōkakyū no ᴊutsu"; }
     @Override public @NotNull SchoolId school() { return SchoolId.NARUTO; }
     @Override public int manaCost() { return 30; }
     @Override public long cooldownMs() { return 5000; }
     @Override public int requiredLevel() { return 5; }
     @Override public @NotNull String description() {
-        return "Exhale a great fireball. Build-up + directed trail + crater + scorch marks + impact frame.";
+        return "ᴇxhale a great fireball. ʙuild-up + directed trail + crater + scorch marks + impact frame.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("FIRE_CHARGE", 3001, "§cFireball Jutsu");

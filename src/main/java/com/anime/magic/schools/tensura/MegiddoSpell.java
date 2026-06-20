@@ -34,13 +34,13 @@ public final class MegiddoSpell implements Spell {
     public MegiddoSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "tensura:megiddo"; }
-    @Override public @NotNull String displayName() { return "§fMegiddo"; }
+    @Override public @NotNull String displayName() { return "§fᴍegiddo"; }
     @Override public @NotNull Spell.SchoolId school() { return Spell.SchoolId.TENSURA; }
     @Override public int manaCost() { return 150; }
     @Override public long cooldownMs() { return 60000; }
     @Override public int requiredLevel() { return 55; }
     @Override public @NotNull String description() {
-        return "Focus sunlight into a lethal pinpoint beam. 60 holy damage, executes targets below 50% HP. 20 AoE.";
+        return "ꜰocus sunlight into a lethal pinpoint beam. 60 holy damage, executes targets below 50% ʜᴘ. 20 ᴀoᴇ.";
     }
     @Override public @NotNull Spell.SpellIcon icon() {
         return new SpellIcon("NETHER_STAR", 2002, "§fMegiddo");

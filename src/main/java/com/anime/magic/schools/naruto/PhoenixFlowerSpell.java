@@ -31,13 +31,13 @@ public final class PhoenixFlowerSpell implements Spell {
     public PhoenixFlowerSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "naruto:phoenix_flower"; }
-    @Override public @NotNull String displayName() { return "§6§lKaton §8» §c§lHōsenka no Jutsu"; }
+    @Override public @NotNull String displayName() { return "§6§lᴋaton §8» §c§lʜōsenka no ᴊutsu"; }
     @Override public @NotNull SchoolId school() { return SchoolId.NARUTO; }
     @Override public int manaCost() { return 60; }
     @Override public long cooldownMs() { return 12000; }
     @Override public int requiredLevel() { return 18; }
     @Override public @NotNull String description() {
-        return "Fire a barrage of 6 homing fireballs over 3 seconds. Each explodes for 8 damage + 2s fire.";
+        return "ꜰire a barrage of 6 homing fireballs over 3 seconds. ᴇach explodes for 8 damage + 2s fire.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("FIRE_CHARGE", 7011, "§cPhoenix Flower");

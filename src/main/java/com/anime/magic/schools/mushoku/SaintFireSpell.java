@@ -30,13 +30,13 @@ public final class SaintFireSpell implements Spell {
     }
 
     @Override public @NotNull String id() { return "mushoku:saint_fire"; }
-    @Override public @NotNull String displayName() { return "§3Saint §8» §6Fireball"; }
+    @Override public @NotNull String displayName() { return "§3ꜱaint §8» §6ꜰireball"; }
     @Override public @NotNull SchoolId school() { return SchoolId.MUSHOKU; }
     @Override public int manaCost() { return 45; }
     @Override public long cooldownMs() { return 9000; }
     @Override public int requiredLevel() { return 12; }
     @Override public @NotNull String description() {
-        return "Classic Saint-class fireball. Travels in a slight arc and explodes on impact.";
+        return "ᴄlassic ꜱaint-class fireball. ᴛravels in a slight arc and explodes on impact.";
     }
     @Override public @NotNull SpellIcon icon() { return new SpellIcon("BLAZE_POWDER", 5002, "§6Saint Fire"); }
     @Override public @NotNull List<String> incantation() {

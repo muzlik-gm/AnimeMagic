@@ -27,13 +27,13 @@ public final class ArmamentHaki implements Spell {
     public ArmamentHaki(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "onepiece:armament_haki"; }
-    @Override public @NotNull String displayName() { return "§8Haki §8» §0Armament Hardening"; }
+    @Override public @NotNull String displayName() { return "§8ʜaki §8» §0ᴀrmament ʜardening"; }
     @Override public @NotNull SchoolId school() { return SchoolId.ONEPIECE; }
     @Override public int manaCost() { return 45; }
     @Override public long cooldownMs() { return 18000; }
     @Override public int requiredLevel() { return 18; }
     @Override public @NotNull String description() {
-        return "Coat your body in hardened will. Resistance III + Strength III for 20 seconds.";
+        return "ᴄoat your body in hardened will. ʀesistance ɪɪɪ + ꜱtrength ɪɪɪ for 20 seconds.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("OBSIDIAN", 6002, "§0Armament Haki");

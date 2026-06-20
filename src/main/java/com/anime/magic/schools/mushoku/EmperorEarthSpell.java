@@ -35,13 +35,13 @@ public final class EmperorEarthSpell implements Spell {
     }
 
     @Override public @NotNull String id() { return "mushoku:emperor_earth"; }
-    @Override public @NotNull String displayName() { return "§4Emperor §8» §6Earthquake"; }
+    @Override public @NotNull String displayName() { return "§4ᴇmperor §8» §6ᴇarthquake"; }
     @Override public @NotNull SchoolId school() { return SchoolId.MUSHOKU; }
     @Override public int manaCost() { return 90; }
     @Override public long cooldownMs() { return 25000; }
     @Override public int requiredLevel() { return 30; }
     @Override public @NotNull String description() {
-        return "Emperor-class spell. Cracks the earth in a 10-block radius and launches all foes skyward.";
+        return "ᴇmperor-class spell. ᴄracks the earth in a 10-block radius and launches all foes skyward.";
     }
     @Override public @NotNull SpellIcon icon() { return new SpellIcon("STONE", 5003, "§6Emperor Earth"); }
     @Override public @NotNull List<String> incantation() {

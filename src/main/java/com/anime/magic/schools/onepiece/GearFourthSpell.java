@@ -29,13 +29,13 @@ public final class GearFourthSpell implements Spell {
     public GearFourthSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "onepiece:gear_fourth"; }
-    @Override public @NotNull String displayName() { return "§c§lGear §8» §0§lFourth: Boundman"; }
+    @Override public @NotNull String displayName() { return "§c§lɢear §8» §0§lꜰourth: ʙoundman"; }
     @Override public @NotNull SchoolId school() { return SchoolId.ONEPIECE; }
     @Override public int manaCost() { return 150; }
     @Override public long cooldownMs() { return 60000; }
     @Override public int requiredLevel() { return 50; }
     @Override public @NotNull String description() {
-        return "Boundman transformation for 25s. Strength V, Resistance III. Every hit deals AoE damage + knockback.";
+        return "ʙoundman transformation for 25s. ꜱtrength ᴠ, ʀesistance ɪɪɪ. ᴇvery hit deals ᴀoᴇ damage + knockback.";
     }
     @Override public @NotNull SpellIcon icon() { return new SpellIcon("OBSIDIAN", 6002, "§0Gear Fourth"); }
 

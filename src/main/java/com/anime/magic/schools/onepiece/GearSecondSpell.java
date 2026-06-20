@@ -26,13 +26,13 @@ public final class GearSecondSpell implements Spell {
     public GearSecondSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "onepiece:gear_second"; }
-    @Override public @NotNull String displayName() { return "§c§lGear §8» §f§lSecond"; }
+    @Override public @NotNull String displayName() { return "§c§lɢear §8» §f§lꜱecond"; }
     @Override public @NotNull SchoolId school() { return SchoolId.ONEPIECE; }
     @Override public int manaCost() { return 80; }
     @Override public long cooldownMs() { return 30000; }
     @Override public int requiredLevel() { return 30; }
     @Override public @NotNull String description() {
-        return "Pump blood at high speed for 15s. Strength II, Speed III, Haste III. Steam aura.";
+        return "ᴘump blood at high speed for 15s. ꜱtrength ɪɪ, ꜱpeed ɪɪɪ, ʜaste ɪɪɪ. ꜱteam aura.";
     }
     @Override public @NotNull SpellIcon icon() { return new SpellIcon("RED_DYE", 6003, "§cGear Second"); }
 

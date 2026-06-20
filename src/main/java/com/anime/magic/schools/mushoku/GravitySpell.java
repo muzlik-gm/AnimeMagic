@@ -29,13 +29,13 @@ public final class GravitySpell implements Spell {
     public GravitySpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "mushoku:gravity"; }
-    @Override public @NotNull String displayName() { return "§5§lKing-class: Gravity"; }
+    @Override public @NotNull String displayName() { return "§5§lᴋing-class: ɢravity"; }
     @Override public @NotNull SchoolId school() { return SchoolId.MUSHOKU; }
     @Override public int manaCost() { return 120; }
     @Override public long cooldownMs() { return 30000; }
     @Override public int requiredLevel() { return 45; }
     @Override public @NotNull String description() {
-        return "Create a gravitational singularity that pulls all enemies in, then explodes them outward for 40 damage.";
+        return "ᴄreate a gravitational singularity that pulls all enemies in, then explodes them outward for 40 damage.";
     }
     @Override public @NotNull SpellIcon icon() { return new SpellIcon("BLACK_DYE", 4002, "§5Gravity"); }
 

@@ -50,13 +50,13 @@ public final class RasenganSpell implements Spell {
     public RasenganSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "naruto:rasengan"; }
-    @Override public @NotNull String displayName() { return "§a§lRasengan §8» §7Spiraling Sphere"; }
+    @Override public @NotNull String displayName() { return "§a§lʀasengan §8» §7ꜱpiraling ꜱphere"; }
     @Override public @NotNull SchoolId school() { return SchoolId.NARUTO; }
     @Override public int manaCost() { return 45; }
     @Override public long cooldownMs() { return 8000; }
     @Override public int requiredLevel() { return 10; }
     @Override public @NotNull String description() {
-        return "Form a sphere of pure chakra, lunge forward, and detonate on impact. Crater + screen shake + impact frame.";
+        return "ꜰorm a sphere of pure chakra, lunge forward, and detonate on impact. ᴄrater + screen shake + impact frame.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("SNOWBALL", 3003, "§aRasengan");

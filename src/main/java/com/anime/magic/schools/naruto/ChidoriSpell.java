@@ -44,13 +44,13 @@ public final class ChidoriSpell implements Spell {
     public ChidoriSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "naruto:chidori"; }
-    @Override public @NotNull String displayName() { return "§b§lChidori §8» §f§lOne Thousand Birds"; }
+    @Override public @NotNull String displayName() { return "§b§lᴄhidori §8» §f§lᴏne ᴛhousand ʙirds"; }
     @Override public @NotNull SchoolId school() { return SchoolId.NARUTO; }
     @Override public int manaCost() { return 50; }
     @Override public long cooldownMs() { return 10000; }
     @Override public int requiredLevel() { return 15; }
     @Override public @NotNull String description() {
-        return "Channel lightning, dash-strike target for 18 dmg + paralysis. Directed stream + impact frame + residual crackle.";
+        return "ᴄhannel lightning, dash-strike target for 18 dmg + paralysis. ᴅirected stream + impact frame + residual crackle.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("PRISMARINE_SHARD", 3002, "§bChidori");

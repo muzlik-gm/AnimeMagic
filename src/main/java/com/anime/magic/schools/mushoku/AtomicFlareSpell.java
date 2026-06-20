@@ -34,13 +34,13 @@ public final class AtomicFlareSpell implements Spell {
     public AtomicFlareSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "mushoku:atomic_flare"; }
-    @Override public @NotNull String displayName() { return "§4§lKing-class: Atomic Flare"; }
+    @Override public @NotNull String displayName() { return "§4§lᴋing-class: ᴀtomic ꜰlare"; }
     @Override public @NotNull SchoolId school() { return SchoolId.MUSHOKU; }
     @Override public int manaCost() { return 140; }
     @Override public long cooldownMs() { return 45000; }
     @Override public int requiredLevel() { return 45; }
     @Override public @NotNull String description() {
-        return "Detonate a miniature sun. 50 damage + 8s fire + knockback to all within 12 blocks.";
+        return "ᴅetonate a miniature sun. 50 damage + 8s fire + knockback to all within 12 blocks.";
     }
     @Override public @NotNull SpellIcon icon() { return new SpellIcon("BLAZE_POWDER", 5002, "§4Atomic Flare"); }
 

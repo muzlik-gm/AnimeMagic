@@ -47,7 +47,7 @@ public final class GomuGomuSkill implements Spell {
     public GomuGomuSkill(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "onepiece:gomu_pistol"; }
-    @Override public @NotNull String displayName() { return "§c§lGomu Gomu §8» §f§lPistol"; }
+    @Override public @NotNull String displayName() { return "§c§lɢomu ɢomu §8» §f§lᴘistol"; }
     @Override public @NotNull SchoolId school() { return SchoolId.ONEPIECE; }
     @Override public int manaCost() { return 30; }
     @Override public long cooldownMs() { return 4500; }

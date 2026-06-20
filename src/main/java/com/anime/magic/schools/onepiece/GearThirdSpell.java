@@ -28,13 +28,13 @@ public final class GearThirdSpell implements Spell {
     public GearThirdSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "onepiece:gear_third"; }
-    @Override public @NotNull String displayName() { return "§c§lGear §8» §f§lThird"; }
+    @Override public @NotNull String displayName() { return "§c§lɢear §8» §f§lᴛhird"; }
     @Override public @NotNull SchoolId school() { return SchoolId.ONEPIECE; }
     @Override public int manaCost() { return 90; }
     @Override public long cooldownMs() { return 35000; }
     @Override public int requiredLevel() { return 35; }
     @Override public @NotNull String description() {
-        return "Inflate your arm to giant size for 20s. Next 3 melee hits deal bonus knockback + 25 damage.";
+        return "ɪnflate your arm to giant size for 20s. ɴext 3 melee hits deal bonus knockback + 25 damage.";
     }
     @Override public @NotNull SpellIcon icon() { return new SpellIcon("RED_DYE", 6003, "§cGear Third"); }
 

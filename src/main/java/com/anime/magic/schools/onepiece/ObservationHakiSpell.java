@@ -28,13 +28,13 @@ public final class ObservationHakiSpell implements Spell {
     public ObservationHakiSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "onepiece:observation_haki"; }
-    @Override public @NotNull String displayName() { return "§8§lHaki §8» §a§lObservation"; }
+    @Override public @NotNull String displayName() { return "§8§lʜaki §8» §a§lᴏbservation"; }
     @Override public @NotNull SchoolId school() { return SchoolId.ONEPIECE; }
     @Override public int manaCost() { return 60; }
     @Override public long cooldownMs() { return 25000; }
     @Override public int requiredLevel() { return 22; }
     @Override public @NotNull String description() {
-        return "Precognitive awareness for 30s. Speed II, Night Vision, see all entities within 15 blocks glow.";
+        return "ᴘrecognitive awareness for 30s. ꜱpeed ɪɪ, ɴight ᴠision, see all entities within 15 blocks glow.";
     }
     @Override public @NotNull SpellIcon icon() { return new SpellIcon("NETHER_STAR", 2001, "§aObservation Haki"); }
 

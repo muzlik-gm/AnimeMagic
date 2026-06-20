@@ -25,13 +25,13 @@ public final class RazorEdgeSkill implements Spell {
     public RazorEdgeSkill(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "tensura:razor_edge"; }
-    @Override public @NotNull String displayName() { return "§5Skill §8» §dRazor Edge"; }
+    @Override public @NotNull String displayName() { return "§5ꜱkill §8» §dʀazor ᴇdge"; }
     @Override public @NotNull SchoolId school() { return SchoolId.TENSURA; }
     @Override public int manaCost() { return 20; }
     @Override public long cooldownMs() { return 3000; }
     @Override public int requiredLevel() { return 8; }
     @Override public @NotNull String description() {
-        return "A pinpoint strike that pierces armor and inflicts bleeding for 4 seconds.";
+        return "ᴀ pinpoint strike that pierces armor and inflicts bleeding for 4 seconds.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("NETHERITE_SWORD", 4003, "§dRazor Edge");

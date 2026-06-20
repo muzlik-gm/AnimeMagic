@@ -27,13 +27,13 @@ public final class QuakeSpell implements Spell {
     public QuakeSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "mushoku:quake"; }
-    @Override public @NotNull String displayName() { return "§6§lEmperor-class: Quake"; }
+    @Override public @NotNull String displayName() { return "§6§lᴇmperor-class: quake"; }
     @Override public @NotNull SchoolId school() { return SchoolId.MUSHOKU; }
     @Override public int manaCost() { return 130; }
     @Override public long cooldownMs() { return 40000; }
     @Override public int requiredLevel() { return 50; }
     @Override public @NotNull String description() {
-        return "Slam the ground. 35 damage + launch all entities within 20 blocks upward. 5 expanding crack rings.";
+        return "ꜱlam the ground. 35 damage + launch all entities within 20 blocks upward. 5 expanding crack rings.";
     }
     @Override public @NotNull SpellIcon icon() { return new SpellIcon("STONE", 5003, "§6Quake"); }
 

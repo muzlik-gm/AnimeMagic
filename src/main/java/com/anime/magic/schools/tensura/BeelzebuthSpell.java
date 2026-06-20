@@ -30,13 +30,13 @@ public final class BeelzebuthSpell implements Spell {
     public BeelzebuthSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "tensura:beelzebuth"; }
-    @Override public @NotNull String displayName() { return "§5§lUnique: Beelzebuth"; }
+    @Override public @NotNull String displayName() { return "§5§lᴜnique: ʙeelzebuth"; }
     @Override public @NotNull Spell.SchoolId school() { return Spell.SchoolId.TENSURA; }
     @Override public int manaCost() { return 110; }
     @Override public long cooldownMs() { return 30000; }
     @Override public int requiredLevel() { return 40; }
     @Override public @NotNull String description() {
-        return "Drain ALL nearby enemies (10-block radius) for 5 seconds. 4 dmg/s each. You heal for total damage.";
+        return "ᴅrain ᴀʟʟ nearby enemies (10-block radius) for 5 seconds. 4 dmg/s each. ʏou heal for total damage.";
     }
     @Override public @NotNull Spell.SpellIcon icon() {
         return new SpellIcon("BLACK_DYE", 4002, "§5Beelzebuth");

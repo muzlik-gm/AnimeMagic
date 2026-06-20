@@ -30,13 +30,13 @@ public final class TimeWarpSpell implements Spell {
     public TimeWarpSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "mushoku:time_warp"; }
-    @Override public @NotNull String displayName() { return "§d§lGod-class: Time Warp"; }
+    @Override public @NotNull String displayName() { return "§d§lɢod-class: ᴛime ᴡarp"; }
     @Override public @NotNull SchoolId school() { return SchoolId.MUSHOKU; }
     @Override public int manaCost() { return 180; }
     @Override public long cooldownMs() { return 60000; }
     @Override public int requiredLevel() { return 60; }
     @Override public @NotNull String description() {
-        return "Bend time around your target for 4s. Target is paralyzed. After 4s, target takes 30 accumulated damage.";
+        return "ʙend time around your target for 4s. ᴛarget is paralyzed. ᴀfter 4s, target takes 30 accumulated damage.";
     }
     @Override public @NotNull SpellIcon icon() { return new SpellIcon("CLOCK", 0, "§dTime Warp"); }
 

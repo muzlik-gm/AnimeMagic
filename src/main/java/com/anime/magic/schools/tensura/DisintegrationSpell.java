@@ -29,13 +29,13 @@ public final class DisintegrationSpell implements Spell {
     public DisintegrationSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "tensura:disintegration"; }
-    @Override public @NotNull String displayName() { return "§5§lSoul §8» §d§lDisintegration"; }
+    @Override public @NotNull String displayName() { return "§5§lꜱoul §8» §d§lᴅisintegration"; }
     @Override public @NotNull Spell.SchoolId school() { return Spell.SchoolId.TENSURA; }
     @Override public int manaCost() { return 100; }
     @Override public long cooldownMs() { return 25000; }
     @Override public int requiredLevel() { return 35; }
     @Override public @NotNull String description() {
-        return "Fire a 25-block beam of disintegration energy for 2s. 5 damage/tick to anything in the beam.";
+        return "ꜰire a 25-block beam of disintegration energy for 2s. 5 damage/tick to anything in the beam.";
     }
     @Override public @NotNull Spell.SpellIcon icon() {
         return new SpellIcon("BLACK_DYE", 4002, "§dDisintegration");

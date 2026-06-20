@@ -37,13 +37,13 @@ public final class ShadowCloneJutsu implements Spell {
     public ShadowCloneJutsu(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "naruto:shadow_clone"; }
-    @Override public @NotNull String displayName() { return "§7Kage Bunshin §8» §fShadow Clones"; }
+    @Override public @NotNull String displayName() { return "§7ᴋage ʙunshin §8» §fꜱhadow ᴄlones"; }
     @Override public @NotNull SchoolId school() { return SchoolId.NARUTO; }
     @Override public int manaCost() { return 50; }
     @Override public long cooldownMs() { return 12000; }
     @Override public int requiredLevel() { return 20; }
     @Override public @NotNull String description() {
-        return "Summon three shadow clones to fight alongside you for 15 seconds.";
+        return "ꜱummon three shadow clones to fight alongside you for 15 seconds.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("SOUL_SAND", 3004, "§7Shadow Clones");

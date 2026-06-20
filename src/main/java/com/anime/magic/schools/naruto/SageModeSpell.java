@@ -35,13 +35,13 @@ public final class SageModeSpell implements Spell {
     public SageModeSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "naruto:sage_mode"; }
-    @Override public @NotNull String displayName() { return "§6§lSage Mode §8» §e§lSennin Mōdo"; }
+    @Override public @NotNull String displayName() { return "§6§lꜱage ᴍode §8» §e§lꜱennin ᴍōdo"; }
     @Override public @NotNull SchoolId school() { return SchoolId.NARUTO; }
     @Override public int manaCost() { return 90; }
     @Override public long cooldownMs() { return 60000; }
     @Override public int requiredLevel() { return 40; }
     @Override public @NotNull String description() {
-        return "Enter Sage Mode for 30 seconds. Strength III, Resistance II, Speed II, Jump Boost II, Regeneration I.";
+        return "ᴇnter ꜱage ᴍode for 30 seconds. ꜱtrength ɪɪɪ, ʀesistance ɪɪ, ꜱpeed ɪɪ, ᴊump ʙoost ɪɪ, ʀegeneration ɪ.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("NETHER_STAR", 7010, "§eSage Mode");

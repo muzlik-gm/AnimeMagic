@@ -38,13 +38,13 @@ public final class ConquerorsHaki implements Spell {
     public ConquerorsHaki(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "onepiece:conquerors_haki"; }
-    @Override public @NotNull String displayName() { return "§8§lHaki §8» §5§lConqueror's Will"; }
+    @Override public @NotNull String displayName() { return "§8§lʜaki §8» §5§lᴄonqueror's ᴡill"; }
     @Override public @NotNull SchoolId school() { return SchoolId.ONEPIECE; }
     @Override public int manaCost() { return 100; }
     @Override public long cooldownMs() { return 30000; }
     @Override public int requiredLevel() { return 30; }
     @Override public @NotNull String description() {
-        return "Unleash your willpower as a 15-block shockwave dome. Mass paralysis + screen shake + crater.";
+        return "ᴜnleash your willpower as a 15-block shockwave dome. ᴍass paralysis + screen shake + crater.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("PURPLE_GLAZED_TERRACOTTA", 6001, "§5Conqueror's Haki");

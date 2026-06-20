@@ -30,13 +30,13 @@ public final class SaintWaterSpell implements Spell {
     }
 
     @Override public @NotNull String id() { return "mushoku:saint_water"; }
-    @Override public @NotNull String displayName() { return "§3Saint §8» §bWater Burst"; }
+    @Override public @NotNull String displayName() { return "§3ꜱaint §8» §bᴡater ʙurst"; }
     @Override public @NotNull SchoolId school() { return SchoolId.MUSHOKU; }
     @Override public int manaCost() { return 35; }
     @Override public long cooldownMs() { return 7000; }
     @Override public int requiredLevel() { return 8; }
     @Override public @NotNull String description() {
-        return "A purifying sphere of water that douses flames, cures poison, and knocks back foes.";
+        return "ᴀ purifying sphere of water that douses flames, cures poison, and knocks back foes.";
     }
     @Override public @NotNull SpellIcon icon() { return new SpellIcon("WATER_BUCKET", 5001, "§bSaint Water"); }
     @Override public @NotNull List<String> incantation() {

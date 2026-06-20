@@ -46,7 +46,7 @@ public final class GluttonySkill implements Spell {
     public GluttonySkill(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "tensura:gluttony"; }
-    @Override public @NotNull String displayName() { return "§5§lUnique Skill §8» §d§lGluttony"; }
+    @Override public @NotNull String displayName() { return "§5§lᴜnique ꜱkill §8» §d§lɢluttony"; }
     @Override public @NotNull Spell.SchoolId school() { return Spell.SchoolId.TENSURA; }
     @Override public int manaCost() { return 70; }
     @Override public long cooldownMs() { return 18000; }

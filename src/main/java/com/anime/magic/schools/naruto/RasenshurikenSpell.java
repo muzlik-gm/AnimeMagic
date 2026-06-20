@@ -42,7 +42,7 @@ public final class RasenshurikenSpell implements Spell {
     public RasenshurikenSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "naruto:rasenshuriken"; }
-    @Override public @NotNull String displayName() { return "§a§lFūton §8» §f§lRasenshuriken"; }
+    @Override public @NotNull String displayName() { return "§a§lꜰūton §8» §f§lʀasenshuriken"; }
     @Override public @NotNull SchoolId school() { return SchoolId.NARUTO; }
     @Override public int manaCost() { return 80; }
     @Override public long cooldownMs() { return 20000; }

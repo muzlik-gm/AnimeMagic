@@ -1,129 +1,123 @@
-prefix: "&8[&dAnimeMagic&8] &r"
+prefix: "&8[&dᴀɴɪᴍᴇ ᴍᴀɢɪᴄ&8] &r"
 
-no-permission: "&cYou do not have permission to do that."
-player-only: "&cThis command can only be run by a player."
-unknown-command: "&cUnknown subcommand. Try &e/%cmd% help&c."
-reloaded: "&aAnimeMagic reloaded in &e%ms% ms&a."
-config-version-mismatch: "&eConfig version mismatch — backing up old config and writing a fresh one."
+no-permission: "&cʏᴏᴜ ᴅᴏ ɴᴏᴛ ʜᴀᴠᴇ ᴘᴇʀᴍɪꜱꜱɪᴏɴ ᴛᴏ ᴅᴏ ᴛʜᴀᴛ."
+player-only: "&cᴛʜɪꜱ ᴄᴏᴍᴍᴀɴᴅ ᴄᴀɴ ᴏɴʟʏ ʙᴇ ʀᴜɴ ʙʏ ᴀ ᴘʟᴀʏᴇʀ."
+unknown-command: "&cᴜɴᴋɴᴏᴡɴ ꜱᴜʙᴄᴏᴍᴍᴀɴᴅ. ᴛʀʏ &e/%cmd% ʜᴇʟᴘ&c."
+reloaded: "&aᴀɴɪᴍᴇ ᴍᴀɢɪᴄ ʀᴇʟᴏᴀᴅᴇᴅ ɪɴ &e%ms% ᴍꜱ&a."
+config-version-mismatch: "&eᴄᴏɴꜰɪɢ ᴠᴇʀꜱɪᴏɴ ᴍɪꜱᴍᴀᴛᴄʜ — ʙᴀᴄᴋɪɴɢ ᴜᴘ ᴏʟᴅ ᴄᴏɴꜰɪɢ ᴀɴᴅ ᴡʀɪᴛɪɴɢ ᴀ ꜰʀᴇꜱʜ ᴏɴᴇ."
 
-# Casting feedback for outcomes that previously had no message.
-spell.disabled-world: "&cSpells are disabled in this world."
-spell.failed: "&cThe spell fizzled."
-spell.aborted: "&cThe spell was interrupted."
+spell.disabled-world: "&cꜱᴘᴇʟʟꜱ ᴀʀᴇ ᴅɪꜱᴀʙʟᴇᴅ ɪɴ ᴛʜɪꜱ ᴡᴏʀʟᴅ."
+spell.failed: "&cᴛʜᴇ ꜱᴘᴇʟʟ ꜰɪᴢᴢʟᴇᴅ."
+spell.aborted: "&cᴛʜᴇ ꜱᴘᴇʟʟ ᴡᴀꜱ ɪɴᴛᴇʀʀᴜᴘᴛᴇᴅ."
 
-mana.show.self: "&bYour mana: &e%current%&b/&e%max%"
-mana.show.other: "&b%player%'s mana: &e%current%&b/&e%max%"
-mana.set: "&aSet &e%player%&a's mana to &e%value%&a."
-mana.add: "&aAdded &e%amount% &amana to &e%player%&a."
-mana.remove: "&aRemoved &e%amount% &amana from &e%player%&a."
-mana.insufficient: "&cNot enough mana! Need &e%need%&c, have &e%have%&c."
-mana.bossbar-title: "&dMana &e%current%&8/&e%max%"
+mana.show.self: "&bʏᴏᴜʀ ᴍᴀɴᴀ: &e%current%&b/&e%max%"
+mana.show.other: "&b%player%'ꜱ ᴍᴀɴᴀ: &e%current%&b/&e%max%"
+mana.set: "&aꜱᴇᴛ &e%player%&a'ꜱ ᴍᴀɴᴀ ᴛᴏ &e%value%&a."
+mana.add: "&aᴀᴅᴅᴇᴅ &e%amount% &aᴍᴀɴᴀ ᴛᴏ &e%player%&a."
+mana.remove: "&aʀᴇᴍᴏᴠᴇᴅ &e%amount% &aᴍᴀɴᴀ ꜰʀᴏᴍ &e%player%&a."
+mana.insufficient: "&cɴᴏᴛ ᴇɴᴏᴜɢʜ ᴍᴀɴᴀ! ɴᴇᴇᴅ &e%need%&c, ʜᴀᴠᴇ &e%have%&c."
+mana.bossbar-title: "&dᴍᴀɴᴀ &e%current%&8/&e%max%"
 
-spell.cast: "&dYou cast &e%spell%&d."
-spell.cooldown: "&cSpell &e%spell% &cis on cooldown (&e%left%s&c)."
-spell.learned: "&aYou learned &e%spell%&a."
-spell.forgotten: "&eYou forgot &e%spell%&e."
-spell.unknown: "&cUnknown spell: &e%id%"
-spell.list.header: "&dKnown spells (&e%count%&d):"
+spell.cast: "&dʏᴏᴜ ᴄᴀꜱᴛ &e%spell%&d."
+spell.cooldown: "&cꜱᴘᴇʟʟ &e%spell% &cɪꜱ ᴏɴ ᴄᴏᴏʟᴅᴏᴡɴ (&e%left%ꜱ&c)."
+spell.learned: "&aʏᴏᴜ ʟᴇᴀʀɴᴇᴅ &e%spell%&a."
+spell.forgotten: "&eʏᴏᴜ ꜰᴏʀɢᴏᴛ &e%spell%&e."
+spell.unknown: "&cᴜɴᴋɴᴏᴡɴ ꜱᴘᴇʟʟ: &e%id%"
+spell.list.header: "&dᴋɴᴏᴡɴ ꜱᴘᴇʟʟꜱ (&e%count%&d):"
 spell.list.entry: "  &7- &e%id% &8(&7%school%&8) &7- %name%"
 spell.info: |
   &d=== &e%name% &d===
-  &7School: &e%school%
-  &7Mana cost: &e%mana%
-  &7Cooldown: &e%cd%s
-  &7Description: &f%desc%
+  &7ꜱᴄʜᴏᴏʟ: &e%school%
+  &7ᴍᴀɴᴀ ᴄᴏꜱᴛ: &e%mana%
+  &7ᴄᴏᴏʟᴅᴏᴡɴ: &e%cd%ꜱ
+  &7ᴅᴇꜱᴄʀɪᴘᴛɪᴏɴ: &f%desc%
 
-school.naruto.name: "&6Naruto"
-school.tensura.name: "&5Tensura"
-school.mushoku.name: "&3Mushoku Tensei"
-school.onepiece.name: "&bOne Piece"
+school.naruto.name: "&6ɴᴀʀᴜᴛᴏ"
+school.tensura.name: "&5ᴛᴇɴꜱᴜʀᴀ"
+school.mushoku.name: "&3ᴍᴜꜱʜᴏᴋᴜ ᴛᴇɴꜱᴇɪ"
+school.onepiece.name: "&bᴏɴᴇ ᴘɪᴇᴄᴇ"
 
-incantation.start: "&7You begin chanting... type each line in chat."
+incantation.start: "&7ʏᴏᴜ ʙᴇɢɪɴ ᴄʜᴀɴᴛɪɴɢ... ᴛʏᴘᴇ ᴇᴀᴄʜ ʟɪɴᴇ ɪɴ ᴄʜᴀᴛ."
 incantation.line-prompt: "&8> &7%line%"
-incantation.line-correct: "&aOK"
-incantation.line-wrong: "&cWrong. Try again."
-incantation.complete: "&dThe spell is woven!"
-incantation.timeout: "&cYour chant fizzled out."
+incantation.line-correct: "&aᴏᴋ"
+incantation.line-wrong: "&cᴡʀᴏɴɢ. ᴛʀʏ ᴀɢᴀɪɴ."
+incantation.complete: "&dᴛʜᴇ ꜱᴘᴇʟʟ ɪꜱ ᴡᴏᴠᴇɴ!"
+incantation.timeout: "&cʏᴏᴜʀ ᴄʜᴀɴᴛ ꜰɪᴢᴢʟᴇᴅ ᴏᴜᴛ."
 
-gui.spellbook.title: "&dSpellbook &7- &fPage %page%/%pages%"
-gui.spellbook.next: "&aNext"
-gui.spellbook.prev: "&aPrev"
-gui.spellbook.close: "&cClose"
-gui.spellbook.filter.all: "&fAll"
-gui.spellbook.filter.naruto: "&6Naruto"
-gui.spellbook.filter.tensura: "&5Tensura"
-gui.spellbook.filter.mushoku: "&3Mushoku"
-gui.spellbook.filter.onepiece: "&bOne Piece"
-gui.spellbook.cast: "&aClick to cast"
+gui.spellbook.title: "&dꜱᴘᴇʟʟʙᴏᴏᴋ &7- &fᴘᴀɢᴇ %page%/%pages%"
+gui.spellbook.next: "&aɴᴇxᴛ"
+gui.spellbook.prev: "&aᴘʀᴇᴠ"
+gui.spellbook.close: "&cᴄʟᴏꜱᴇ"
+gui.spellbook.filter.all: "&fᴀʟʟ"
+gui.spellbook.filter.naruto: "&6ɴᴀʀᴜᴛᴏ"
+gui.spellbook.filter.tensura: "&5ᴛᴇɴꜱᴜʀᴀ"
+gui.spellbook.filter.mushoku: "&3ᴍᴜꜱʜᴏᴋᴜ"
+gui.spellbook.filter.onepiece: "&ʙ ᴏɴᴇ ᴘɪᴇᴄᴇ"
+gui.spellbook.cast: "&aᴄʟɪᴄᴋ ᴛᴏ ᴄᴀꜱᴛ"
 
-arena.created: "&aArena &e%name% &acreated."
-arena.deleted: "&aArena &e%name% &adeleted."
-arena.no-exist: "&cArena &e%name% &cdoes not exist."
-arena.joined: "&aJoined arena queue for &e%name%&a. &7(%cur%/%max%)"
-arena.left: "&aLeft arena queue."
-arena.full: "&cArena &e%name% &cis full!"
-arena.starting: "&dArena &e%name% &dis starting in &e%sec%s&d!"
-arena.started: "&d=== Arena &e%name% &dhas begun! ==="
-arena.ended: "&d=== Arena &e%name% &dended! Winner: &e%winner%&d ==="
-arena.draw: "&d=== Arena &e%name% &dended in a draw! ==="
-arena.already-in: "&cYou are already in an arena queue."
-arena.not-in: "&cYou are not in an arena queue."
-arena.list.header: "&dArenas (&e%count%&d):"
+arena.created: "&aᴀʀᴇɴᴀ &e%name% &aᴄʀᴇᴀᴛᴇᴅ."
+arena.deleted: "&aᴀʀᴇɴᴀ &e%name% &aᴅᴇʟᴇᴛᴇᴅ."
+arena.no-exist: "&cᴀʀᴇɴᴀ &e%name% &cᴅᴏᴇꜱ ɴᴏᴛ ᴇxɪꜱᴛ."
+arena.joined: "&aᴊᴏɪɴᴇᴅ ᴀʀᴇɴᴀ qᴜᴇᴜᴇ ꜰᴏʀ &e%name%&a. &7(%cur%/%max%)"
+arena.left: "&aʟᴇꜰᴛ ᴀʀᴇɴᴀ qᴜᴇᴜᴇ."
+arena.full: "&cᴀʀᴇɴᴀ &e%name% &cɪꜱ ꜰᴜʟʟ!"
+arena.starting: "&dᴀʀᴇɴᴀ &e%name% &dɪꜱ ꜱᴛᴀʀᴛɪɴɢ ɪɴ &e%sec%ꜱ&d!"
+arena.started: "&d=== ᴀʀᴇɴᴀ &e%name% &dʜᴀꜱ ʙᴇɢᴜɴ! ==="
+arena.ended: "&d=== ᴀʀᴇɴᴀ &e%name% &dᴇɴᴅᴇᴅ! ᴡɪɴɴᴇʀ: &e%winner%&d ==="
+arena.draw: "&d=== ᴀʀᴇɴᴀ &e%name% &dᴇɴᴅᴇᴅ ɪɴ ᴀ ᴅʀᴀᴡ! ==="
+arena.already-in: "&cʏᴏᴜ ᴀʀᴇ ᴀʟʀᴇᴀᴅʏ ɪɴ ᴀɴ ᴀʀᴇɴᴀ qᴜᴇᴜᴇ."
+arena.not-in: "&cʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ɪɴ ᴀɴ ᴀʀᴇɴᴀ qᴜᴇᴜᴇ."
+arena.list.header: "&dᴀʀᴇɴᴀꜱ (&e%count%&d):"
 arena.list.entry: "  &7- &e%name% &8(&7%state%&8, &7%cur%/%max%&8)"
-arena.not-enough: "&7Not enough players to start."
+arena.not-enough: "&7ɴᴏᴛ ᴇɴᴏᴜɢʜ ᴘʟᴀʏᴇʀꜱ ᴛᴏ ꜱᴛᴀʀᴛ."
 
-metrics.disabled: "&7Metrics are disabled in config."
+metrics.disabled: "&7ᴍᴇᴛʀɪᴄꜱ ᴀʀᴇ ᴅɪꜱᴀʙʟᴇᴅ ɪɴ ᴄᴏɴꜰɪɢ."
 
-help.header: "&d=== &eAnimeMagic Help &d==="
+help.header: "&d=== &eᴀɴɪᴍᴇ ᴍᴀɢɪᴄ ʜᴇʟᴘ &d==="
 help.magic: |
-  &e/magic reload &7- Reload config & messages
-  &e/magic info &7- Show plugin info
-  &e/magic give <player> <spell> &7- Force-teach a spell
-  &e/magic version &7- Show version
+  &e/ᴍᴀɢɪᴄ ʀᴇʟᴏᴀᴅ &7- ʀᴇʟᴏᴀᴅ ᴄᴏɴꜰɪɢ & ᴍᴇꜱꜱᴀɢᴇꜱ
+  &e/ᴍᴀɢɪᴄ ɪɴꜰᴏ &7- ꜱʜᴏᴡ ᴘʟᴜɢɪɴ ɪɴꜰᴏ
+  &e/ᴍᴀɢɪᴄ ɢɪᴠᴇ <ᴘʟᴀʏᴇʀ> <ꜱᴘᴇʟʟ> &7- ꜰᴏʀᴄᴇ-ᴛᴇᴀᴄʜ ᴀ ꜱᴘᴇʟʟ
+  &e/ᴍᴀɢɪᴄ ᴠᴇʀꜱɪᴏɴ &7- ꜱʜᴏᴡ ᴠᴇʀꜱɪᴏɴ
 help.spell: |
-  &e/spell cast <id> &7- Cast a spell you know
-  &e/spell learn <id> &7- Learn a spell
-  &e/spell forget <id> &7- Forget a spell
-  &e/spell list &7- List known spells
-  &e/spell info <id> &7- Show spell details
+  &e/ꜱᴘᴇʟʟ ᴄᴀꜱᴛ <ɪᴅ> &7- ᴄᴀꜱᴛ ᴀ ꜱᴘᴇʟʟ ʏᴏᴜ ᴋɴᴏᴡ
+  &e/ꜱᴘᴇʟʟ ʟᴇᴀʀɴ <ɪᴅ> &7- ʟᴇᴀʀɴ ᴀ ꜱᴘᴇʟʟ
+  &e/ꜱᴘᴇʟʟ ꜰᴏʀɢᴇᴛ <ɪᴅ> &7- ꜰᴏʀɢᴇᴛ ᴀ ꜱᴘᴇʟʟ
+  &e/ꜱᴘᴇʟʟ ʟɪꜱᴛ &7- ʟɪꜱᴛ ᴋɴᴏᴡɴ ꜱᴘᴇʟʟꜱ
+  &e/ꜱᴘᴇʟʟ ɪɴꜰᴏ <ɪᴅ> &7- ꜱʜᴏᴡ ꜱᴘᴇʟʟ ᴅᴇᴛᴀɪʟꜱ
 help.arena: |
-  &e/arena create <name> &7- Create an arena at your location
-  &e/arena delete <name> &7- Delete an arena
-  &e/arena join <name> &7- Join an arena queue
-  &e/arena leave &7- Leave your queue
-  &e/arena start <name> &7- Force-start an arena
-  &e/arena stop <name> &7- Force-stop an arena
-  &e/arena list &7- List arenas
+  &e/ᴀʀᴇɴᴀ ᴄʀᴇᴀᴛᴇ <ɴᴀᴍᴇ> &7- ᴄʀᴇᴀᴛᴇ ᴀɴ ᴀʀᴇɴᴀ ᴀᴛ ʏᴏᴜʀ ʟᴏᴄᴀᴛɪᴏɴ
+  &e/ᴀʀᴇɴᴀ ᴅᴇʟᴇᴛᴇ <ɴᴀᴍᴇ> &7- ᴅᴇʟᴇᴛᴇ ᴀɴ ᴀʀᴇɴᴀ
+  &e/ᴀʀᴇɴᴀ ᴊᴏɪɴ <ɴᴀᴍᴇ> &7- ᴊᴏɪɴ ᴀɴ ᴀʀᴇɴᴀ qᴜᴇᴜᴇ
+  &e/ᴀʀᴇɴᴀ ʟᴇᴀᴠᴇ &7- ʟᴇᴀᴠᴇ ʏᴏᴜʀ qᴜᴇᴜᴇ
+  &e/ᴀʀᴇɴᴀ ꜱᴛᴀʀᴛ <ɴᴀᴍᴇ> &7- ꜰᴏʀᴄᴇ-ꜱᴛᴀʀᴛ ᴀɴ ᴀʀᴇɴᴀ
+  &e/ᴀʀᴇɴᴀ ꜱᴛᴏᴘ <ɴᴀᴍᴇ> &7- ꜰᴏʀᴄᴇ-ꜱᴛᴏᴘ ᴀɴ ᴀʀᴇɴᴀ
+  &e/ᴀʀᴇɴᴀ ʟɪꜱᴛ &7- ʟɪꜱᴛ ᴀʀᴇɴᴀꜱ
 
-controls.hotbar.equipped: "&7Equipped: &e%spell%"
-controls.hotbar.casting: "&7» Casting %mode% &e%spell%"
-school.default-applied: "&aDefault loadout applied: &e%school%&a. Use &e/school &ato switch."
-school.switched: "&aSwitched to &e%school% &aschool loadout."
+controls.hotbar.equipped: "&7ᴇqᴜɪᴘᴘᴇᴅ: &e%spell%"
+controls.hotbar.casting: "&7» ᴄᴀꜱᴛɪɴɢ %mode% &e%spell%"
+school.default-applied: "&aᴅᴇꜰᴀᴜʟᴛ ʟᴏᴀᴅᴏᴜᴛ ᴀᴘᴘʟɪᴇᴅ: &e%school%&a. ᴜꜱᴇ &e/ꜱᴄʜᴏᴏʟ &aᴛᴏ ꜱᴡɪᴛᴄʜ."
+school.switched: "&aꜱᴡɪᴛᴄʜᴇᴅ ᴛᴏ &e%school% &aꜱᴄʜᴏᴏʟ ʟᴏᴀᴅᴏᴜᴛ."
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Action-bar HUD — minimal display of the currently selected ability.
-# Format:  §e❯ §f<Spell Name> §7(<status>)
-# Status is one of: (§c3s§7) on cooldown, (§cNo Mana§7) if unaffordable,
-# or nothing if ready. When mana.enabled is false, the "No Mana" status
-# is suppressed.
-# ─────────────────────────────────────────────────────────────────────────────
-actionbar.empty: "&7Slot &e%slot% &7has no ability bound. Use &e/bind hotbar %slot% <spell>&7."
-controls.wheel.title: "&dSpell Wheel &7- &fClick to cast"
-controls.wheel.click-to-cast: "&aClick to cast"
-controls.wheel.empty: "&7No recent spells — cast one first."
-controls.combo.progress: "&7Hand seals: &e%combo%"
-controls.combo.timeout: "&7Your hand seals faded."
-controls.combo.reset: "&7Hand seals reset."
-controls.bind.hotbar.set: "&aBound slot &e%slot% &ato &e%spell%&a."
-controls.bind.cleared: "&aCleared binding for slot &e%slot%&a."
-controls.bind.sneak.set: "&aBound sneak-cast to &e%spell%&a."
-controls.bind.sneak.cleared: "&aCleared sneak-cast binding."
-controls.bind.combo.set: "&aBound combo &e%seq% &ato &e%spell%&a."
-controls.bind.combo.cleared: "&aCleared combo &e%seq%&a."
-controls.castbar.cancelled: "&7Channel interrupted."
-controls.castbar.complete: "&dChannel complete"
+# Actionbar HUD
+actionbar.empty: "&7ꜱʟᴏᴛ &e%slot% &7ʜᴀꜱ ɴᴏ ᴀʙɪʟɪᴛʏ ʙᴏᴜɴᴅ. ᴜꜱᴇ &e/ʙɪɴᴅ ʜᴏᴛʙᴀʀ %slot% <ꜱᴘᴇʟʟ>&7."
 
-models.spawned: "&7Spawned model &e%id%&7."
-models.unknown: "&cUnknown model: &e%id%"
-models.animation.unknown: "&cUnknown animation: &e%id%"
-models.animation.playing: "&7Playing animation &e%id%&7."
+controls.wheel.title: "&dꜱᴘᴇʟʟ ᴡʜᴇᴇʟ &7- &fᴄʟɪᴄᴋ ᴛᴏ ᴄᴀꜱᴛ"
+controls.wheel.click-to-cast: "&aᴄʟɪᴄᴋ ᴛᴏ ᴄᴀꜱᴛ"
+controls.wheel.empty: "&7ɴᴏ ʀᴇᴄᴇɴᴛ ꜱᴘᴇʟʟꜱ — ᴄᴀꜱᴛ ᴏɴᴇ ꜰɪʀꜱᴛ."
+controls.combo.progress: "&7ʜᴀɴᴅ ꜱᴇᴀʟꜱ: &e%combo%"
+controls.combo.timeout: "&7ʏᴏᴜʀ ʜᴀɴᴅ ꜱᴇᴀʟꜱ ꜰᴀᴅᴇᴅ."
+controls.combo.reset: "&7ʜᴀɴᴅ ꜱᴇᴀʟꜱ ʀᴇꜱᴇᴛ."
+controls.bind.hotbar.set: "&aʙᴏᴜɴᴅ ꜱʟᴏᴛ &e%slot% &aᴛᴏ &e%spell%&a."
+controls.bind.cleared: "&aᴄʟᴇᴀʀᴇᴅ ʙɪɴᴅɪɴɢ ꜰᴏʀ ꜱʟᴏᴛ &e%slot%&a."
+controls.bind.sneak.set: "&aʙᴏᴜɴᴅ ꜱɴᴇᴀᴋ-ᴄᴀꜱᴛ ᴛᴏ &e%spell%&a."
+controls.bind.sneak.cleared: "&aᴄʟᴇᴀʀᴇᴅ ꜱɴᴇᴀᴋ-ᴄᴀꜱᴛ ʙɪɴᴅɪɴɢ."
+controls.bind.combo.set: "&aʙᴏᴜɴᴅ ᴄᴏᴍʙᴏ &e%seq% &aᴛᴏ &e%spell%&a."
+controls.bind.combo.cleared: "&aᴄʟᴇᴀʀᴇᴅ ᴄᴏᴍʙᴏ &e%seq%&a."
+controls.castbar.cancelled: "&7ᴄʜᴀɴɴᴇʟ ɪɴᴛᴇʀʀᴜᴘᴛᴇᴅ."
+controls.castbar.complete: "&dᴄʜᴀɴɴᴇʟ ᴄᴏᴍᴘʟᴇᴛᴇ"
+
+models.spawned: "&7ꜱᴘᴀᴡɴᴇᴅ ᴍᴏᴅᴇʟ &e%id%&7."
+models.unknown: "&cᴜɴᴋɴᴏᴡɴ ᴍᴏᴅᴇʟ: &e%id%"
+models.animation.unknown: "&cᴜɴᴋɴᴏᴡɴ ᴀɴɪᴍᴀᴛɪᴏɴ: &e%id%"
+models.animation.playing: "&7ᴘʟᴀʏɪɴɢ ᴀɴɪᴍᴀᴛɪᴏɴ &e%id%&7."

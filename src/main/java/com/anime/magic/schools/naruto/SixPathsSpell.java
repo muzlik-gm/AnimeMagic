@@ -42,13 +42,13 @@ public final class SixPathsSpell implements Spell {
     public SixPathsSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "naruto:six_paths"; }
-    @Override public @NotNull String displayName() { return "§f§lSix Paths Sage Mode"; }
+    @Override public @NotNull String displayName() { return "§f§lꜱix ᴘaths ꜱage ᴍode"; }
     @Override public @NotNull SchoolId school() { return SchoolId.NARUTO; }
     @Override public int manaCost() { return 200; }
     @Override public long cooldownMs() { return 120000; }
     @Override public int requiredLevel() { return 60; }
     @Override public @NotNull String description() {
-        return "Ultimate transformation. Ascend, gain flight + massive buffs for 20s. Pulses 15 damage to all nearby enemies every 3s.";
+        return "ᴜltimate transformation. ᴀscend, gain flight + massive buffs for 20s. ᴘulses 15 damage to all nearby enemies every 3s.";
     }
     @Override public @NotNull SpellIcon icon() {
         return new SpellIcon("NETHER_STAR", 7010, "§fSix Paths Sage Mode");

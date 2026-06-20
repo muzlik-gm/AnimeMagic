@@ -42,13 +42,13 @@ public final class TrueDragonSpell implements Spell {
     public TrueDragonSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "tensura:true_dragon"; }
-    @Override public @NotNull String displayName() { return "§5§lTrue Dragon Form"; }
+    @Override public @NotNull String displayName() { return "§5§lᴛrue ᴅragon ꜰorm"; }
     @Override public @NotNull Spell.SchoolId school() { return Spell.SchoolId.TENSURA; }
     @Override public int manaCost() { return 250; }
     @Override public long cooldownMs() { return 180000; }
     @Override public int requiredLevel() { return 70; }
     @Override public @NotNull String description() {
-        return "Transform into a True Dragon for 30s. Flight + massive buffs. Aura pulses 12 damage to all nearby every 2s.";
+        return "ᴛransform into a ᴛrue ᴅragon for 30s. ꜰlight + massive buffs. ᴀura pulses 12 damage to all nearby every 2s.";
     }
     @Override public @NotNull Spell.SpellIcon icon() {
         return new SpellIcon("NETHER_STAR", 7010, "§5True Dragon");

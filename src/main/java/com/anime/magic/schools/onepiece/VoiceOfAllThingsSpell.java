@@ -28,13 +28,13 @@ public final class VoiceOfAllThingsSpell implements Spell {
     public VoiceOfAllThingsSpell(AnimeMagicPlugin plugin) { this.plugin = plugin; }
 
     @Override public @NotNull String id() { return "onepiece:voice_of_all_things"; }
-    @Override public @NotNull String displayName() { return "§f§lVoice of All Things"; }
+    @Override public @NotNull String displayName() { return "§f§lᴠoice of ᴀll ᴛhings"; }
     @Override public @NotNull SchoolId school() { return SchoolId.ONEPIECE; }
     @Override public int manaCost() { return 130; }
     @Override public long cooldownMs() { return 75000; }
     @Override public int requiredLevel() { return 55; }
     @Override public @NotNull String description() {
-        return "Commune with the world for 10s. All hostiles within 30 blocks become passive. You regen 5 HP/s.";
+        return "ᴄommune with the world for 10s. ᴀll hostiles within 30 blocks become passive. ʏou regen 5 ʜᴘ/s.";
     }
     @Override public @NotNull SpellIcon icon() { return new SpellIcon("NETHER_STAR", 2004, "§fVoice of All Things"); }
 
