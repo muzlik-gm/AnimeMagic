@@ -3,10 +3,22 @@
   "item": "FIRE_CHARGE",
   "customModelData": 7011,
   "display": "FIXED",
-  "billboard": "CENTER",
-  "defaultScale": { "x": 0.4, "y": 0.4, "z": 0.4 },
-  "defaultTranslation": { "x": 0.0, "y": 0.0, "z": 0.0 },
-  "defaultRotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+  "billboard": "FIXED",
+  "defaultScale": {
+    "x": 0.4,
+    "y": 0.4,
+    "z": 0.4
+  },
+  "defaultTranslation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  "defaultRotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
   "glow": true,
   "shadowRadius": 0.0
 }

@@ -3,10 +3,22 @@
   "item": "SNOWBALL",
   "customModelData": 7008,
   "display": "FIXED",
-  "billboard": "CENTER",
-  "defaultScale": { "x": 1.0, "y": 1.0, "z": 1.0 },
-  "defaultTranslation": { "x": 0.0, "y": 0.0, "z": 0.0 },
-  "defaultRotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+  "billboard": "FIXED",
+  "defaultScale": {
+    "x": 1.0,
+    "y": 1.0,
+    "z": 1.0
+  },
+  "defaultTranslation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  "defaultRotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
   "glow": true,
   "shadowRadius": 0.0
 }

@@ -3,7 +3,7 @@
   "item": "PAPER",
   "customModelData": 7018,
   "display": "FIXED",
-  "billboard": "CENTER",
+  "billboard": "FIXED",
   "defaultScale": {
     "x": 0.6,
     "y": 0.6,

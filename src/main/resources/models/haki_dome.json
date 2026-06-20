@@ -3,7 +3,7 @@
   "item": "PURPLE_GLAZED_TERRACOTTA",
   "customModelData": 7005,
   "display": "FIXED",
-  "billboard": "CENTER",
+  "billboard": "FIXED",
   "defaultScale": {
     "x": 2.0,
     "y": 2.0,

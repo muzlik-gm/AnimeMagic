@@ -118,7 +118,9 @@ public final class ModelDisplay {
         ticker.runTaskTimer(plugin, 1L, 1L);
     }
 
-    /** Make this display follow the player each tick (offset by `offset`). */
+    /** Make this display follow the player each tick (offset by `offset`).
+     *  The model's orientation is LOCKED — it does NOT rotate with the
+     *  player's view. Only the position follows. */
     public void followPlayer(@NotNull UUID playerId, @NotNull Vector offset) {
         if (follower != null) follower.cancel();
         follower = new BukkitRunnable() {
@@ -126,7 +128,14 @@ public final class ModelDisplay {
                 var p = plugin.getServer().getPlayer(playerId);
                 if (p == null || !p.isOnline()) { cancel(); return; }
                 if (entity == null || entity.isDead()) { cancel(); return; }
+                // Teleport to the player's position + offset, but with
+                // yaw=0 and pitch=0 so the model orientation stays FIXED.
+                // Previously this used p.getLocation() which carried the
+                // player's yaw/pitch, causing the model to rotate when
+                // the player looked up/down/left/right.
                 Location loc = p.getLocation().add(offset);
+                loc.setYaw(0f);
+                loc.setPitch(0f);
                 entity.teleport(loc);
             }
         };

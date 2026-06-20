@@ -3,7 +3,7 @@
   "item": "PRISMARINE_SHARD",
   "customModelData": 7009,
   "display": "FIXED",
-  "billboard": "CENTER",
+  "billboard": "FIXED",
   "defaultScale": {
     "x": 0.5,
     "y": 2.0,

@@ -3,10 +3,22 @@
   "item": "PAPER",
   "customModelData": 7001,
   "display": "FIXED",
-  "billboard": "CENTER",
-  "defaultScale": { "x": 0.6, "y": 0.6, "z": 0.6 },
-  "defaultTranslation": { "x": 0.0, "y": 0.0, "z": 0.0 },
-  "defaultRotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+  "billboard": "FIXED",
+  "defaultScale": {
+    "x": 0.6,
+    "y": 0.6,
+    "z": 0.6
+  },
+  "defaultTranslation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  "defaultRotation": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
   "glow": true,
   "shadowRadius": 0.0
 }

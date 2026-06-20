@@ -61,6 +61,11 @@ public final class SpellEffects {
             return null;
         }
         try {
+            // Reset yaw/pitch on the spawn location so the model doesn't
+            // inherit the player's view direction (was causing the model
+            // to rotate when the player looked up/down/left/right).
+            spawn.setYaw(0f);
+            spawn.setPitch(0f);
             ModelDisplay display = new ModelDisplay(plugin, model, spawn,
                     owner != null ? owner.getUniqueId() : null, lifetimeTicks);
 
